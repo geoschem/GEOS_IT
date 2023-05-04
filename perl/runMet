@@ -1,0 +1,31 @@
+#!/bin/tcsh -f
+
+#------------------------------------------------------------------------------
+#          Harvard University Atmospheric Chemistry Modeling Group            !
+#------------------------------------------------------------------------------
+#BOP
+#
+# !IROUTINE: runMet
+#
+# !DESCRIPTION: Subroutine runMet runs the executable files Geos57Driver.0,
+#  thru Geos57Driver5 simultaneously.  It takes as input 6 
+#\\
+#\\
+# !INTERFACE:
+#
+# !CALLING SEQUENCE:
+#  runMet script1 script2 script3 script4 script5 script6
+#
+# !REVISION HISTORY:
+#  20 Jan 2012 - R. Yantosca - Initial version
+#  23 Jan 2012 - R. Yantosca - Now only submit 3 processes at a time
+#EOP
+#------------------------------------------------------------------------------
+#BOC
+
+$1 &   # CN, A1, I3 
+$2 &   # A3cld, A3dyn
+$3 &   # A3mstC, A3mstE
+
+exit(0);
+#EOC

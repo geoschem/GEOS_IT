@@ -1,0 +1,6 @@
+*.[oax]
+*.mod
+*.MOD
+*~*
+bin/
+Geos5Driver
