@@ -5,11 +5,11 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: schedGeosFp
+# !MODULE: schedGeosIt
 #
-# !DESCRIPTION: schedGeosFp is a Perl script which schedules a GEOS-FP data
+# !DESCRIPTION: schedGeosIt is a Perl script which schedules a GEOS-IT data
 #  download to happen automatically via the "at" command.  It calls the
-#  getGeosFp script to schedule the data download, and the doGeos57Multi
+#  getGeosIt script to schedule the data download, and the doGeos57Multi
 #  script to start the data processing after all of the data has arrived.
 #\\
 #\\
@@ -20,7 +20,7 @@
   use Dates qw( &addDate );    # Routines from "Dates.pm"
 #
 # !CALLING SEQUENCE:
-#  schedGeosFp YYYYMMDD nDays [now]
+#  schedGeosIt YYYYMMDD nDays [now]
 #
 # !REMARKS:
 #  Uses the Unix "at" command to schedule jobs.  
@@ -35,7 +35,7 @@
 #
 # !IROUTINE: main
 #
-# !DESCRIPTION: Driver routine for the sleepGeosFp script.  Gets arguments
+# !DESCRIPTION: Driver routine for the sleepGeosIt script.  Gets arguments
 #  from the command line and schedules the data procesing job.
 #\\
 #\\
@@ -45,9 +45,9 @@ sub main() {
 #
 # !REVISION HISTORY: 
 #  07 Aug 2013 - R. Yantosca - Initial version, based on schedGeos57
-#  08 Aug 2013 - R. Yantosca - Now calls purgeGeosFp to remove raw met data
+#  08 Aug 2013 - R. Yantosca - Now calls purgeGeosIt to remove raw met data
 #                              files for prior days from the download directory
-#  20 Sep 2013 - R. Yantosca - Now call doGeosFpMulti
+#  20 Sep 2013 - R. Yantosca - Now call doGeosItMulti
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -58,7 +58,7 @@ sub main() {
 
   # Error check # of arguments
   if ( scalar( @ARGV ) != 3 ) {  
-    print "Usage: schedGeosFp YYYYMMDD nDays when\n"; 
+    print "Usage: schedGeosIt YYYYMMDD nDays when\n"; 
     exit(1); 
   }
 
@@ -84,11 +84,11 @@ sub main() {
     # Add commands to the string
 #-----------------------------------------------------------------------------
 # Prior to 2/11/14:
-# For now, disable the call to "purgeGeosFp" script. (bmy, 2/11/14)
-#    $cmd .= "./purgeGeosFp $date\n";
+# For now, disable the call to "purgeGeosIt" script. (bmy, 2/11/14)
+#    $cmd .= "./purgeGeosIt $date\n";
 #-----------------------------------------------------------------------------
-    $cmd .= "./getGeosFp $date\n";
-    $cmd .= "./doGeosFpMulti $date\n";
+    $cmd .= "./getGeosIt $date\n";
+    $cmd .= "./doGeosItMulti $date\n";
   }
 
   # Add the end of file

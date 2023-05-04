@@ -3,28 +3,27 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !ROUTINE: GeosFpFixA3Cld
+! !ROUTINE: GeosItDriver1
 !
-! !DESCRIPTION: Program GeosFpFixA3Cld is the driver routine that we must
-!  use to reprocess the A3Cld files.  We need to use the CLOUD field from
-!  tavg3_3d_rad_Nv instead of taking it from CFAN + CFLS (which causes
-!  higher O3 and OH in GEOS-Chem).
+! !DESCRIPTION: Program GeosItDriver1 is a top-level driver for the 
+!  GEOS-5.7.x regridding programs. 
 !\\
 !\\
 ! !INTERFACE:
 !
-PROGRAM GeosFpFixA3Cld
+PROGRAM GeosItDriver1
 !
 ! !USES:
 !
-  USE GeosFpA3CldModule
-  USE GeosFpInputsModule
-  USE GeosFpRegridModule
+  USE GeosItA3CldModule
+  USE GeosItA3DynModule
+  USE GeosItInputsModule
+  USE GeosItRegridModule
 
   IMPLICIT NONE
 !
 ! !REMARKS:
-!  GeosFpDriver1 creates the A3cld (3hr time-averaged cloud parameters) and
+!  GeosItDriver1 creates the A3cld (3hr time-averaged cloud parameters) and
 !  A3dyn  (3hr time-averaged dynamics parameters) data files for input into 
 !  GEOS-Chem.
 !                                                                             .
@@ -32,20 +31,21 @@ PROGRAM GeosFpFixA3Cld
 !  and re-packaged into NcdfUtilities by Bob Yantosca, Harvard Univ.
 !
 ! !REVISION HISTORY: 
-!  20 Sep 2013 - R. Yantosca - Now renamed Geos57 to GeosFp in routine names
+!  20 Sep 2013 - R. Yantosca - Now renamed Geos57 to GeosIt in routine names
 !------------------------------------------------------------------------------
 
   ! Read filenames and fields to process from an input file
-  CALL GeosFpInitialize
+  CALL GeosItInitialize
 
   ! Initialize GEOS-5 regridding code
-  CALL GeosFpRegridInit
+  CALL GeosItRegridInit
 
   ! Create the 3-hour average data files
-  CALL GeosFpMakeA3Cld
+  CALL GeosItMakeA3Cld
+  CALL GeosItMakeA3Dyn
 
   ! Cleanup and quit 
-  CALL GeosFpCleanup
+  CALL GeosItCleanup
 
-END PROGRAM GeosFpFixA3Cld
+END PROGRAM GeosItDriver1
 !EOP

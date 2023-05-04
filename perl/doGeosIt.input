@@ -1,0 +1,130 @@
+#------------------------------------------------------------------------------
+#          Harvard University Atmospheric Chemistry Modeling Group            !
+#------------------------------------------------------------------------------
+#BOP
+#
+# !INCLUDE: doGeosIt.input  
+#
+# !DESCRIPTION: Input file specifies the various default settings for
+# directories etc. for the doGeosItMulti script.
+#\\
+#\\
+# !REMARKS:
+# Login String           : Username:Password from your GES-DISC subscription
+# Raw Met Data Directory : Dir where GEOS-5 "raw" met data is found
+# Code Directory         : Dir where the executable file is found
+# Job Directory          : Dir where job scripts are found
+# Log Directory          : Dir where output logs will be sent
+# Temporary Directory    : Dir for temporary files (can be same as Job Dir)
+# Program Executable     : Name of executable file (should be "Geos5Driver")
+# Submit Statement       : {JOB} will be replaced w/ the actual job script name
+#
+# !REMARKS:
+#  You need to add a \ before the @ sign in email addresses,
+#  otherwise Perl won't know how to deal with it.
+#
+# !REVISION HISTORY: 
+#  24 Oct 2011 - R. Yantosca - Initial version (based on doGeos5.input)
+#  13 Jan 2012 - R. Yantosca - Executable is now named "Geos57Driver.x"
+#  20 Jan 2012 - R. Yantosca - Now add variable for the file containing
+#                              the default settings for the executable
+#  06 Aug 2013 - R. Yantosca - Now add list of emails for notification
+#  06 Aug 2013 - R. Yantosca - Now add sleep time between tries [s]
+#  20 Sep 2013 - R. Yantosca - Renamed to doGeosIt.input
+#  25 Sep 2013 - R. Yantosca - Updated file sizes for GEOSIT files
+#  11 Feb 2014 - R. Yantosca - Now added file sizes for EU, SE grids
+#
+
+==> Raw Met Data Directory
+/storage1/fs1/rvmartin/Active/GEOS-Chem-shared/MetFieldProcessing/GEOS_IT-raw/2021/03/
+
+==> Code Directory
+../bin
+
+==> Job Directory
+../jobs
+
+==> Log Directory
+../logs
+
+==> Temporary Directory
+/storage1/fs1/rvmartin/Active/GEOS-Chem-shared/MetFieldProcessing/scratch/GEOS_IT/2021/03/
+
+==> Program Executable
+GeosItDriver{THREAD}.x
+
+==> Defaults for Executable
+../bin/GeosItDriver.input
+
+==> Submit Statement
+{JOB} &
+
+==> Sleep Time [s]
+300
+
+==> Emails for Notification
+your\@email.address
+
+#-----------------------------------------------------
+# File sizes for processed GEOS-IT met data:
+# Used by purgeGeosIt to remove old "raw" files        
+# before getting new files
+#-----------------------------------------------------
+
+==> CH Nested-Grid Met Fields
+/as/data/geos/GEOS_0.25x0.3125_CH/GEOS_IT/YYYY/MM
+ 159985884  GEOSIT.YYYYMMDD.A1.025x03125.CH.nc
+ 584242324  GEOSIT.YYYYMMDD.A3cld.025x03125.CH.nc
+ 417317376  GEOSIT.YYYYMMDD.A3dyn.025x03125.CH.nc
+ 333854836  GEOSIT.YYYYMMDD.A3mstC.025x03125.CH.nc
+ 423113044  GEOSIT.YYYYMMDD.A3mstE.025x03125.CH.nc
+ 251550928  GEOSIT.YYYYMMDD.I3.025x03125.CH.nc
+
+==> EU Nested-Grid Met Fields
+/as/data/geos/GEOS_0.25x0.3125_EU/GEOS_IT/YYYY/MM
+  91857936  GEOSIT.YYYYMMDD.A1.025x03125.EU.nc
+ 328290588  GEOSIT.YYYYMMDD.A3cld.025x03125.EU.nc
+ 234494100  GEOSIT.YYYYMMDD.A3dyn.025x03125.EU.nc
+ 187596040  GEOSIT.YYYYMMDD.A3mstC.025x03125.EU.nc
+ 237751068  GEOSIT.YYYYMMDD.A3mstE.025x03125.EU.nc
+ 141349284  GEOSIT.YYYYMMDD.I3.025x03125.EU.nc
+
+==> NA Nested-Grid Met Fields
+/as/data/geos/GEOS_0.25x0.3125_NA/GEOS_IT/YYYY/MM
+ 205087116  GEOSIT.YYYYMMDD.A1.025x03125.NA.nc
+ 733023288  GEOSIT.YYYYMMDD.A3cld.025x03125.NA.nc
+ 523589040  GEOSIT.YYYYMMDD.A3dyn.025x03125.NA.nc
+ 418872100  GEOSIT.YYYYMMDD.A3mstC.025x03125.NA.nc
+ 530861208  GEOSIT.YYYYMMDD.A3mstE.025x03125.NA.nc
+ 315609504  GEOSIT.YYYYMMDD.I3.025x03125.NA.nc
+
+==> SE Nested-Grid Met Fields
+/as/data/geos/GEOS_0.25x0.3125_SE/GEOS_IT/YYYY/MM
+ 128594824  GEOSIT.YYYYMMDD.A1.025x03125.SE.nc
+ 459604948  GEOSIT.YYYYMMDD.A3cld.025x03125.SE.nc
+ 328290124  GEOSIT.YYYYMMDD.A3dyn.025x03125.SE.nc
+ 262632896  GEOSIT.YYYYMMDD.A3mstC.025x03125.SE.nc
+ 332849812  GEOSIT.YYYYMMDD.A3mstE.025x03125.SE.nc
+ 197887516  GEOSIT.YYYYMMDD.I3.025x03125.SE.nc
+
+==> 2x25 Global Met Fields
+/as/data/geos/GEOS_2x2.5/GEOS_IT/YYYY/MM
+  59141184  GEOSIT.YYYYMMDD.A1.2x25.nc
+ 211346220  GEOSIT.YYYYMMDD.A3cld.2x25.nc
+ 150962340  GEOSIT.YYYYMMDD.A3dyn.2x25.nc
+ 120770584  GEOSIT.YYYYMMDD.A3mstC.2x25.nc
+ 153059148  GEOSIT.YYYYMMDD.A3mstE.2x25.nc
+  90998100  GEOSIT.YYYYMMDD.I3.2x25.nc
+
+==> 4x5 Global Met Fields
+/as/data/geos/GEOS_4x5/GEOS_IT/YYYY/MM
+  14959212  GEOSIT.YYYYMMDD.A1.4x5.nc
+  53420372  GEOSIT.YYYYMMDD.A3cld.4x5.nc
+  38158028  GEOSIT.YYYYMMDD.A3dyn.4x5.nc
+  30527044  GEOSIT.YYYYMMDD.A3mstC.4x5.nc
+  38688120  GEOSIT.YYYYMMDD.A3mstE.4x5.nc
+  23001984  GEOSIT.YYYYMMDD.I3.4x5.nc
+
+END OF FILE
+#EOP
+#------------------------------------------------------------------------------

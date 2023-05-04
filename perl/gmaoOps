@@ -182,8 +182,8 @@ sub main() {
   }
  
   # Print output
-  print '====== STATUS OF GEOS-FP DATA PROCESSING @ GMAO ======'."\n";
-  print "GEOS-FP production status             : $status\n";
+  print '====== STATUS OF GEOS-IT DATA PROCESSING @ GMAO ======'."\n";
+  print "GEOS-IT production status             : $status\n";
   print "Current date/time being produced      : $running\n";
   print "Last date/time that has finished      : $completed\n";
   print "Last date/time available for download : $delivery\n";

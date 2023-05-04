@@ -3,16 +3,16 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: GeosFpInputsModule
+! !MODULE: GeosItInputsModule
 !
-! !DESCRIPTION: GeosFpInputsModule contains variables that are used by
+! !DESCRIPTION: GeosItInputsModule contains variables that are used by
 !  the various regridding routines.  These are initialized from the
-!  \texttt{GeosFpDriver.input} file.
+!  \texttt{GeosItDriver.input} file.
 !\\
 !\\
 ! !INTERFACE:
 
-MODULE GeosFpInputsModule
+MODULE GeosItInputsModule
 !
 ! !USES:
 !
@@ -261,8 +261,8 @@ MODULE GeosFpInputsModule
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC  :: GeosFpInitialize
-  PUBLIC  :: GeosFpCleanup
+  PUBLIC  :: GeosItInitialize
+  PUBLIC  :: GeosItCleanup
 !
 ! !PRIVATE MEMBER FUNCTIONS:
 !
@@ -279,7 +279,7 @@ MODULE GeosFpInputsModule
 !                              tavg3_3d_mst_Ne into output files
 !  20 Jan 2012 - R. Yantosca - Now use lowercase "output" string for all grids
 !  15 Feb 2012 - R. Yantosca - Add variables for nested NA grid
-!  19 Sep 2013 - R. Yantosca - Renamed to GeosFpInputsModule
+!  19 Sep 2013 - R. Yantosca - Renamed to GeosItInputsModule
 !  19 Sep 2013 - R. Yantosca - Added variables for nested Europe grid  (EU)
 !  19 Sep 2013 - R. Yantosca - Remove reference to tavg3_3d_rad_Nv collection
 !  19 Sep 2013 - R. Yantosca - Remove variables for collections that we don't
@@ -296,7 +296,7 @@ MODULE GeosFpInputsModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpInitialize
+! !IROUTINE: GeosItInitialize
 
 !
 ! !DESCRIPTION: This routine deallocates all previously-allocated
@@ -305,7 +305,7 @@ MODULE GeosFpInputsModule
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpInitialize
+  SUBROUTINE GeosItInitialize
 !
 ! !REVISION HISTORY:
 !  30 Aug 2011 - R. Yantosca - Initial version, based on MerraInputsModule
@@ -316,7 +316,7 @@ MODULE GeosFpInputsModule
 !  15 Feb 2012 - R. Yantosca - Read information about nested NA grid
 !  16 May 2013 - R. Yantosca - Bug fix: set doNative=T if doNestNa=T
 !  19 Sep 2013 - R. Yantosca - Added nested Europe grid (EU)
-!  19 Sep 2013 - R. Yantosca - Adjust reading of data fields to GEOS-FP vars
+!  19 Sep 2013 - R. Yantosca - Adjust reading of data fields to GEOS-IT vars
 !  08 Oct 2013 - R. Yantosca - Added nested SE asia grid (SE)
 !EOP
 !------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ MODULE GeosFpInputsModule
     !-----------------------------------------------------------------------
 
     ! Open the file
-    OPEN( IU_TXT, FILE='./GeosFpDriver.input', STATUS='old', ERR=999 )
+    OPEN( IU_TXT, FILE='./GeosItDriver.input', STATUS='old', ERR=999 )
 
     ! Read each line
     DO
@@ -791,7 +791,7 @@ MODULE GeosFpInputsModule
     PRINT*, '%%% Error reading "filename.input"!'
     CALL EXIT(1)
 
-  END SUBROUTINE GeosFpInitialize
+  END SUBROUTINE GeosItInitialize
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -1000,7 +1000,7 @@ MODULE GeosFpInputsModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpCleanup
+! !IROUTINE: GeosItCleanup
 !
 ! !DESCRIPTION: This routine deallocates all previously-allocated
 !  module arrays and pointer objects.
@@ -1008,7 +1008,7 @@ MODULE GeosFpInputsModule
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpCleanup
+  SUBROUTINE GeosItCleanup
 !
 ! !REVISION HISTORY:
 !  25 Oct 2011 - R. Yantosca - Initial version, based on MERRA
@@ -1161,6 +1161,6 @@ MODULE GeosFpInputsModule
        IF ( ASSOCIATED( mapTo4x5 ) ) DEALLOCATE( mapTo4x5 )
     ENDIF
 
-  END SUBROUTINE GeosFpCleanup
+  END SUBROUTINE GeosItCleanup
 !EOC
-END MODULE GeosFpInputsModule
+END MODULE GeosItInputsModule

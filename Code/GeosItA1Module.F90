@@ -3,23 +3,23 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: GeosFpA1Module
+! !MODULE: GeosItA1Module
 !
-! !DESCRIPTION: Module GeosFpA1Module contains routines to create the
-!  GEOS-Chem average 1-hr data files from the GEOS-FP raw data.
+! !DESCRIPTION: Module GeosItA1Module contains routines to create the
+!  GEOS-Chem average 1-hr data files from the GEOS-IT raw data.
 !\\
 !\\
 ! !INTERFACE:
 
-MODULE GeosFpA1Module
+MODULE GeosItA1Module
 !
 ! !USES:
 !
-  ! GEOS-FP data modules
+  ! GEOS-IT data modules
   USE CharpakModule
-  USE GeosFpInputsModule
-  USE GeosFpRegridModule
-  USE GeosFpUtilityModule
+  USE GeosItInputsModule
+  USE GeosItRegridModule
+  USE GeosItUtilityModule
 
   ! Modules for writing netCDF
   USE m_netcdf_io_create
@@ -41,7 +41,7 @@ MODULE GeosFpA1Module
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC  :: GeosFpMakeA1
+  PUBLIC  :: GeosItMakeA1
 !
 ! !PRIVATE MEMBER FUNCTIONS:
 !
@@ -51,12 +51,12 @@ MODULE GeosFpA1Module
   PRIVATE :: Process2dRadNx
   PRIVATE :: Process2dSlvNx
   PRIVATE :: Process2dAlbedo
-  PRIVATE :: GeosFpSeaIceBins
-  PRIVATE :: GeosFpCreateLwi
-  PRIVATE :: GeosFpRegridLwi
-  PRIVATE :: GeosFpAdjustSnomas
-  PRIVATE :: GeosFpProcessAlbedo
-  PRIVATE :: GeosFpProcessTropp
+  PRIVATE :: GeosItSeaIceBins
+  PRIVATE :: GeosItCreateLwi
+  PRIVATE :: GeosItRegridLwi
+  PRIVATE :: GeosItAdjustSnomas
+  PRIVATE :: GeosItProcessAlbedo
+  PRIVATE :: GeosItProcessTropp
 !
 ! !DEFINED_PARAMETERS:
 !
@@ -73,7 +73,7 @@ MODULE GeosFpA1Module
 !  09 Jan 2012 - R. Yantosca - Updated comments, cosmetic changes
 !  11 Jan 2012 - R. Yantosca - Now put debugging kludges in #if blocks
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  19 Sep 2013 - R. Yantosca - Renamed to GeosFpA1Module; adjusted for COARDS
+!  19 Sep 2013 - R. Yantosca - Renamed to GeosItA1Module; adjusted for COARDS
 !  08 Oct 2013 - R. Yantosca - Now save CH, EU, NA, SE nested grids in one pass
 !EOP
 !------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ MODULE GeosFpA1Module
     INTEGER,          INTENT(INOUT) :: fOut          ! Output netCDF file ID
 !
 ! !REVISION HISTORY:
-!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosFpCnModule
+!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosItCnModule
 !  01 Feb 2012 - R. Yantosca - Make all global attribute names lowercase
 !  20 Sep 2013 - R. Yantosca - Change and/or add attribute names for COARDS
 !  23 Sep 2013 - R. Yantosca - Add calendar attribute to time
@@ -162,7 +162,7 @@ MODULE GeosFpA1Module
     !-------------------------------------------------------------------------
 
     ! Title string
-    lName = 'GEOS-FP 1-hour time-averaged parameters (A1), processed for GEOS-Chem input'
+    lName = 'GEOS-IT 1-hour time-averaged parameters (A1), processed for GEOS-Chem input'
     CALL NcDef_Glob_Attributes( fOut, 'Title',                TRIM( lName ) )
 
     ! Contact
@@ -201,7 +201,7 @@ MODULE GeosFpA1Module
     
 
     ! Version
-    lName = 'GEOS-FP'
+    lName = 'GEOS-IT'
     CALL NcDef_Glob_Attributes( fOut, 'Version',              TRIM( lName ) )
     
 
@@ -1124,24 +1124,24 @@ MODULE GeosFpA1Module
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpMakeA1
+! !IROUTINE: GeosItMakeA1
 !
-! !DESCRIPTION: Routine GeosFpMakeA1
+! !DESCRIPTION: Routine GeosItMakeA1
 ! \begin{enumerate}
 ! \item Extracting 3-hr time-averaged data fields (surface values) from
-!       the GEOS-FP raw data files (netCDF-4 format),
+!       the GEOS-IT raw data files (netCDF-4 format),
 ! \item Regridding the fields to GEOS-Chem data resolution, and
 ! \item Saving the regridded data to disk in netCDF format.
 ! \end{enumerate}
-! This routine is called directly from the main program GeosFpDriver.F90
+! This routine is called directly from the main program GeosItDriver.F90
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpMakeA1
+  SUBROUTINE GeosItMakeA1
 !
 ! !REVISION HISTORY:
-!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosFpA3Module.F90
+!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosItA3Module.F90
 !  11 Jan 2012 - R. Yantosca - Now call StrCompress to remove white space
 !                              in the input file name.
 !  19 Jan 2012 - R. Yantosca - Now write output to temporary data directories
@@ -1179,7 +1179,7 @@ MODULE GeosFpA1Module
     !=======================================================================
 
     ! Echo info
-    msg = '%%%%%%%%%% ENTERING ROUTINE GeosFpMakeA1 %%%%%%%%%%'
+    msg = '%%%%%%%%%% ENTERING ROUTINE GeosItMakeA1 %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' )
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
@@ -1456,11 +1456,11 @@ MODULE GeosFpA1Module
     IF ( doGlobal05   ) CALL NcCl( fOutGlobal05  )
 
     ! Echo info
-    msg = '%%%%%%%%%% LEAVING ROUTINE GeosFpMakeA1 %%%%%%%%%%'
+    msg = '%%%%%%%%%% LEAVING ROUTINE GeosItMakeA1 %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' ) '%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-  END SUBROUTINE GeosFpMakeA1
+  END SUBROUTINE GeosItMakeA1
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -1469,7 +1469,7 @@ MODULE GeosFpA1Module
 !
 ! !IROUTINE: Process2dFlxNx
 !
-! !DESCRIPTION: Subroutine Process2dFlxNx regrids the GEOS-FP met fields
+! !DESCRIPTION: Subroutine Process2dFlxNx regrids the GEOS-IT met fields
 !  from the "tavg1\_2d\_flx\_Nx" file and saves output to netCDF format.
 !\\
 !\\
@@ -1483,12 +1483,12 @@ MODULE GeosFpA1Module
     CHARACTER(LEN=*), INTENT(IN) :: fields(:)   ! List of field names
 !
 ! !REVISION HISTORY:
-!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosFpCnModule.F90
-!  06 Jan 2012 - R. Yantosca - Now call GeosFpCreateLwi to make the LWI field
-!  06 Jan 2012 - R. Yantosca - Now call GeosFpSeaIceBins to compute the
+!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosItCnModule.F90
+!  06 Jan 2012 - R. Yantosca - Now call GeosItCreateLwi to make the LWI field
+!  06 Jan 2012 - R. Yantosca - Now call GeosItSeaIceBins to compute the
 !                              fractional sea ice bins SEAICE{00..90}
 !  09 Jan 2012 - R. Yantosca - Remove fOut* arguments, they are passed via
-!                              the module GeosFpInputsModule.F90
+!                              the module GeosItInputsModule.F90
 !  11 Jan 2012 - R. Yantosca - Now put debugging kludge in an #if block
 !  17 Jan 2012 - R. Yantosca - Nullify pointers after using them
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
@@ -1744,11 +1744,11 @@ MODULE GeosFpA1Module
              IF ( doNative ) THEN
 
                 ! Create the LWI fields on the global grid (if necessary)
-                CALL GeosFpCreateLwi( Q,          mapNative,              &
+                CALL GeosItCreateLwi( Q,          mapNative,              &
                                       I025x03125, J025x03125, lwi        )
 
                 ! Bin sea ice for native grid output
-                CALL GeosFpSeaIceBins( Q,         BINSIZE,    mapNative,  &
+                CALL GeosItSeaIceBins( Q,         BINSIZE,    mapNative,  &
                                        ice,       I025x03125, J025x03125 )
              ENDIF
 
@@ -1916,7 +1916,7 @@ MODULE GeosFpA1Module
                 !-----------------------------------------------------------
 
                 ! Create the 2 x 2.5 LWI field
-                CALL GeosFpCreateLwi( Q, mapTo2x25, I2x25, J2x25, lwi2x25 )
+                CALL GeosItCreateLwi( Q, mapTo2x25, I2x25, J2x25, lwi2x25 )
 
                 ! Write LWI to disk
                 st3d = (/ 1,     1,     H  /)
@@ -1928,7 +1928,7 @@ MODULE GeosFpA1Module
                 !-----------------------------------------------------------
 
                 ! Bin sea ice for 2 x 2.5 output
-                CALL GeosFpSeaIceBins( Q,       BINSIZE, mapTo2x25,  &
+                CALL GeosItSeaIceBins( Q,       BINSIZE, mapTo2x25,  &
                                        ice2x25, I2x25,   J2x25        )
 
                 ! Write each sea ice field to disk
@@ -1948,7 +1948,7 @@ MODULE GeosFpA1Module
                 !-----------------------------------------------------------
 
                 ! Create the 4 x 5 LWI field
-                CALL GeosFpCreateLwi( Q, mapTo4x5, I4x5, J4x5, lwi4x5 )
+                CALL GeosItCreateLwi( Q, mapTo4x5, I4x5, J4x5, lwi4x5 )
 
                 ! Write LWI to disk
                 st3d = (/ 1,    1,    H  /)
@@ -1960,7 +1960,7 @@ MODULE GeosFpA1Module
                 !-----------------------------------------------------------
 
                 ! Bin sea ice for 4x5 output
-                CALL GeosFpSeaIceBins( Q,       BINSIZE, mapTo4x5,   &
+                CALL GeosItSeaIceBins( Q,       BINSIZE, mapTo4x5,   &
                                        ice4x5,  I4x5,    J4x5         )
 
                 ! Write each sea ice bin to disk
@@ -1980,14 +1980,14 @@ MODULE GeosFpA1Module
                 !-----------------------------------------------------------
 
                 ! Create the 0.5 x 0.625 LWI field
-                CALL GeosFpCreateLwi( Q,        mapTo05x0625,           &
+                CALL GeosItCreateLwi( Q,        mapTo05x0625,           &
                                      I05x0625, J05x0625, lwi05 )
 
                 !-----------------------------------------------------------
                 ! 0.5 x 0.625 GRID: Sea ice bins
                 !-----------------------------------------------------------
                 ! Bin sea ice for 0.5 x 0.625 output
-                CALL GeosFpSeaIceBins( Q,       BINSIZE, mapTo05x0625,  &
+                CALL GeosItSeaIceBins( Q,       BINSIZE, mapTo05x0625,  &
                                        ice05, I05x0625,   J05x0625   )
 
                 IF ( doNestCh05 ) THEN
@@ -2146,9 +2146,9 @@ MODULE GeosFpA1Module
           WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
           ! Do the regridding
-          IF ( do2x25 ) CALL RegridGeosFpTo2x25( 0, Q, Q2x25 )
-          IF ( do4x5  ) CALL RegridGeosFpTo4x5 ( 0, Q, Q4x5  )
-          IF ( do05x0625 ) CALL RegridGeosFpTo05x0625( 0, Q, Q05 ) ! (lzh)
+          IF ( do2x25 ) CALL RegridGeosItTo2x25( 0, Q, Q2x25 )
+          IF ( do4x5  ) CALL RegridGeosItTo4x5 ( 0, Q, Q4x5  )
+          IF ( do05x0625 ) CALL RegridGeosItTo05x0625( 0, Q, Q05 ) ! (lzh)
 
           !-----------------------------------------------------------------
           ! Post-regrid special handling
@@ -2321,7 +2321,7 @@ MODULE GeosFpA1Module
 !
 ! !IROUTINE: Process2dLndNx
 !
-! !DESCRIPTION:  Subroutine Process2dLndNx regrids the GEOS-FP met fields
+! !DESCRIPTION:  Subroutine Process2dLndNx regrids the GEOS-IT met fields
 !  from the "tavg1\_2d\_lnd\_Nx" file and saves output to netCDF format.
 !\\
 !\\
@@ -2335,9 +2335,9 @@ MODULE GeosFpA1Module
     CHARACTER(LEN=*), INTENT(IN) :: fields(:)   ! List of field names
 !
 ! !REVISION HISTORY:
-!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosFpCnModule.F90
+!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosItCnModule.F90
 !  09 Jan 2012 - R. Yantosca - Remove fOut* arguments, they are passed via
-!                              the module GeosFpInputsModule.F90
+!                              the module GeosItInputsModule.F90
 !  11 Jan 2012 - R. Yantosca - Now put debugging kludge in an #if block
 !  17 Jan 2012 - R. Yantosca - Nullify pointers after using them
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
@@ -2571,7 +2571,7 @@ MODULE GeosFpA1Module
           !-----------------------------------------------------------------
 
           ! Adjust SNOMAS to be consistent w/ GEOS-Chem usage
-          IF ( name == 'SNOMAS' ) CALL GeosFpAdjustSnomas( Q )
+          IF ( name == 'SNOMAS' ) CALL GeosItAdjustSnomas( Q )
 
           !-----------------------------------------------------------------
           ! Do the regridding!
@@ -2580,9 +2580,9 @@ MODULE GeosFpA1Module
           WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
           ! Regrid to global grids
-          IF ( do2x25 ) CALL RegridGeosFpTo2x25( 0, Q, Q2x25 )
-          IF ( do4x5  ) CALL RegridGeosFpTo4x5 ( 0, Q, Q4x5  )
-          IF ( do05x0625 ) CALL RegridGeosFpTo05x0625( 0, Q, Q05 ) ! (lzh)
+          IF ( do2x25 ) CALL RegridGeosItTo2x25( 0, Q, Q2x25 )
+          IF ( do4x5  ) CALL RegridGeosItTo4x5 ( 0, Q, Q4x5  )
+          IF ( do05x0625 ) CALL RegridGeosItTo05x0625( 0, Q, Q05 ) ! (lzh)
 
           !-----------------------------------------------------------------
           ! Post-regrid handling
@@ -2757,7 +2757,7 @@ MODULE GeosFpA1Module
 !
 ! !IROUTINE: Process2dRadNx
 !
-! !DESCRIPTION:  Subroutine Process2dRadNx regrids the GEOS-FP met fields
+! !DESCRIPTION:  Subroutine Process2dRadNx regrids the GEOS-IT met fields
 !  from the "tavg1\_2d\_rad\_Nx" file and saves output to netCDF format.
 !\\
 !\\
@@ -2771,9 +2771,9 @@ MODULE GeosFpA1Module
     CHARACTER(LEN=*), INTENT(IN) :: fields(:)   ! List of field names
 !
 ! !REVISION HISTORY:
-!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosFpA3Module.F90
+!  05 Jan 2012 - R. Yantosca - Initial version, based on GeosItA3Module.F90
 !  09 Jan 2012 - R. Yantosca - Remove fOut* arguments, they are passed via
-!                              the module GeosFpInputsModule.F90
+!                              the module GeosItInputsModule.F90
 !  11 Jan 2012 - R. Yantosca - Now put debugging kludge in an #if block
 !  17 Jan 2012 - R. Yantosca - Nullify pointers after using them
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
@@ -3019,9 +3019,9 @@ MODULE GeosFpA1Module
           WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
           ! Regrid
-          IF ( do2x25 ) CALL RegridGeosFpTo2x25( 0, Q, Q2x25 )
-          IF ( do4x5  ) CALL RegridGeosFpTo4x5 ( 0, Q, Q4x5  )
-          IF ( do05x0625 ) CALL RegridGeosFpTo05x0625( 0, Q, Q05 ) ! (lzh)
+          IF ( do2x25 ) CALL RegridGeosItTo2x25( 0, Q, Q2x25 )
+          IF ( do4x5  ) CALL RegridGeosItTo4x5 ( 0, Q, Q4x5  )
+          IF ( do05x0625 ) CALL RegridGeosItTo05x0625( 0, Q, Q05 ) ! (lzh)
 
           !-----------------------------------------------------------------
           ! Post-regrid handling
@@ -3196,7 +3196,7 @@ MODULE GeosFpA1Module
 !
 ! !IROUTINE: Process2dSlvNx
 !
-! !DESCRIPTION:  Subroutine Process2dSlvNx regrids the GEOS-FP met fields
+! !DESCRIPTION:  Subroutine Process2dSlvNx regrids the GEOS-IT met fields
 !  from the "tavg1\_2d\_slv\_Nx" file and saves output to netCDF format.
 !\\
 !\\
@@ -3210,9 +3210,9 @@ MODULE GeosFpA1Module
     CHARACTER(LEN=*), INTENT(IN) :: fields(:)   ! List of field names
 !
 ! !REVISION HISTORY:
-!  11 Aug 2010 - R. Yantosca - Initial version, based on GeosFpA3Module.F90
+!  11 Aug 2010 - R. Yantosca - Initial version, based on GeosItA3Module.F90
 !  09 Jan 2012 - R. Yantosca - Remove fOut* arguments, they are passed via
-!                              the module GeosFpInputsModule.F90
+!                              the module GeosItInputsModule.F90
 !  11 Jan 2012 - R. Yantosca - Now put debugging kludge in an #if block
 !  17 Jan 2012 - R. Yantosca - Divide native-grid winds by pressures
 !                              after regridding
@@ -3432,9 +3432,9 @@ MODULE GeosFpA1Module
        Q = Q / 100e0
 
        ! Regrid to 2 x 2.5
-       IF ( do2x25 ) CALL RegridGeosFpTo2x25( 0, P, P2x25 )
-       IF ( do4x5  ) CALL RegridGeosFpTo4x5 ( 0, P, P4x5  )
-       IF ( do05x0625 ) CALL RegridGeosFpTo05x0625( 0, P, P05 )   ! (lzh)
+       IF ( do2x25 ) CALL RegridGeosItTo2x25( 0, P, P2x25 )
+       IF ( do4x5  ) CALL RegridGeosItTo4x5 ( 0, P, P4x5  )
+       IF ( do05x0625 ) CALL RegridGeosItTo05x0625( 0, P, P05 )   ! (lzh)
 
        !====================================================================
        ! Process all other data fields
@@ -3477,7 +3477,7 @@ MODULE GeosFpA1Module
           ! Fill missing values in TROPP and other fields
           SELECT CASE( name )
              CASE( 'TROPPT', 'TROPPV', 'TROPPB' )
-                CALL GeosFpProcessTropp( Q )
+                CALL GeosItProcessTropp( Q )
              CASE DEFAULT
                 WHERE( Q == FILL_VALUE ) Q = 0e0
           END SELECT
@@ -3501,9 +3501,9 @@ MODULE GeosFpA1Module
           WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
           ! Regrid
-          IF ( do2x25 ) CALL RegridGeosFpTo2x25( 0, Q, Q2x25 )
-          IF ( do4x5  ) CALL RegridGeosFpTo4x5 ( 0, Q, Q4x5  )
-          IF ( do05x0625 ) CALL RegridGeosFpTo05x0625( 0, Q, Q05 ) ! (lzh)
+          IF ( do2x25 ) CALL RegridGeosItTo2x25( 0, Q, Q2x25 )
+          IF ( do4x5  ) CALL RegridGeosItTo4x5 ( 0, Q, Q4x5  )
+          IF ( do05x0625 ) CALL RegridGeosItTo05x0625( 0, Q, Q05 ) ! (lzh)
 
           !-----------------------------------------------------------------
           ! Post-regrid handling
@@ -3687,7 +3687,7 @@ MODULE GeosFpA1Module
 ! !IROUTINE: Process2dAlbedo
 !
 ! !DESCRIPTION: Subroutine Process2dAlbedo creates the daily average albedo
-!  field.  This routine is a wrapper for GeosFpProcessAlbedo.
+!  field.  This routine is a wrapper for GeosItProcessAlbedo.
 !\\
 !\\
 ! !INTERFACE:
@@ -3697,7 +3697,7 @@ MODULE GeosFpA1Module
 ! !REMARKS:
 !   Rationale for doing this:
 !   ----------------------------------------------------------------------
-!   The GEOS-FP ALBEDO field is only defined where it is daylight.
+!   The GEOS-IT ALBEDO field is only defined where it is daylight.
 !   Some places in GEOS-Chem require an ALBEDO field even at night (i.e.
 !   as a proxy for determining land surface).  Therefore compute the
 !   daily average albedo and return to the data processing routine above.
@@ -3930,7 +3930,7 @@ MODULE GeosFpA1Module
     !=======================================================================
 
     ! Compute daily average albedo
-    CALL GeosFpProcessAlbedo( Q )
+    CALL GeosItProcessAlbedo( Q )
 
     !-----------------------------------------------------------------
     ! Regrid to coarse resolution
@@ -3939,9 +3939,9 @@ MODULE GeosFpA1Module
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
     ! Regrid
-    IF ( do2x25 ) CALL RegridGeosFpTo2x25( 0, Q(:,:,1), Q2x25 )
-    IF ( do4x5  ) CALL RegridGeosFpTo4x5 ( 0, Q(:,:,1), Q4x5  )
-    IF ( do05x0625 ) CALL RegridGeosFpTo05x0625( 0, Q(:,:,1), Q05 ) ! (lzh)
+    IF ( do2x25 ) CALL RegridGeosItTo2x25( 0, Q(:,:,1), Q2x25 )
+    IF ( do4x5  ) CALL RegridGeosItTo4x5 ( 0, Q(:,:,1), Q4x5  )
+    IF ( do05x0625 ) CALL RegridGeosItTo05x0625( 0, Q(:,:,1), Q05 ) ! (lzh)
 
     ! Make sure ALBEDO is positive-definite
     IF ( do2x25 ) WHERE( Q2x25 < 0e0 ) Q2x25 = 0e0
@@ -4100,9 +4100,9 @@ MODULE GeosFpA1Module
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpSeaIceBins
+! !IROUTINE: GeosItSeaIceBins
 !
-! !DESCRIPTION: Subroutine GeosFpSeaIceBins bins the FRSEAICE field into
+! !DESCRIPTION: Subroutine GeosItSeaIceBins bins the FRSEAICE field into
 !  bins for 2 x 2.5 and 4 x 5 output.  For each coarse grid box, the number of
 !  fine grid boxes having a sea ice fraction within a particular bin is
 !  computed.  Typically the bins will be percentage decades (e.g. 0-10%,
@@ -4111,7 +4111,7 @@ MODULE GeosFpA1Module
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpSeaIceBins( Ice, BinSize, map, IceOut, IMX, JMX )
+  SUBROUTINE GeosItSeaIceBins( Ice, BinSize, map, IceOut, IMX, JMX )
 !
 ! !INPUT PARAMETERS:
 !
@@ -4136,7 +4136,7 @@ MODULE GeosFpA1Module
 !
 ! !REVISION HISTORY:
 !  17 Aug 2010 - R. Yantosca - Initial version, based on RegridTau
-!  25 Aug 2010 - R. Yantosca - Renamed to "GeosFpSeaIceBins"
+!  25 Aug 2010 - R. Yantosca - Renamed to "GeosItSeaIceBins"
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -4225,23 +4225,23 @@ MODULE GeosFpA1Module
     ENDDO
     ENDDO
 
-  END SUBROUTINE GeosFpSeaIceBins
+  END SUBROUTINE GeosItSeaIceBins
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpCreateLwi
+! !IROUTINE: GeosItCreateLwi
 !
-! !DESCRIPTION: Subroutine GeosFpCreateLwi creates the GEOS-5 style
+! !DESCRIPTION: Subroutine GeosItCreateLwi creates the GEOS-5 style
 !  land/water/ice (LWI) flags field and then regrids it to coarser resolution.
 !  LWI is used for backwards compatibility w/ existing GEOS-Chem routines.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpCreateLwi( frSeaIce, map, IMX, JMX, lwiOut )
+  SUBROUTINE GeosItCreateLwi( frSeaIce, map, IMX, JMX, lwiOut )
 !
 ! !INPUT PARAMETERS:
 !
@@ -4299,18 +4299,18 @@ MODULE GeosFpA1Module
 
        ! If the MAP object is passed, then
        ! regrid the LWI field to coarse resolution
-       CALL GeosFpRegridLwi( lwiIn, lwiOut, map, IMX, JMX )
+       CALL GeosItRegridLwi( lwiIn, lwiOut, map, IMX, JMX )
 
     ENDIF
 
-  END SUBROUTINE GeosFpCreateLwi
+  END SUBROUTINE GeosItCreateLwi
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpRegridLwi
+! !IROUTINE: GeosItRegridLwi
 !
 ! !DESCRIPTION: This routine regrids the land-water indices (LWI) field.
 !  Instead of an actual area regridding, we pick the mode of the LWI values
@@ -4319,7 +4319,7 @@ MODULE GeosFpA1Module
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpRegridLwi( lwiIn, lwiOut, map, IMX, JMX )
+  SUBROUTINE GeosItRegridLwi( lwiIn, lwiOut, map, IMX, JMX )
 !
 ! !INPUT PARAMETERS:
 !
@@ -4393,23 +4393,23 @@ MODULE GeosFpA1Module
     ENDDO
     ENDDO
 
-  END SUBROUTINE GeosFpRegridLwi
+  END SUBROUTINE GeosItRegridLwi
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpAdjustSnomas
+! !IROUTINE: GeosItAdjustSnomas
 !
-! !DESCRIPTION: Routine GeosFpAdjustSnomas will adjust the GEOS-FP SNOMAS
+! !DESCRIPTION: Routine GeosItAdjustSnomas will adjust the GEOS-IT SNOMAS
 !  field to make it more similar to the GEOS-5 SNOMAS field.  This is necessary
 !  for backward compatibility with existing GEOS-Chem routines.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpAdjustSnomas( Q )
+  SUBROUTINE GeosItAdjustSnomas( Q )
 !
 ! !INPUT/OUTPUT PARAMETERS:
 !
@@ -4417,7 +4417,7 @@ MODULE GeosFpA1Module
 !
 ! !REMARKS:
 !  NOTE: This routine was originally developed for the MERRA data processing
-!  code, but the same algorithm also can be used for GEOS-FP data.
+!  code, but the same algorithm also can be used for GEOS-IT data.
 !                                                                             .
 !  Original comments from MERRA code:
 !  ----------------------------------
@@ -4512,22 +4512,22 @@ MODULE GeosFpA1Module
    ENDDO
    ENDDO
 
-  END SUBROUTINE GeosFpAdjustSnomas
+  END SUBROUTINE GeosItAdjustSnomas
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpProcessAlbedo
+! !IROUTINE: GeosItProcessAlbedo
 !
-! !DESCRIPTION: Subroutine GeosFpProcessAlbedo computes the daily average
+! !DESCRIPTION: Subroutine GeosItProcessAlbedo computes the daily average
 !  albedo from the MERRA raw data.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpProcessAlbedo( Q )
+  SUBROUTINE GeosItProcessAlbedo( Q )
 !
 ! !INPUT/OUTPUT PARAMETERS:
 !
@@ -4538,7 +4538,7 @@ MODULE GeosFpA1Module
 ! !REMARKS:
 !   Rationale for doing this:
 !   ----------------------------------------------------------------------
-!   The GEOS-FP ALBEDO field is only defined where it is daylight.
+!   The GEOS-IT ALBEDO field is only defined where it is daylight.
 !   Some places in GEOS-Chem require an ALBEDO field even at night (i.e.
 !   as a proxy for determining land surface).  Therefore compute the
 !   daily average albedo and return to the data processing routine above.
@@ -4591,14 +4591,14 @@ MODULE GeosFpA1Module
     ENDDO
     ENDDO
 
-  END SUBROUTINE GeosFpProcessAlbedo
+  END SUBROUTINE GeosItProcessAlbedo
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpProcessTropp
+! !IROUTINE: GeosItProcessTropp
 !
 ! !DESCRIPTION: Subroutine "GeosProcessTropp" replaces any missing values in
 !  the TROPP field with a zonal mean average.
@@ -4606,7 +4606,7 @@ MODULE GeosFpA1Module
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpProcessTropp( Q )
+  SUBROUTINE GeosItProcessTropp( Q )
 !
 ! !INPUT/OUTPUT PARAMETERS:
 !
@@ -4644,7 +4644,7 @@ MODULE GeosFpA1Module
     !=======================================================================
 
     ! Echo info
-    msg = '%%%%%%%%%% ENTERING ROUTINE GeosFpProcessTropp %%%%%%%%%%'
+    msg = '%%%%%%%%%% ENTERING ROUTINE GeosItProcessTropp %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' ) '%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
@@ -4660,7 +4660,7 @@ MODULE GeosFpA1Module
        ! If no, echo a message, then exit
        msg = '%%% No missing data values found in TROPP!  Continuing on ...'
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
-       msg = '%%%%%%%%%% LEAVING ROUTINE GeosFpProcessTropp %%%%%%%%%%'
+       msg = '%%%%%%%%%% LEAVING ROUTINE GeosItProcessTropp %%%%%%%%%%'
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
        WRITE( IU_LOG, '(a)' ) '%%%'
        RETURN
@@ -4726,10 +4726,10 @@ MODULE GeosFpA1Module
     ENDDO
 
     ! Echo info
-    msg = '%%%%%%%%%% LEAVING ROUTINE GeosFpProcessTropp %%%%%%%%%%'
+    msg = '%%%%%%%%%% LEAVING ROUTINE GeosItProcessTropp %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
     WRITE( IU_LOG, '(a)' ) '%%%'
 
-  END SUBROUTINE GeosFpProcessTropp
+  END SUBROUTINE GeosItProcessTropp
 !EOC
-END MODULE GeosFpA1Module
+END MODULE GeosItA1Module

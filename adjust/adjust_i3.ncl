@@ -5,7 +5,7 @@
 ;
 ; !ROUTINE: adjust_i3
 ;
-; !DESCRIPTION: Routine to adjust the existing GEOS-FP "I3" (instantaneous
+; !DESCRIPTION: Routine to adjust the existing GEOS-IT "I3" (instantaneous
 ;  3-hour) data files for better COARDS compliance.
 ;\\
 ;\\
@@ -27,7 +27,7 @@
 ; !INPUT PARAMETERS:
 ;  inFile   : Name of GEOS-5.7.2 "CN" file w/ input data
 ;  apBpFile ; Name of file w/ Ap and Bp data
-;  outFile  : Name of GEOSFP "CN" file w/ vars & atts adjusted for COARDS
+;  outFile  : Name of GEOSIT "CN" file w/ vars & atts adjusted for COARDS
 ;
 ; !LOCAL VARIABLES:
 ;
@@ -134,7 +134,7 @@ begin
   add_coards_global_atts( fIn, fOut )
  
   ; Redefine the title string
-  fOut@Title             = "GEOS-FP instantaneous 3-hour parameters (I3), processed for GEOS-Chem input"
+  fOut@Title             = "GEOS-IT instantaneous 3-hour parameters (I3), processed for GEOS-Chem input"
 
 end
 ;EOC

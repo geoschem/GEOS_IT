@@ -5,8 +5,8 @@
 ;
 ; !MODULE: adjust_all
 ;
-; !DESCRIPTION: Driver routine for the GEOS-FP adjustment code.  Calls 
-;  other scripts to adjust GEOS-FP data files for better COARDS compliance.
+; !DESCRIPTION: Driver routine for the GEOS-IT adjustment code.  Calls 
+;  other scripts to adjust GEOS-IT data files for better COARDS compliance.
 ;\\
 ;\\
 ; !USES:
@@ -68,7 +68,7 @@ begin
     if ( .not. ismissing( inFile ) ) then 
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust files
@@ -93,7 +93,7 @@ begin
     if ( .not. ismissing( inFile ) ) then
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust files
@@ -118,7 +118,7 @@ begin
     if ( .not. ismissing( inFile ) ) 
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust files
@@ -143,7 +143,7 @@ begin
     if ( .not. ismissing( inFile ) ) then
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust files
@@ -168,7 +168,7 @@ begin
     if ( .not. ismissing( inFile ) ) then 
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust files
@@ -193,7 +193,7 @@ begin
     if ( .not. ismissing( inFile ) ) then
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust files
@@ -218,7 +218,7 @@ begin
     if ( .not. ismissing( inFile ) ) then 
 
       ; Set output file name
-      outFile = str_sub_str( inFile, "GEOS572", "GEOSFP" )
+      outFile = str_sub_str( inFile, "GEOS572", "GEOSIT" )
       print( "Now processing: "+ notdir( outFile ) )
 
       ; Readjust the A3cld files

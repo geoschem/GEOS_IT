@@ -6,7 +6,7 @@
 #
 # !MODULE: Makefile (in Code subdirectory)
 #
-# !DESCRIPTION: Makefile for the GEOS-FP data processing code.
+# !DESCRIPTION: Makefile for the GEOS-IT data processing code.
 #\\
 #\\
 # !REMARKS:
@@ -34,14 +34,14 @@
 #
 # !REVISION HISTORY: 
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS-5
-#  11 Jan 2012 - R. Yantosca - Now compile GeosFpA3*Module.F90 files
-#  12 Jan 2012 - R. Yantosca - Split GeosFpA3MstModule.F90 into two modules
+#  11 Jan 2012 - R. Yantosca - Now compile GeosItA3*Module.F90 files
+#  12 Jan 2012 - R. Yantosca - Split GeosItA3MstModule.F90 into two modules
 #  23 Jan 2012 - R. Yantosca - Now compile an executable that creates all 
 #                              the output files, as well as separate 
 #                              executables that create a few files each 
 #                              (i.e. coarse-grain parallelization)
-#  20 Sep 2013 - R. Yantosca - Changed Geos57 to GeosFp in filenames
-#  20 Sep 2013 - R. Yantosca - Now just create GeosFpDriver{012}.x exe files
+#  20 Sep 2013 - R. Yantosca - Changed Geos57 to GeosIt in filenames
+#  20 Sep 2013 - R. Yantosca - Now just create GeosItDriver{012}.x exe files
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -54,10 +54,10 @@
 SHELL   = /bin/sh
 BIN     = ../bin
 DOC     = ../doc
-EXE0    = GeosFpDriver0.x
-EXE1    = GeosFpDriver1.x
-EXE2    = GeosFpDriver2.x
-EXE3    = GeosFpFixA3Cld.x
+EXE0    = GeosItDriver0.x
+EXE1    = GeosItDriver1.x
+EXE2    = GeosItDriver2.x
+EXE3    = GeosItFixA3Cld.x
 LIB     = ../lib
 MOD     = ../mod
 
@@ -79,10 +79,10 @@ include ./Makefile_header.mk
 
 # Source code & object files
 SRC  := $(wildcard *.F) $(wildcard *.F90)            # Get these files
-SRC  := $(filter-out GeosFpDriver.F90  \
-                     GeosFpDriver0.F90 \
-                     GeosFpDriver1.F90 \
-                     GeosFpDriver2.F90 \
+SRC  := $(filter-out GeosItDriver.F90  \
+                     GeosItDriver0.F90 \
+                     GeosItDriver1.F90 \
+                     GeosItDriver2.F90 \
                      CreateTemplateFile.F90,$(SRC))  # but skip these files
 TMP  := $(SRC:.F=.o)
 OBJ  := $(TMP:.F90=.o)
@@ -124,23 +124,23 @@ m_netcdf_io_write.o      : m_netcdf_io_write.F90        \
 
 CharpakModule.o          : CharpakModule.F
 
-GeosFpInputsModule.o     : GeosFpInputsModule.F90       \
+GeosItInputsModule.o     : GeosItInputsModule.F90       \
                            m_netcdf_io_open.o           \
                            m_netcdf_io_close.o          \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpRegridModule.o     : GeosFpRegridModule.F90       \
-                           GeosFpInputsModule.o
+GeosItRegridModule.o     : GeosItRegridModule.F90       \
+                           GeosItInputsModule.o
 
-GeosFpUtilityModule.o    : GeosFpUtilityModule.F90      \
+GeosItUtilityModule.o    : GeosItUtilityModule.F90      \
                            CharpakModule.o
 
-GeosFpA1Module.o         : GeosFpA1Module.F90           \
+GeosItA1Module.o         : GeosItA1Module.F90           \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -150,11 +150,11 @@ GeosFpA1Module.o         : GeosFpA1Module.F90           \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpA3CldModule.o      : GeosFpA3CldModule.F90        \
+GeosItA3CldModule.o      : GeosItA3CldModule.F90        \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -164,11 +164,11 @@ GeosFpA3CldModule.o      : GeosFpA3CldModule.F90        \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpA3DynModule.o      : GeosFpA3DynModule.F90        \
+GeosItA3DynModule.o      : GeosItA3DynModule.F90        \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -178,11 +178,11 @@ GeosFpA3DynModule.o      : GeosFpA3DynModule.F90        \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpA3MstCModule.o     : GeosFpA3MstCModule.F90       \
+GeosItA3MstCModule.o     : GeosItA3MstCModule.F90       \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -192,11 +192,11 @@ GeosFpA3MstCModule.o     : GeosFpA3MstCModule.F90       \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpA3MstEModule.o     : GeosFpA3MstEModule.F90       \
+GeosItA3MstEModule.o     : GeosItA3MstEModule.F90       \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -206,11 +206,11 @@ GeosFpA3MstEModule.o     : GeosFpA3MstEModule.F90       \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpCnModule.o         : GeosFpCnModule.F90           \
+GeosItCnModule.o         : GeosItCnModule.F90           \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -220,11 +220,11 @@ GeosFpCnModule.o         : GeosFpCnModule.F90           \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpI3Module.o         : GeosFpI3Module.F90           \
+GeosItI3Module.o         : GeosItI3Module.F90           \
                            CharpakModule.o              \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpUtilityModule.o        \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItUtilityModule.o        \
                            m_netcdf_io_create.o         \
                            m_netcdf_io_define.o         \
                            m_netcdf_io_write.o          \
@@ -234,41 +234,41 @@ GeosFpI3Module.o         : GeosFpI3Module.F90           \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosFpDriver.o           : GeosFpDriver.F90             \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpA1Module.o             \
-                           GeosFpA3CldModule.o          \
-                           GeosFpA3DynModule.o          \
-                           GeosFpA3MstCModule.o         \
-                           GeosFpA3MstEModule.o         \
-                           GeosFpCnModule.o             \
-                           GeosFpI3Module.o
+GeosItDriver.o           : GeosItDriver.F90             \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItA1Module.o             \
+                           GeosItA3CldModule.o          \
+                           GeosItA3DynModule.o          \
+                           GeosItA3MstCModule.o         \
+                           GeosItA3MstEModule.o         \
+                           GeosItCnModule.o             \
+                           GeosItI3Module.o
 
-GeosFpDriver0.o          : GeosFpDriver0.F90            \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpA1Module.o             \
-                           GeosFpCnModule.o             \
-                           GeosFpI3Module.o
+GeosItDriver0.o          : GeosItDriver0.F90            \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItA1Module.o             \
+                           GeosItCnModule.o             \
+                           GeosItI3Module.o
 
-GeosFpDriver1.o          : GeosFpDriver1.F90            \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpA3CldModule.o          \
-                           GeosFpA3DynModule.o   
+GeosItDriver1.o          : GeosItDriver1.F90            \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItA3CldModule.o          \
+                           GeosItA3DynModule.o   
 
-GeosFpDriver2.o          : GeosFpDriver2.F90            \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpA3MstCModule.o         \
-                           GeosFpA3MstEModule.o
+GeosItDriver2.o          : GeosItDriver2.F90            \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItA3MstCModule.o         \
+                           GeosItA3MstEModule.o
 
 
-GeosFpFixA3Cld.o         : GeosFpFixA3Cld.F90           \
-                           GeosFpInputsModule.o         \
-                           GeosFpRegridModule.o         \
-                           GeosFpA3CldModule.o
+GeosItFixA3Cld.o         : GeosItFixA3Cld.F90           \
+                           GeosItInputsModule.o         \
+                           GeosItRegridModule.o         \
+                           GeosItA3CldModule.o
 
 #==============================================================================
 # Makefile targets
@@ -279,14 +279,14 @@ GeosFpFixA3Cld.o         : GeosFpFixA3Cld.F90           \
 all: lib exe
 
 lib: $(OBJ)
-	$(AR) crs libGeosFp.a $(OBJ)
-	mv libGeosFp.a $(LIB)
+	$(AR) crs libGeosIt.a $(OBJ)
+	mv libGeosIt.a $(LIB)
 
 exe: $(OBJx) $(OBJx0) $(OBJx1) $(OBJx2)
-	$(LD) $(OBJx0) -L$(LIB) -lGeosFp $(LINK_NC) -o $(EXE0)
-	$(LD) $(OBJx1) -L$(LIB) -lGeosFp $(LINK_NC) -o $(EXE1)
-	$(LD) $(OBJx2) -L$(LIB) -lGeosFp $(LINK_NC) -o $(EXE2)
-	$(LD) $(OBJx3) -L$(LIB) -lGeosFp $(LINK_NC) -o $(EXE3)
+	$(LD) $(OBJx0) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE0)
+	$(LD) $(OBJx1) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE1)
+	$(LD) $(OBJx2) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE2)
+	$(LD) $(OBJx3) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE3)
 	cp -f $(EXE0) $(BIN)
 	cp -f $(EXE1) $(BIN)
 	cp -f $(EXE2) $(BIN)

@@ -5,9 +5,9 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: getGeosFp
+# !MODULE: getGeosIt
 #
-# !DESCRIPTION: Perl script getGeosFP downloads 1 day of GEOS-FP raw met
+# !DESCRIPTION: Perl script getGeosIT downloads 1 day of GEOS-IT raw met
 #  data (0.25 x 0.3125 degree horizontal resolution).  We download the data
 #  directly from the GMAO FTP site with the Unix Wget command.
 #\\
@@ -27,7 +27,7 @@ use Dates qw( &addDate
 # Met field directory
 our $MET_DIR     = "";
 
-# GEOS-FP file collection names
+# GEOS-IT file collection names
 our @COLLECTIONS = ( "tavg1_2d_flx_Nx", "tavg1_2d_lnd_Nx", 
 		     "tavg1_2d_rad_Nx", "tavg1_2d_slv_Nx", 
 		     "inst3_3d_asm_Nv", "tavg3_3d_asm_Nv",
@@ -66,7 +66,7 @@ our $LISTING     = "";
 #
 # !REVISION HISTORY: 
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/getGeos5
-#  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP: Renamed to getGeosFp
+#  05 Aug 2013 - R. Yantosca - Modified for GEOS-IT: Renamed to getGeosIt
 #  05 Aug 2013 - R. Yantosca - Added &waitForData routine
 #  07 Aug 2013 - R. Yantosca - Now check if all files are downloaded
 #  18 Oct 2013 - R. Yantosca - Don't use the tavg3_3d_rad_Nv collection
@@ -98,7 +98,7 @@ sub getDefaults($) {
 #
 # !REVISION HISTORY:
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/checkGeos5
-#  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP met data
+#  05 Aug 2013 - R. Yantosca - Modified for GEOS-IT met data
 #  06 Aug 2013 - R. Yantosca - Now read sleep time between tries [s]
 #  06 Aug 2013 - R. Yantosca - Now save name of file listing @ GMAO FTP
 #EOP
@@ -163,7 +163,7 @@ sub getFileList() {
 #
 # !REVISION HISTORY:
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/checkGeos5
-#  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP met data
+#  05 Aug 2013 - R. Yantosca - Modified for GEOS-IT met data
 #  07 Aug 2013 - R. Yantosca - Now reload file listing if it can't be found
 #EOP
 #------------------------------------------------------------------------------
@@ -306,7 +306,7 @@ sub checkData($) {
 #
 # !IROUTINE: getData
 #
-# !DESCRIPTION: Routine getData downloads 1-day of GEOS-FP data via the
+# !DESCRIPTION: Routine getData downloads 1-day of GEOS-IT data via the
 #  Unix wget command.
 #\\
 #\\
@@ -328,7 +328,7 @@ sub getData(@) {
 #  25 Oct 2011 - R. Yantosca - Updated comments
 #  12 Jan 2012 - R. Yantosca - Comment out sections that download the
 #                              tavg3_3d_odt_Nv and tavg3_3d_qdt_Nv files
-#  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP (w/ Sajeev Philip)
+#  05 Aug 2013 - R. Yantosca - Modified for GEOS-IT (w/ Sajeev Philip)
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -366,7 +366,7 @@ sub getData(@) {
     } else { 
 
       #----------------------------------------------------------------------
-      # Otherwise, download the GEOS-FP data
+      # Otherwise, download the GEOS-IT data
       #----------------------------------------------------------------------
 
       # Keep trying to download the file until we
@@ -383,14 +383,14 @@ sub getData(@) {
 
   # Print the overall status code to stdout & log before exiting
   $msg = &getLocalTime();
-  print "\ngetGeosFp: Overall status code: $status\n\nExiting at $msg\n";
+  print "\ngetGeosIt: Overall status code: $status\n\nExiting at $msg\n";
 
   # Doublecheck that all files are present again 
   $status = 0;
   foreach $file ( @fileList ) { 
     if ( &checkData( $file ) == 0 ) { $status++; }
   } 
-  print "getGeosFp: Number of files successfully downloaded: $status\n";
+  print "getGeosIt: Number of files successfully downloaded: $status\n";
 
   # Return status
   if ( $status == $N_FILES ) { return(  0 ); }
@@ -404,7 +404,7 @@ sub getData(@) {
 #
 # !IROUTINE: main
 #
-# !DESCRIPTION: Main is the driver program for the getGeosFp script.
+# !DESCRIPTION: Main is the driver program for the getGeosIt script.
 #\\
 #\\
 # !INTERFACE:
@@ -416,9 +416,9 @@ sub main() {
 #
 # !REVISION HISTORY:
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/getGeos5
-#  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP data (w/ Sajeev Philip)
+#  05 Aug 2013 - R. Yantosca - Modified for GEOS-IT data (w/ Sajeev Philip)
 #  18 Oct 2013 - R. Yantosca - Use $N_FILES instead of the hardcoded 144
-#  14 Nov 2013 - R. Yantosca - Bug fix: now read doGeosFp.input
+#  14 Nov 2013 - R. Yantosca - Bug fix: now read doGeosIt.input
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -426,7 +426,7 @@ sub main() {
 # !LOCAL VARIABLES!
 #
   # Scalars
-  my $errMsg    = "Usage: getGeosFp YYYYMMDD [ {0|1} ] ]\n";
+  my $errMsg    = "Usage: getGeosIt YYYYMMDD [ {0|1} ] ]\n";
   my $printOnly = 0;
   my $status    = 0;
 
@@ -439,9 +439,9 @@ sub main() {
   else                           { print "$errMsg\n"; exit(1);               }
  
   # Get info from the defautls file, also set default date
-  &getDefaults( "doGeosFp.input" );
+  &getDefaults( "doGeosIt.input" );
 
-  # We expect $N_FILES files for a normal day's worth of GEOS-FP met data
+  # We expect $N_FILES files for a normal day's worth of GEOS-IT met data
   while ( scalar( @fileList = &getFileList() ) != $N_FILES ) { 
     sleep( $SLEEP_SEC );
   }

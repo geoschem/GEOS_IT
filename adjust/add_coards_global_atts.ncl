@@ -49,14 +49,14 @@ begin
   ;=========================================================================
 
   ; Basic contact info
-  fOut@Title                = str_sub_str( fIn@title, "GEOS-5.7.2", "GEOS-FP" )
+  fOut@Title                = str_sub_str( fIn@title, "GEOS-5.7.2", "GEOS-IT" )
   fOut@Title                = str_sub_str( fOut@Title, " for GEOS-Chem", ", processed for GEOS-Chem input" )
   fOut@Contact              = fIn@contact
   fOut@References           = fIn@references
 
   ; Filename (disregard full directory path)
   fileName                  = notdir( fIn@filename )
-  fileName                  = str_sub_str( fileName, "GEOS572", "GEOSFP" )
+  fileName                  = str_sub_str( fileName, "GEOS572", "GEOSIT" )
   fOut@Filename             = fileName
 
   ; Production & modification dates
@@ -76,7 +76,7 @@ begin
 
   ; File info
   fOut@Conventions          = "COARDS"
-  fOut@Version              = "GEOS-FP"
+  fOut@Version              = "GEOS-IT"
   fOut@Model                = "GEOS-5"
   fOut@Nlayers              = fIn@nlayers
 

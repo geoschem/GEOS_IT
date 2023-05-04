@@ -60,27 +60,27 @@ SRC1 :=                                \
 ./src.intro                            \
 $(CODEDIR)/CreateTemplateFile.F90      \
 $(CODEDIR)/CharpakModule.F	       \
-$(CODEDIR)/GeosFpA1Module.F90	       \
-$(CODEDIR)/GeosFpA3CldModule.F90       \
-$(CODEDIR)/GeosFpA3DynModule.F90       \
-$(CODEDIR)/GeosFpA3MstCModule.F90      \
-$(CODEDIR)/GeosFpA3MstEModule.F90      \
-$(CODEDIR)/GeosFpCnModule.F90	       \
-$(CODEDIR)/GeosFpI3Module.F90	       \
-$(CODEDIR)/GeosFpInputsModule.F90      \
-$(CODEDIR)/GeosFpRegridModule.F90      \
-$(CODEDIR)/GeosFpUtilityModule.F90     \
-$(CODEDIR)/GeosFpDriver.F90            \
-$(CODEDIR)/GeosFpDriver0.F90	       \
-$(CODEDIR)/GeosFpDriver1.F90	       \
-$(CODEDIR)/GeosFpDriver2.F90
+$(CODEDIR)/GeosItA1Module.F90	       \
+$(CODEDIR)/GeosItA3CldModule.F90       \
+$(CODEDIR)/GeosItA3DynModule.F90       \
+$(CODEDIR)/GeosItA3MstCModule.F90      \
+$(CODEDIR)/GeosItA3MstEModule.F90      \
+$(CODEDIR)/GeosItCnModule.F90	       \
+$(CODEDIR)/GeosItI3Module.F90	       \
+$(CODEDIR)/GeosItInputsModule.F90      \
+$(CODEDIR)/GeosItRegridModule.F90      \
+$(CODEDIR)/GeosItUtilityModule.F90     \
+$(CODEDIR)/GeosItDriver.F90            \
+$(CODEDIR)/GeosItDriver0.F90	       \
+$(CODEDIR)/GeosItDriver1.F90	       \
+$(CODEDIR)/GeosItDriver2.F90
 
 
 # LaTeX etc. files
-TEX1 :=GeosFpDriver.tex
-DVI1 :=GeosFpDriver.dvi
-PDF1 :=GeosFpDriver.pdf
-PS1  :=GeosFpDriver.ps
+TEX1 :=GeosItDriver.tex
+DVI1 :=GeosItDriver.dvi
+PDF1 :=GeosItDriver.pdf
+PS1  :=GeosItDriver.ps
 
 srcdoc:
 	rm -f $(TEX1)
@@ -139,10 +139,10 @@ $(CODEDIR)/Makefile_header.mk \
 ./Makefile
 
 # LaTeX etc. files
-TEX2 = GeosFpDriver_Makefiles.tex
-DVI2 = GeosFpDriver_Makefiles.dvi
-PDF2 = GeosFpDriver_Makefiles.pdf
-PS2  = GeosFpDriver_Makefiles.ps
+TEX2 = GeosItDriver_Makefiles.tex
+DVI2 = GeosItDriver_Makefiles.dvi
+PDF2 = GeosItDriver_Makefiles.pdf
+PS2  = GeosItDriver_Makefiles.ps
 
 makedoc:
 	rm -f $(TEX2)
@@ -161,22 +161,22 @@ makedoc:
 # Source files 
 SRC3 =                    \
 ./perl.intro              \
-$(PERLDIR)/doGeosFp       \
-$(PERLDIR)/doGeosFp.input \
-$(PERLDIR)/getGeosFp      \
-$(PERLDIR)/checkGeosFp    \
-$(PERLDIR)/sleepGeosFp    \
-$(PERLDIR)/schedGeosFp    \
+$(PERLDIR)/doGeosIt       \
+$(PERLDIR)/doGeosIt.input \
+$(PERLDIR)/getGeosIt      \
+$(PERLDIR)/checkGeosIt    \
+$(PERLDIR)/sleepGeosIt    \
+$(PERLDIR)/schedGeosIt    \
 $(PERLDIR)/cleanJobs      \
 $(PERLDIR)/cleanLogs      \
-$(PERLDIR)/delGeosFp      \
+$(PERLDIR)/delGeosIt      \
 $(PERLDIR)/Dates.pm
 
 # LaTeX etc. files
-TEX3 = GeosFpDriver_Perl.tex
-DVI3 = GeosFpDriver_Perl.dvi
-PDF3 = GeosFpDriver_Perl.pdf
-PS3  = GeosFpDriver_Perl.ps
+TEX3 = GeosItDriver_Perl.tex
+DVI3 = GeosItDriver_Perl.dvi
+PDF3 = GeosItDriver_Perl.pdf
+PS3  = GeosItDriver_Perl.ps
 
 perldoc:
 	rm -f $(TEX3)

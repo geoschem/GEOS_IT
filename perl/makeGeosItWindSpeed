@@ -5,7 +5,7 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: makeGeosFpWindSpeed
+# !MODULE: makeGeosItWindSpeed
 #
 # !DESCRIPTION: This Perl script is used to create netCDF files for the
 #  scalar wind speed at native resolution (0.25 x 0.3125).  This data file
@@ -32,12 +32,12 @@ use Dates qw( addDate );        # Use functions from Dates.pm
 our $DO_WIND_SPEED  = "";       # Toggles 
 our $FILE_TEMPLATE  = "";       # Filename template
 our $LOG_DIR        = "";       # Log file dir
-our $RAW_DATA_DIR   = "";       # Dir where GEOS-FP raw data is found
+our $RAW_DATA_DIR   = "";       # Dir where GEOS-IT raw data is found
 our $TEMPORARY_DIR  = "";       # Dir where wind speed file will be created 
 our $OUTPUT_DIR     = "";       # Dir where wind speed file will be moved
 #
 # !CALLING SEQUENCE:
-#  makeGeosFpWindSpeed YYYYMMDD [nDays]
+#  makeGeosItWindSpeed YYYYMMDD [nDays]
 #    - YYYYMMDD is the starting date
 #    - nDays (optional) is the # of days to process (default=1)
 #
@@ -145,7 +145,7 @@ sub checkDir($) {
 
   # Stop with error if directory doesn't exist
   if ( !( -d $dir ) ) { 
-    print "makeGeosFpWindSpeed ERROR: Directory does not exist: $dir\n";
+    print "makeGeosItWindSpeed ERROR: Directory does not exist: $dir\n";
     exit(3);
   }
   
@@ -239,7 +239,7 @@ sub makeWindSpeed($$) {
     #-------------------------------------------
 
     # Make log file name
-    $logFile = "$LOG_DIR/log.doGeosFpMulti.$today-$$-3";
+    $logFile = "$LOG_DIR/log.doGeosItMulti.$today-$$-3";
    
     # Open log file
     open( O, ">$logFile" ) or die "Cannot open $logFile!\n";
@@ -288,7 +288,7 @@ sub makeWindSpeed($$) {
 #
 # !IROUTINE: main
 #
-# !DESCRIPTION: Driver routine for the makeGeosFpWindSpeed script.  It gets
+# !DESCRIPTION: Driver routine for the makeGeosItWindSpeed script.  It gets
 #  arguments from the command line and calls other module routines.#  
 #\\
 #\\
@@ -297,7 +297,7 @@ sub makeWindSpeed($$) {
 sub main() { 
 #
 # !CALLING SEQUENCE:
-#  makeGeosFpWindSpeed YYYYMMDD [nDays]
+#  makeGeosItWindSpeed YYYYMMDD [nDays]
 #    - YYYYMMDD is the starting date
 #    - nDays (optional) is the # of days to process (default=1)
 #
@@ -310,7 +310,7 @@ sub main() {
 #
   my $date   = 0;
   my $nDays  = 0;
-  my $errMsg = "Usage: moveGeosFp YYYYMMDD [nDays]\n";
+  my $errMsg = "Usage: moveGeosIt YYYYMMDD [nDays]\n";
 
   # Error check arguments
   if    ( scalar( @ARGV ) == 2 ) { $date = $ARGV[0];  $nDays = $ARGV[1]; }
@@ -318,8 +318,8 @@ sub main() {
   else                           { print "$errMsg\n"; exit(1);           }
 
   # Get default values from input files
-  &getDefaults( "../bin/GeosFpDriver.input" );
-  &getDefaults( "./doGeosFp.input"          );
+  &getDefaults( "../bin/GeosItDriver.input" );
+  &getDefaults( "./doGeosIt.input"          );
 
   # Create the file with the scalar wind speed
   if ( $DO_WIND_SPEED =~ "T" ) { &makeWindSpeed( $date, $nDays ); } 

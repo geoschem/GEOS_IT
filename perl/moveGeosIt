@@ -5,9 +5,9 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: moveGeosFp
+# !MODULE: moveGeosIt
 #
-# !DESCRIPTION: This Perl script is used to move GEOS-FP files for
+# !DESCRIPTION: This Perl script is used to move GEOS-IT files for
 #  from the scratch directory space to the GEOS-Chem data directory space.
 #\\
 #\\
@@ -64,14 +64,14 @@ our $TEMP_DIR_4x5      = "";
 our $DATA_DIR_4x5      = "";
 #
 # !CALLING SEQUENCE:
-# moveGeosFp YYYYMMDD FILETYPE
+# moveGeosIt YYYYMMDD FILETYPE
 #
 # !REVISION HISTORY: 
 #  23 Jan 2012 - R. Yantosca - Initial version
 #  16 Feb 2012 - R. Yantosca - Updated for NA nested grid
-#  24 May 2013 - R. Yantosca - Now read logicals from GeosFpDriver.input that
+#  24 May 2013 - R. Yantosca - Now read logicals from GeosItDriver.input that
 #                              can be used to shut off file moves
-#  20 Sep 2013 - R. Yantosca - Renamed to moveGeosFp
+#  20 Sep 2013 - R. Yantosca - Renamed to moveGeosIt
 #  10 Oct 2013 - R. Yantosca - Now move data from SE Asia nested grid (SE)
 #  11 Oct 2013 - R. Yantosca - Now do not move files if the temporary dir 
 #                              matches the output dir
@@ -148,7 +148,7 @@ sub getDefaults($$) {
 # !IROUTINE: getDirectories
 #
 # !DESCRIPTION:  Routine getDirectories reads the file and directory paths
-#  from the input file for the GEOS-FP Fortran executable.
+#  from the input file for the GEOS-IT Fortran executable.
 #\\
 #\\
 # !INTERFACE:
@@ -166,10 +166,10 @@ sub getDirectories($) {
 # !REVISION HISTORY:
 #  23 Jan 2012 - R. Yantosca - Initial version
 #  16 Feb 2012 - R. Yantosca - Updated for NA nested grid
-#  24 May 2013 - R. Yantosca - Now read logicals from GeosFpDriver.input
+#  24 May 2013 - R. Yantosca - Now read logicals from GeosItDriver.input
 #  10 Oct 2013 - R. Yantosca - Do not move files if the temporary directory
 #                              is the same as the data directory as listed
-#                              in bin/GeosFpDriver.input.
+#                              in bin/GeosItDriver.input.
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -232,7 +232,7 @@ sub getDirectories($) {
 
   # Don't move files if the temporary directory string is the same as the 
   # data directory string.  This allows us to skip using the temporary 
-  # directory.  You must edit bin/GeosFpDriver.input accordingly.
+  # directory.  You must edit bin/GeosItDriver.input accordingly.
   # is the same as the data directory string
   if ( $TEMP_DIR_NEST_CH eq $DATA_DIR_NEST_CH ) { $DO_NEST_CH = "F"; }
   if ( $TEMP_DIR_NEST_EU eq $DATA_DIR_NEST_EU ) { $DO_NEST_EU = "F"; }
@@ -351,7 +351,7 @@ sub checkDir($) {
 
   # Stop with error if directory doesn't exist
   if ( !( -d $dir ) ) { 
-    print "moveGeosFp ERROR: Directory does not exist: $dir\n";
+    print "moveGeosIt ERROR: Directory does not exist: $dir\n";
     exit(1)
   }
   
@@ -366,7 +366,7 @@ sub checkDir($) {
 #
 # !IROUTINE: moveFiles
 #
-# !DESCRIPTION: Subroutine moveFiles moves the processed GEOS-FP met field 
+# !DESCRIPTION: Subroutine moveFiles moves the processed GEOS-IT met field 
 #  files from the temporary directory to the data directory.
 #\\
 #\\
@@ -526,7 +526,7 @@ sub moveFiles(@) {
 #
 # !IROUTINE: main
 #
-# !DESCRIPTION: Routine main is the driver routine for the moveGeosFp script.
+# !DESCRIPTION: Routine main is the driver routine for the moveGeosIt script.
 #\\
 #\\
 # !INTERFACE:
@@ -543,12 +543,12 @@ sub main() {
 
   # Error check arguments
   if ( scalar( @ARGV ) == 0 ) { 
-    print "Usage: moveGeosFp YYYYMMDD FILETYPE\n"; 
+    print "Usage: moveGeosIt YYYYMMDD FILETYPE\n"; 
     exit(1);
   }
 
   # Get default values
-  &getDefaults( "doGeosFp.input", $ARGV[0] );
+  &getDefaults( "doGeosIt.input", $ARGV[0] );
 
   # Get data & temporary directories
   &getDirectories( $DEFAULTS_FOR_EXE );

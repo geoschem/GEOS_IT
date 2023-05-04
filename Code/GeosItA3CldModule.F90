@@ -3,24 +3,24 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: GeosFpA3CldModule
+! !MODULE: GeosItA3CldModule
 !
-! !DESCRIPTION: Module GeosFpA3CldModule contains routines to create the
-!  GEOS-Chem average 3-hr data files (w/ cloud parameters) from the GEOS-FP
+! !DESCRIPTION: Module GeosItA3CldModule contains routines to create the
+!  GEOS-Chem average 3-hr data files (w/ cloud parameters) from the GEOS-IT
 !  raw data.
 !\\
 !\\
 ! !INTERFACE:
 
-MODULE GeosFpA3CldModule
+MODULE GeosItA3CldModule
 !
 ! !USES:
 !
-  ! GEOS-FP data modules
+  ! GEOS-IT data modules
   USE CharpakModule
-  USE GeosFpInputsModule
-  USE GeosFpRegridModule
-  USE GeosFpUtilityModule
+  USE GeosItInputsModule
+  USE GeosItRegridModule
+  USE GeosItUtilityModule
 
   ! Modules for writing netCDF
   USE m_netcdf_io_create
@@ -41,7 +41,7 @@ MODULE GeosFpA3CldModule
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC  :: GeosFpMakeA3Cld
+  PUBLIC  :: GeosItMakeA3Cld
 !
 ! !PRIVATE MEMBER FUNCTIONS:
 !
@@ -59,7 +59,7 @@ MODULE GeosFpA3CldModule
 !  17 Jan 2012 - R. Yantosca - Flip native resolution data after reading
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
 !  28 Feb 2012 - R. Yantosca - Add extra fields
-!  19 Sep 2013 - R. Yantosca - Renamed to GeosFpA3CldModule; adjust for COARDS
+!  19 Sep 2013 - R. Yantosca - Renamed to GeosItA3CldModule; adjust for COARDS
 !  08 Oct 2013 - R. Yantosca - Now save CH, EU, NA, SE nested grids in one pass
 !EOP
 !------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ MODULE GeosFpA3CldModule
     !-------------------------------------------------------------------------
 
     ! Title string
-    lName = 'GEOS-FP time-averaged 3-hour cloud parameters (A3cld), processed for GEOS-Chem input'
+    lName = 'GEOS-IT time-averaged 3-hour cloud parameters (A3cld), processed for GEOS-Chem input'
     CALL NcDef_Glob_Attributes( fOut, 'Title',                TRIM( lName ) )
 
     ! Contact
@@ -199,7 +199,7 @@ MODULE GeosFpA3CldModule
     CALL NcDef_Glob_Attributes( fOut, 'Conventions',          TRIM( lName ) )
 
     ! Version
-    lName = 'GEOS-FP'
+    lName = 'GEOS-IT'
     CALL NcDef_Glob_Attributes( fOut, 'Version',              TRIM( lName ) )
 
     ! Model
@@ -559,21 +559,21 @@ MODULE GeosFpA3CldModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpMakeA3Cld
+! !IROUTINE: GeosItMakeA3Cld
 !
-! !DESCRIPTION: Routine GeosFpMakeA3Cld is the the driver routine for
+! !DESCRIPTION: Routine GeosItMakeA3Cld is the the driver routine for
 ! \begin{enumerate}
 ! \item Extracting 3-hr time-averaged data fields (cloud parameters) from
-!       the GEOS-FP raw data files (netCDF-4 format),
+!       the GEOS-IT raw data files (netCDF-4 format),
 ! \item Regridding the fields to GEOS-Chem data resolution, and
 ! \item Saving the regridded data to netCDF format.
 ! \end{enumerate}
-! This routine is called directly from the main program GeosFpDriver.F90
+! This routine is called directly from the main program GeosItDriver.F90
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpMakeA3Cld()
+  SUBROUTINE GeosItMakeA3Cld()
 !
 ! !REVISION HISTORY:
 !  11 Jan 2012 - R. Yantosca - Initial version, based on MERRA
@@ -612,7 +612,7 @@ MODULE GeosFpA3CldModule
     !=======================================================================
 
     ! Echo info
-    msg = '%%%%%%%%%% ENTERING ROUTINE GeosFpMakeA3Cld %%%%%%%%%%'
+    msg = '%%%%%%%%%% ENTERING ROUTINE GeosItMakeA3Cld %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' )
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
@@ -621,7 +621,7 @@ MODULE GeosFpA3CldModule
                     TRIM( tavg3_3d_rad_Nv_data   )
 
     ! Return the list of fields and number of fields to process
-    ! from each of the GeosFp raw met data files
+    ! from each of the GeosIt raw met data files
     CALL GetNFields( tavg3_3d_cld_Nv_data_c, nFields_3dCldNv, fields_3dCldNv )
     CALL GetNFields( tavg3_3d_rad_Nv_data,   nFields_3dRadNv, fields_3dRadNv )
     CALL GetNFields( allFieldsList,          nAllFields,      allFields      )
@@ -874,11 +874,11 @@ MODULE GeosFpA3CldModule
     IF ( doGlobal05   ) CALL NcCl( fOutGlobal05  )
 
     ! Echo info
-    msg = '%%%%%%%%%% LEAVING ROUTINE GeosFpMakeA3Cld %%%%%%%%%%'
+    msg = '%%%%%%%%%% LEAVING ROUTINE GeosItMakeA3Cld %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' ) '%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-  END SUBROUTINE GeosFpMakeA3Cld
+  END SUBROUTINE GeosItMakeA3Cld
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -887,7 +887,7 @@ MODULE GeosFpA3CldModule
 !
 ! !IROUTINE: Process3dCldNv
 !
-! !DESCRIPTION: Subroutine Process3dCldNv regrids the GEOS-FP met fields
+! !DESCRIPTION: Subroutine Process3dCldNv regrids the GEOS-IT met fields
 !  from the "tavg3\_3d\_cld\_Nv" file and saves output to netCDF file format.
 !\\
 !\\
@@ -1221,16 +1221,16 @@ MODULE GeosFpA3CldModule
 
                    ! Regrid to 2 x 2.5
                    IF ( do2x25 ) THEN
-                      CALL RegridGeosFpTo2x25( 0, Qflip(:,:,L), Q2x25(:,:,L) )
+                      CALL RegridGeosItTo2x25( 0, Qflip(:,:,L), Q2x25(:,:,L) )
                    ENDIF
 
                     ! Regrid to 4x5
                    IF ( do4x5 ) THEN
-                      CALL RegridGeosFpTo4x5 ( 0, Qflip(:,:,L), Q4x5(:,:,L)  )
+                      CALL RegridGeosItTo4x5 ( 0, Qflip(:,:,L), Q4x5(:,:,L)  )
                    ENDIF
                    ! Regrid to 0.5 x 0.625 (lzh, 06/21/2014)
                    IF ( do05x0625 ) THEN
-                      CALL RegridGeosFpTo05x0625( 0, Qflip(:,:,L), Q05(:,:,L) )
+                      CALL RegridGeosItTo05x0625( 0, Qflip(:,:,L), Q05(:,:,L) )
                    ENDIF
                 ENDDO
 
@@ -1385,19 +1385,19 @@ MODULE GeosFpA3CldModule
 
           ! Regrid to 2 x 2.5
           IF ( do2x25 ) THEN
-             CALL RegridGeosFpTo2x25( 0, QI(:,:,L), QI_2x25(:,:,L) )
-             CALL RegridGeosFpTo2x25( 0, QL(:,:,L), QL_2x25(:,:,L) )
+             CALL RegridGeosItTo2x25( 0, QI(:,:,L), QI_2x25(:,:,L) )
+             CALL RegridGeosItTo2x25( 0, QL(:,:,L), QL_2x25(:,:,L) )
           ENDIF
 
           ! Regrid to 4x5
           IF ( do4x5 ) THEN
-             CALL RegridGeosFpTo4x5 ( 0, QI(:,:,L), QI_4x5(:,:,L)  )
-             CALL RegridGeosFpTo4x5 ( 0, QL(:,:,L), QL_4x5(:,:,L)  )
+             CALL RegridGeosItTo4x5 ( 0, QI(:,:,L), QI_4x5(:,:,L)  )
+             CALL RegridGeosItTo4x5 ( 0, QL(:,:,L), QL_4x5(:,:,L)  )
           ENDIF
           ! Regrid to 0.5 x 0.625   ! (lzh,06/21/2014)
           IF ( do05x0625 ) THEN
-             CALL RegridGeosFpTo05x0625( 0, QI(:,:,L), QI05(:,:,L) )
-             CALL RegridGeosFpTo05x0625( 0, QL(:,:,L), QL05(:,:,L) )
+             CALL RegridGeosItTo05x0625( 0, QI(:,:,L), QI05(:,:,L) )
+             CALL RegridGeosItTo05x0625( 0, QL(:,:,L), QL05(:,:,L) )
           ENDIF
        ENDDO
 
@@ -3058,4 +3058,4 @@ MODULE GeosFpA3CldModule
 
   END FUNCTION IsSafeDiv
 !EOC
-END MODULE GeosFpA3CldModule
+END MODULE GeosItA3CldModule

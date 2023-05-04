@@ -3,9 +3,9 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: GeosFpRegridModule
+! !MODULE: GeosItRegridModule
 !
-! !DESCRIPTION: Module GeosFpRegridModule contains arrays and variables used 
+! !DESCRIPTION: Module GeosItRegridModule contains arrays and variables used 
 !  to regrid the GEOS-5 data from 0.25 x 0.3125 to coarser resolution grids.
 !
 !\subsection*{Overview}
@@ -82,17 +82,17 @@
 !
 ! !INTERFACE: 
 !
-MODULE GeosFpRegridModule
+MODULE GeosItRegridModule
 ! 
 ! !USES:
 !
-  USE GeosFpInputsModule, ONLY : I025x03125, J025x03125, L025x03125
-  USE GeosFpInputsModule, ONLY : I05x0666,   J05x0666,   L05x0666
-  USE GeosFpInputsModule, ONLY : I1x125,     J1x125,     L1x125  
-  USE GeosFpInputsModule, ONLY : I2x25,      J2x25,      L2x25   
-  USE GeosFpInputsModule, ONLY : I4x5,       J4x5,       L4x5   
+  USE GeosItInputsModule, ONLY : I025x03125, J025x03125, L025x03125
+  USE GeosItInputsModule, ONLY : I05x0666,   J05x0666,   L05x0666
+  USE GeosItInputsModule, ONLY : I1x125,     J1x125,     L1x125  
+  USE GeosItInputsModule, ONLY : I2x25,      J2x25,      L2x25   
+  USE GeosItInputsModule, ONLY : I4x5,       J4x5,       L4x5   
   ! (lzh,06/20/2014)
-  USE GeosFpInputsModule, ONLY : I05x0625,   J05x0625,   L05x0625   
+  USE GeosItInputsModule, ONLY : I05x0625,   J05x0625,   L05x0625   
 
   IMPLICIT NONE
   PRIVATE
@@ -109,11 +109,11 @@ MODULE GeosFpRegridModule
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC         :: RegridGeosFpto1x125
-  PUBLIC         :: RegridGeosFpto2x25
-  PUBLIC         :: RegridGeosFpto4x5
-  PUBLIC         :: GeosFpRegridInit
-  PUBLIC         :: RegridGeosFpto05x0625    ! (lzh,06/20/2014)  
+  PUBLIC         :: RegridGeosItto1x125
+  PUBLIC         :: RegridGeosItto2x25
+  PUBLIC         :: RegridGeosItto4x5
+  PUBLIC         :: GeosItRegridInit
+  PUBLIC         :: RegridGeosItto05x0625    ! (lzh,06/20/2014)  
 !
 ! !PUBLIC DATA MEMBERS:
 ! 
@@ -229,16 +229,16 @@ MODULE GeosFpRegridModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: RegridGeosFpto1x125
+! !IROUTINE: RegridGeosItto1x125
 !
-! !DESCRIPTION: Subroutine RegridGeosFpto1x125 is a wrapper for MAP\_A2A.  
+! !DESCRIPTION: Subroutine RegridGeosItto1x125 is a wrapper for MAP\_A2A.  
 !  It is called to regrid from the GEOS-5.7.x chemistry forcing ("F") 
 !  grid (1 x 1.25) to the GEOS-Chem 4 x 5 grid.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE RegridGeosFpto1x125( iv, q1, q2 )
+  SUBROUTINE RegridGeosItto1x125( iv, q1, q2 )
 !
 ! !INPUT PARAMETERS:
 !
@@ -273,7 +273,7 @@ MODULE GeosFpRegridModule
                   J1x125,         xedge_1x125, sine_1x125,       &
                   q2,             0,           iv               )
 
-  END SUBROUTINE RegridGeosFpto1x125
+  END SUBROUTINE RegridGeosItto1x125
 !EOC
 
 !======= (lzh, 06/20/2014)============
@@ -282,16 +282,16 @@ MODULE GeosFpRegridModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: RegridGeosFpto05x0625
+! !IROUTINE: RegridGeosItto05x0625
 !
-! !DESCRIPTION: Subroutine RegridGeosFpto1x125 is a wrapper for MAP\_A2A.  
+! !DESCRIPTION: Subroutine RegridGeosItto1x125 is a wrapper for MAP\_A2A.  
 !  It is called to regrid from the GEOS-5.7.x chemistry forcing ("F") 
 !  grid (1 x 1.25) to the GEOS-Chem 4 x 5 grid.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE RegridGeosFpto05x0625( iv, q1, q2 )
+  SUBROUTINE RegridGeosItto05x0625( iv, q1, q2 )
 !
 ! !INPUT PARAMETERS:
 !
@@ -326,7 +326,7 @@ MODULE GeosFpRegridModule
                   J05x0625,       xedge_05x0625, sine_05x0625,   &
                   q2,             0,           iv               )
 
-  END SUBROUTINE RegridGeosFpto05x0625
+  END SUBROUTINE RegridGeosItto05x0625
 !EOC
 !======= (finish edit) ===============
 
@@ -335,16 +335,16 @@ MODULE GeosFpRegridModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: RegridGeosFpTo2x25
+! !IROUTINE: RegridGeosItTo2x25
 !
-! !DESCRIPTION: Subroutine RegridGeosFpTo2x25 is a wrapper for MAP\_A2A.
+! !DESCRIPTION: Subroutine RegridGeosItTo2x25 is a wrapper for MAP\_A2A.
 !  It is called to regrid from the GEOS-5.7.x native grid (0.25 x0 x 0.3125)
 !  to the GEOS-Chem 2 x 2.5 grid.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE RegridGeosFpTo2x25( iv, q1, q2 )
+  SUBROUTINE RegridGeosItTo2x25( iv, q1, q2 )
 !
 ! !INPUT PARAMETERS:
 !
@@ -378,23 +378,23 @@ MODULE GeosFpRegridModule
                   J2x25,          xedge_2x25,  sine_2x25,        &
                   q2,             0,           iv               )
 
-  END SUBROUTINE RegridGeosFpTo2x25
+  END SUBROUTINE RegridGeosItTo2x25
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: RegridGeosFpNTo4x5
+! !IROUTINE: RegridGeosItNTo4x5
 !
-! !DESCRIPTION: Subroutine RegridGeosFpNTo2x25 is a wrapper for MAP\_A2A.
+! !DESCRIPTION: Subroutine RegridGeosItNTo2x25 is a wrapper for MAP\_A2A.
 !  It is called to regrid from the GEOS-5.7.x native ("N") grid (0.5 x 0.666)
 !  to the GEOS-Chem 4 x 5 grid.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE RegridGeosFpto4x5( iv, q1, q2 )
+  SUBROUTINE RegridGeosItto4x5( iv, q1, q2 )
 !
 ! !INPUT PARAMETERS:
 !
@@ -429,7 +429,7 @@ MODULE GeosFpRegridModule
                   J4x5,           xedge_4x5,   sine_4x5,         &
                   q2,             0,           iv               )
 
-  END SUBROUTINE RegridGeosFpto4x5
+  END SUBROUTINE RegridGeosItto4x5
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -486,7 +486,7 @@ MODULE GeosFpRegridModule
 !                               into "Geos3RegridModule".  Added F90 type 
 !                               declarations to be consistent with  
 !                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -596,7 +596,7 @@ MODULE GeosFpRegridModule
 !                               into "Geos3RegridModule".  Added F90 type 
 !                               declarations to be consistent with  
 !                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -745,7 +745,7 @@ MODULE GeosFpRegridModule
 !                               into "Geos3RegridModule".  Added F90 type 
 !                               declarations to be consistent with  
 !                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -971,7 +971,7 @@ MODULE GeosFpRegridModule
 !                               into "Geos3RegridModule".  Added F90 type 
 !                               declarations to be consistent with  
 !                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -1161,7 +1161,7 @@ MODULE GeosFpRegridModule
 !                               into "Geos3RegridModule".  Added F90 type 
 !                               declarations to be consistent with  
 !                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -1249,7 +1249,7 @@ MODULE GeosFpRegridModule
 !                               into "Geos3RegridModule".  Added F90 type 
 !                               declarations to be consistent with  
 !                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -1359,7 +1359,7 @@ MODULE GeosFpRegridModule
 !                              into "Geos3RegridModule".  Added F90 type 
 !                              declarations to be consistent with  
 !                              TypeModule.f90.  Also updated comments. 
-!  08 Nov 2006 - R. Yantosca - Inserted into GeosFpRegridModule.f90
+!  08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
 !  12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
 !EOP
 !------------------------------------------------------------------------------
@@ -1437,15 +1437,15 @@ MODULE GeosFpRegridModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpRegridInit
+! !IROUTINE: GeosItRegridInit
 !
-! !DESCRIPTION: Subroutine GeosFpRegridInit initializes the longitude and 
+! !DESCRIPTION: Subroutine GeosItRegridInit initializes the longitude and 
 !  latitude edge arrays for 0.5 x 0.666, 1 x 1.25, 2 x 2.5, and 4 x 5 grids.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpRegridInit
+  SUBROUTINE GeosItRegridInit
 !
 ! !REMARKS:
 !  Computation is done in REAL*8 and then casted to REAL*4 in order
@@ -1790,7 +1790,7 @@ MODULE GeosFpRegridModule
     nc_ymid_4x5  (J4x5  )        = +90e0
     nc_ymid_05x0625(J05x0625)    = +90e0    ! (lzh,06/20/2014)
 
-  END SUBROUTINE GeosFpRegridInit
+  END SUBROUTINE GeosItRegridInit
 !EOC
-END MODULE GeosFpRegridModule
+END MODULE GeosItRegridModule
 

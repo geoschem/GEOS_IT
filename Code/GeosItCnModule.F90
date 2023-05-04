@@ -3,23 +3,23 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: GeosFpCnModule
+! !MODULE: GeosItCnModule
 !
-! !DESCRIPTION: Module GeosFpCnModule contains routines to create the
-!  GEOS-Chem constant data files from the GEOS-FP raw data.
+! !DESCRIPTION: Module GeosItCnModule contains routines to create the
+!  GEOS-Chem constant data files from the GEOS-IT raw data.
 !\\
 !\\
 ! !INTERFACE:
 
-MODULE GeosFpCnModule
+MODULE GeosItCnModule
 !
 ! !USES:
 !
-  ! GEOS-FP data modules
+  ! GEOS-IT data modules
   USE CharpakModule
-  USE GeosFpInputsModule
-  USE GeosFpRegridModule
-  USE GeosFpUtilityModule
+  USE GeosItInputsModule
+  USE GeosItRegridModule
+  USE GeosItUtilityModule
 
   ! Modules for writing netCDF
   USE m_netcdf_io_create
@@ -41,7 +41,7 @@ MODULE GeosFpCnModule
 !
 ! !PUBLIC MEMBER FUNCTIONS:
 !
-  PUBLIC  :: GeosFpMakeCn
+  PUBLIC  :: GeosItMakeCn
 !
 ! !PRIVATE MEMBER FUNCTIONS:
 !
@@ -60,9 +60,9 @@ MODULE GeosFpCnModule
 !  20 Dec 2011 - R. Yantosca - Updates to achieve COARDS netCDF compliance
 !  04 Jan 2012 - R. Yantosca - Updated comments, cosmetic changes
 !  04 Jan 2012 - R. Yantosca - Add extra global attributes
-!  04 Jan 2012 - R. Yantosca - Now reference GeosFpUtilityModule
+!  04 Jan 2012 - R. Yantosca - Now reference GeosItUtilityModule
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  19 Sep 2013 - R. Yantosca - Renamed to GeosFpCnModule; adjusted for COARDS
+!  19 Sep 2013 - R. Yantosca - Renamed to GeosItCnModule; adjusted for COARDS
 !  08 Oct 2013 - R. Yantosca - Now save CH, EU, NA, SE nested grids in one pass
 !EOP
 !------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ CONTAINS
     !-------------------------------------------------------------------------
 
     ! Title string
-    lName = 'GEOS-FP constant parameters (CN), processed for GEOS-Chem input'
+    lName = 'GEOS-IT constant parameters (CN), processed for GEOS-Chem input'
     CALL NcDef_Glob_Attributes( fOut, 'Title',                TRIM( lName ) )
 
     ! Contact
@@ -194,7 +194,7 @@ CONTAINS
     CALL NcDef_Glob_Attributes( fOut, 'Conventions',          TRIM( lName ) )
 
     ! Version
-    lName = 'GEOS-FP'
+    lName = 'GEOS-IT'
     CALL NcDef_Glob_Attributes( fOut, 'Version',              TRIM( lName ) )
 
     ! Model
@@ -405,21 +405,21 @@ CONTAINS
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: GeosFpMakeCn
+! !IROUTINE: GeosItMakeCn
 !
-! !DESCRIPTION: Routine GeosFpMakeCn is the the driver routine for
+! !DESCRIPTION: Routine GeosItMakeCn is the the driver routine for
 ! \begin{enumerate}
 ! \item Extracting constant data fields (surface values) from
-!       the GEOS-FP raw data files (netCDF-4 format)
+!       the GEOS-IT raw data files (netCDF-4 format)
 ! \item Regridding the fields to GEOS-Chem data resolution, and
 ! \item Saving the regridded data to netCDF format.
 ! \end{enumerate}
-! This routine is called directly from the main program GeosFpDriver.F90
+! This routine is called directly from the main program GeosItDriver.F90
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE GeosFpMakeCn
+  SUBROUTINE GeosItMakeCn
 !
 ! !REVISION HISTORY:
 !  27 Jul 2010 - R. Yantosca - Initial version, based on GEOS-5
@@ -456,7 +456,7 @@ CONTAINS
     !=======================================================================
 
     ! Echo info
-    msg = '%%%%%%%%%% ENTERING ROUTINE GeosFpMakeCn %%%%%%%%%%'
+    msg = '%%%%%%%%%% ENTERING ROUTINE GeosItMakeCn %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' )
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
@@ -705,10 +705,10 @@ CONTAINS
 
 
     ! Echo info
-    msg = '%%%%%%%%%% LEAVING ROUTINE GeosFpMakeCn %%%%%%%%%%'
+    msg = '%%%%%%%%%% LEAVING ROUTINE GeosItMakeCn %%%%%%%%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-  END SUBROUTINE GeosFpMakeCn
+  END SUBROUTINE GeosItMakeCn
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -717,7 +717,7 @@ CONTAINS
 !
 ! !IROUTINE: ProcessCn2dAsmNx
 !
-! !DESCRIPTION: Subroutine ProcessCn2dAsmNx regrids the GEOS-FP met fields
+! !DESCRIPTION: Subroutine ProcessCn2dAsmNx regrids the GEOS-IT met fields
 !  from the "const\_2d\_asm\_Nx" file and saves output to netCDF format.
 !\\
 !\\
@@ -733,7 +733,7 @@ CONTAINS
 ! !REVISION HISTORY:
 !  04 Jan 2012 - R. Yantosca - Initial version, based on MERRA
 !  09 Jan 2012 - R. Yantosca - Remove fOut* arguments, they are passed via
-!                              the module GeosFpInputsModule.F90
+!                              the module GeosItInputsModule.F90
 !  17 Jan 2012 - R. Yantosca - Nullify pointers after using them
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
 !  21 Jun 2012 - R. Yantosca - Bug fix: remove 2nd instance of doNestCh
@@ -960,16 +960,16 @@ CONTAINS
 
        ! Regrid to 2 x 2.5
        IF ( do2x25 ) THEN
-          CALL RegridGeosFpto2x25( 0, Q(:,:,1), Q2x25 )
+          CALL RegridGeosItto2x25( 0, Q(:,:,1), Q2x25 )
        ENDIF
 
        ! Regrid to 4x5
        IF ( do4x5 ) THEN
-          CALL RegridGeosFpTo4x5( 0, Q(:,:,1), Q4x5 )
+          CALL RegridGeosItTo4x5( 0, Q(:,:,1), Q4x5 )
        ENDIF
        ! Regrid to 0.5 x 0.625   ! (lzh,06/21/2014)
        IF ( do05x0625 ) THEN
-          CALL RegridGeosFpto05x0625( 0, Q(:,:,1), Q05 )
+          CALL RegridGeosItto05x0625( 0, Q(:,:,1), Q05 )
        ENDIF
 
        !-----------------------------
@@ -1130,4 +1130,4 @@ CONTAINS
 
   END SUBROUTINE ProcessCn2dAsmNx
 !EOC
-END MODULE GeosFpCnModule
+END MODULE GeosItCnModule

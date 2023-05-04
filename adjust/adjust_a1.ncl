@@ -5,7 +5,7 @@
 ;
 ; !ROUTINE: adjust_a1
 ;
-; !DESCRIPTION: Routine to adjust the existing GEOS-FP "A1" (surface
+; !DESCRIPTION: Routine to adjust the existing GEOS-IT "A1" (surface
 ;  variables, 1-hour time averaged) data files for better COARDS compliance.
 ;\\
 ;\\
@@ -26,7 +26,7 @@
 ;
 ; !INPUT PARAMETERS:
 ;  inFile   : Name of GEOS-5.7.2 "A1" file w/ input data
-;  outFile  : Name of GEOSFP "A1" file w/ vars & atts adjusted for COARDS
+;  outFile  : Name of GEOSIT "A1" file w/ vars & atts adjusted for COARDS
 ;
 ; !LOCAL VARIABLES:
 ;
@@ -406,7 +406,7 @@ begin
   add_coards_global_atts( fIn, fOut )
   
   ; Redefine the title string
-  fOut@Title             = "GEOS-FP 1-hour time-averaged parameters (A1), processed for GEOS-Chem input"
+  fOut@Title             = "GEOS-IT 1-hour time-averaged parameters (A1), processed for GEOS-Chem input"
 
 end
 ;EOC

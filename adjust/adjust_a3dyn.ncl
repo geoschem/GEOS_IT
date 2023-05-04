@@ -5,7 +5,7 @@
 ;
 ; !ROUTINE: adjust_a3dyn
 ;
-; !DESCRIPTION: Routine to adjust the existing GEOS-FP "A3dyn" (dynamics,
+; !DESCRIPTION: Routine to adjust the existing GEOS-IT "A3dyn" (dynamics,
 ;  3-hour time averaged) data files for better COARDS compliance.
 ;\\
 ;\\
@@ -26,7 +26,7 @@
 ;
 ; !INPUT PARAMETERS:
 ;  inFile   : Name of GEOS-5.7.2 "A3dyn" file w/ input data
-;  outFile  : Name of GEOSFP "A3dyn" file w/ vars & atts adjusted for COARDS
+;  outFile  : Name of GEOSIT "A3dyn" file w/ vars & atts adjusted for COARDS
 ;
 ; !LOCAL VARIABLES:
 ;
@@ -144,7 +144,7 @@ begin
   add_coards_global_atts( fIn, fOut )
 
   ; Redefine the title string
-  fOut@Title             = "GEOS-FP time-averaged 3-hour dynamical parameters (A3dyn), processed for GEOS-Chem input"
+  fOut@Title             = "GEOS-IT time-averaged 3-hour dynamical parameters (A3dyn), processed for GEOS-Chem input"
 
 end
 ;EOC

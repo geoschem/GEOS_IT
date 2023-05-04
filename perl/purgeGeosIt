@@ -5,7 +5,7 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: purgeGeosFp
+# !MODULE: purgeGeosIt
 #
 # !DESCRIPTION: This perl script checks to see if all met fields for a given
 #  date have been processed properly.  If so, it will remove the "raw" met
@@ -29,93 +29,93 @@ our $RAW_MET_DIR           = "";    # Dir where raw met fields are stored
  
 # CH Nested grid met fields
 our $NESTED_C_MET_DIR     = "";     # Nested CH  met field directory
-our $FILE_NESTED_C_A1     = "";     # Nested CH  GEOS-FP "A1"     file name
-our $SIZE_NESTED_C_A1     = "";     # Nested CH  GEOS-FP "A1"     file size
-our $FILE_NESTED_C_A3cld  = "";     # Nested CH  GEOS-FP "A3cld"  file name
-our $SIZE_NESTED_C_A3cld  = "";     # Nested CH  GEOS-FP "A3cld"  file size
-our $FILE_NESTED_C_A3dyn  = "";     # Nested CH  GEOS-FP "A3dyn"  file name
-our $SIZE_NESTED_C_A3dyn  = "";     # Nested CH  GEOS-FP "A3dyn"  file size
-our $FILE_NESTED_C_A3mstC = "";     # Nested CH  GEOS-FP "A3mstC" file name
-our $SIZE_NESTED_C_A3mstC = "";     # Nested CH  GEOS-FP "A3mstC" file size
-our $FILE_NESTED_C_A3mstE = "";     # Nested CH  GEOS-FP "A3mstE" file name
-our $SIZE_NESTED_C_A3mstE = "";     # Nested CH  GEOS-FP "A3mstE" file size
-our $FILE_NESTED_C_I3     = "";     # Nested CH  GEOS-FP "I3"     file name
-our $SIZE_NESTED_C_I3     = "";     # Nested CH  GEOS-FP "I3"     file size
+our $FILE_NESTED_C_A1     = "";     # Nested CH  GEOS-IT "A1"     file name
+our $SIZE_NESTED_C_A1     = "";     # Nested CH  GEOS-IT "A1"     file size
+our $FILE_NESTED_C_A3cld  = "";     # Nested CH  GEOS-IT "A3cld"  file name
+our $SIZE_NESTED_C_A3cld  = "";     # Nested CH  GEOS-IT "A3cld"  file size
+our $FILE_NESTED_C_A3dyn  = "";     # Nested CH  GEOS-IT "A3dyn"  file name
+our $SIZE_NESTED_C_A3dyn  = "";     # Nested CH  GEOS-IT "A3dyn"  file size
+our $FILE_NESTED_C_A3mstC = "";     # Nested CH  GEOS-IT "A3mstC" file name
+our $SIZE_NESTED_C_A3mstC = "";     # Nested CH  GEOS-IT "A3mstC" file size
+our $FILE_NESTED_C_A3mstE = "";     # Nested CH  GEOS-IT "A3mstE" file name
+our $SIZE_NESTED_C_A3mstE = "";     # Nested CH  GEOS-IT "A3mstE" file size
+our $FILE_NESTED_C_I3     = "";     # Nested CH  GEOS-IT "I3"     file name
+our $SIZE_NESTED_C_I3     = "";     # Nested CH  GEOS-IT "I3"     file size
 
 # EU Nested grid met fields
 our $NESTED_E_MET_DIR     = "";     # Nested EU  met field directory
-our $FILE_NESTED_E_A1     = "";     # Nested EU  GEOS-FP "A1"     file name
-our $SIZE_NESTED_E_A1     = "";     # Nested EU  GEOS-FP "A1"     file size
-our $FILE_NESTED_E_A3cld  = "";     # Nested EU  GEOS-FP "A3cld"  file name
-our $SIZE_NESTED_E_A3cld  = "";     # Nested EU  GEOS-FP "A3cld"  file size
-our $FILE_NESTED_E_A3dyn  = "";     # Nested EU  GEOS-FP "A3dyn"  file name
-our $SIZE_NESTED_E_A3dyn  = "";     # Nested EU  GEOS-FP "A3dyn"  file size
-our $FILE_NESTED_E_A3mstC = "";     # Nested EU  GEOS-FP "A3mstC" file name
-our $SIZE_NESTED_E_A3mstC = "";     # Nested EU  GEOS-FP "A3mstC" file size
-our $FILE_NESTED_E_A3mstE = "";     # Nested EU  GEOS-FP "A3mstE" file name
-our $SIZE_NESTED_E_A3mstE = "";     # Nested EU  GEOS-FP "A3mstE" file size
-our $FILE_NESTED_E_I3     = "";     # Nested EU  GEOS-FP "I3"     file name
-our $SIZE_NESTED_E_I3     = "";     # Nested EU  GEOS-FP "I3"     file size
+our $FILE_NESTED_E_A1     = "";     # Nested EU  GEOS-IT "A1"     file name
+our $SIZE_NESTED_E_A1     = "";     # Nested EU  GEOS-IT "A1"     file size
+our $FILE_NESTED_E_A3cld  = "";     # Nested EU  GEOS-IT "A3cld"  file name
+our $SIZE_NESTED_E_A3cld  = "";     # Nested EU  GEOS-IT "A3cld"  file size
+our $FILE_NESTED_E_A3dyn  = "";     # Nested EU  GEOS-IT "A3dyn"  file name
+our $SIZE_NESTED_E_A3dyn  = "";     # Nested EU  GEOS-IT "A3dyn"  file size
+our $FILE_NESTED_E_A3mstC = "";     # Nested EU  GEOS-IT "A3mstC" file name
+our $SIZE_NESTED_E_A3mstC = "";     # Nested EU  GEOS-IT "A3mstC" file size
+our $FILE_NESTED_E_A3mstE = "";     # Nested EU  GEOS-IT "A3mstE" file name
+our $SIZE_NESTED_E_A3mstE = "";     # Nested EU  GEOS-IT "A3mstE" file size
+our $FILE_NESTED_E_I3     = "";     # Nested EU  GEOS-IT "I3"     file name
+our $SIZE_NESTED_E_I3     = "";     # Nested EU  GEOS-IT "I3"     file size
 
 # NA nested grid met fields
 our $NESTED_N_MET_DIR     = "";     # Nested NA   met field directory
-our $FILE_NESTED_N_A1     = "";     # Nested NA   GEOS-FP "A1"     file name
-our $SIZE_NESTED_N_A1     = "";     # Nested NA   GEOS-FP "A1"     file size
-our $FILE_NESTED_N_A3cld  = "";     # Nested NA   GEOS-FP "A3cld"  file name
-our $SIZE_NESTED_N_A3cld  = "";     # Nested NA   GEOS-FP "A3cld"  file size
-our $FILE_NESTED_N_A3dyn  = "";     # Nested NA   GEOS-FP "A3dyn"  file name
-our $SIZE_NESTED_N_A3dyn  = "";     # Nested NA   GEOS-FP "A3dyn"  file size
-our $FILE_NESTED_N_A3mstC = "";     # Nested NA   GEOS-FP "A3mstC" file name
-our $SIZE_NESTED_N_A3mstC = "";     # Nested NA   GEOS-FP "A3mstC" file size
-our $FILE_NESTED_N_A3mstE = "";     # Nested NA   GEOS-FP "A3mstE" file name
-our $SIZE_NESTED_N_A3mstE = "";     # Nested NA   GEOS-FP "A3mstE" file size
-our $FILE_NESTED_N_I3     = "";     # Nested NA   GEOS-FP "I3"     file name
-our $SIZE_NESTED_N_I3     = "";     # Nested NA   GEOS-FP "I3"     file size
+our $FILE_NESTED_N_A1     = "";     # Nested NA   GEOS-IT "A1"     file name
+our $SIZE_NESTED_N_A1     = "";     # Nested NA   GEOS-IT "A1"     file size
+our $FILE_NESTED_N_A3cld  = "";     # Nested NA   GEOS-IT "A3cld"  file name
+our $SIZE_NESTED_N_A3cld  = "";     # Nested NA   GEOS-IT "A3cld"  file size
+our $FILE_NESTED_N_A3dyn  = "";     # Nested NA   GEOS-IT "A3dyn"  file name
+our $SIZE_NESTED_N_A3dyn  = "";     # Nested NA   GEOS-IT "A3dyn"  file size
+our $FILE_NESTED_N_A3mstC = "";     # Nested NA   GEOS-IT "A3mstC" file name
+our $SIZE_NESTED_N_A3mstC = "";     # Nested NA   GEOS-IT "A3mstC" file size
+our $FILE_NESTED_N_A3mstE = "";     # Nested NA   GEOS-IT "A3mstE" file name
+our $SIZE_NESTED_N_A3mstE = "";     # Nested NA   GEOS-IT "A3mstE" file size
+our $FILE_NESTED_N_I3     = "";     # Nested NA   GEOS-IT "I3"     file name
+our $SIZE_NESTED_N_I3     = "";     # Nested NA   GEOS-IT "I3"     file size
 
 # SE Nested grid met fields
 our $NESTED_S_MET_DIR     = "";     # Nested SE  met field directory
-our $FILE_NESTED_S_A1     = "";     # Nested SE  GEOS-FP "A1"     file name
-our $SIZE_NESTED_S_A1     = "";     # Nested SE  GEOS-FP "A1"     file size
-our $FILE_NESTED_S_A3cld  = "";     # Nested SE  GEOS-FP "A3cld"  file name
-our $SIZE_NESTED_S_A3cld  = "";     # Nested SE  GEOS-FP "A3cld"  file size
-our $FILE_NESTED_S_A3dyn  = "";     # Nested SE  GEOS-FP "A3dyn"  file name
-our $SIZE_NESTED_S_A3dyn  = "";     # Nested SE  GEOS-FP "A3dyn"  file size
-our $FILE_NESTED_S_A3mstC = "";     # Nested SE  GEOS-FP "A3mstC" file name
-our $SIZE_NESTED_S_A3mstC = "";     # Nested SE  GEOS-FP "A3mstC" file size
-our $FILE_NESTED_S_A3mstE = "";     # Nested SE  GEOS-FP "A3mstE" file name
-our $SIZE_NESTED_S_A3mstE = "";     # Nested SE  GEOS-FP "A3mstE" file size
-our $FILE_NESTED_S_I3     = "";     # Nested SE  GEOS-FP "I3"     file name
-our $SIZE_NESTED_S_I3     = "";     # Nested SE  GEOS-FP "I3"     file size
+our $FILE_NESTED_S_A1     = "";     # Nested SE  GEOS-IT "A1"     file name
+our $SIZE_NESTED_S_A1     = "";     # Nested SE  GEOS-IT "A1"     file size
+our $FILE_NESTED_S_A3cld  = "";     # Nested SE  GEOS-IT "A3cld"  file name
+our $SIZE_NESTED_S_A3cld  = "";     # Nested SE  GEOS-IT "A3cld"  file size
+our $FILE_NESTED_S_A3dyn  = "";     # Nested SE  GEOS-IT "A3dyn"  file name
+our $SIZE_NESTED_S_A3dyn  = "";     # Nested SE  GEOS-IT "A3dyn"  file size
+our $FILE_NESTED_S_A3mstC = "";     # Nested SE  GEOS-IT "A3mstC" file name
+our $SIZE_NESTED_S_A3mstC = "";     # Nested SE  GEOS-IT "A3mstC" file size
+our $FILE_NESTED_S_A3mstE = "";     # Nested SE  GEOS-IT "A3mstE" file name
+our $SIZE_NESTED_S_A3mstE = "";     # Nested SE  GEOS-IT "A3mstE" file size
+our $FILE_NESTED_S_I3     = "";     # Nested SE  GEOS-IT "I3"     file name
+our $SIZE_NESTED_S_I3     = "";     # Nested SE  GEOS-IT "I3"     file size
 
 # Global grid met fields    
 our $GLOBAL_4_MET_DIR     = "";     # Global 4x5  met field directory
-our $FILE_GLOBAL_4_A1     = "";     # Global 4x5  GEOS-FP "A1"     file name
-our $SIZE_GLOBAL_4_A1     = "";     # Global 4x5  GEOS-FP "A1"     file size
-our $FILE_GLOBAL_4_A3cld  = "";     # Global 4x5  GEOS-FP "A3cld"  file name
-our $SIZE_GLOBAL_4_A3cld  = "";     # Global 4x5  GEOS-FP "A3cld"  file size
-our $FILE_GLOBAL_4_A3dyn  = "";     # Global 4x5  GEOS-FP "A3dyn"  file name
-our $SIZE_GLOBAL_4_A3dyn  = "";     # Global 4x5  GEOS-FP "A3dyn"  file size
-our $FILE_GLOBAL_4_A3mstC = "";     # Global 4x5  GEOS-FP "A3mstC" file name
-our $SIZE_GLOBAL_4_A3mstC = "";     # Global 4x5  GEOS-FP "A3mstC" file size
-our $FILE_GLOBAL_4_A3mstE = "";     # Global 4x5  GEOS-FP "A3mstE" file name
-our $SIZE_GLOBAL_4_A3mstE = "";     # Global 4x5  GEOS-FP "A3mstE" file size
-our $FILE_GLOBAL_4_I3     = "";     # Global 4x5  GEOS-FP "I3"     file name
-our $SIZE_GLOBAL_4_I3     = "";     # Global 4x5  GEOS-FP "I3"     file size
+our $FILE_GLOBAL_4_A1     = "";     # Global 4x5  GEOS-IT "A1"     file name
+our $SIZE_GLOBAL_4_A1     = "";     # Global 4x5  GEOS-IT "A1"     file size
+our $FILE_GLOBAL_4_A3cld  = "";     # Global 4x5  GEOS-IT "A3cld"  file name
+our $SIZE_GLOBAL_4_A3cld  = "";     # Global 4x5  GEOS-IT "A3cld"  file size
+our $FILE_GLOBAL_4_A3dyn  = "";     # Global 4x5  GEOS-IT "A3dyn"  file name
+our $SIZE_GLOBAL_4_A3dyn  = "";     # Global 4x5  GEOS-IT "A3dyn"  file size
+our $FILE_GLOBAL_4_A3mstC = "";     # Global 4x5  GEOS-IT "A3mstC" file name
+our $SIZE_GLOBAL_4_A3mstC = "";     # Global 4x5  GEOS-IT "A3mstC" file size
+our $FILE_GLOBAL_4_A3mstE = "";     # Global 4x5  GEOS-IT "A3mstE" file name
+our $SIZE_GLOBAL_4_A3mstE = "";     # Global 4x5  GEOS-IT "A3mstE" file size
+our $FILE_GLOBAL_4_I3     = "";     # Global 4x5  GEOS-IT "I3"     file name
+our $SIZE_GLOBAL_4_I3     = "";     # Global 4x5  GEOS-IT "I3"     file size
 				    
 # Global grid met fields    	    
 our $GLOBAL_2_MET_DIR     = "";     # Global 2x25 met field directory
-our $FILE_GLOBAL_2_A1     = "";     # Global 2x25 GEOS-FP "A1"     file name
-our $SIZE_GLOBAL_2_A1     = "";     # Global 2x25 GEOS-FP "A1"     file size
-our $FILE_GLOBAL_2_A3cld  = "";     # Global 2x25 GEOS-FP "A3cld"  file name
-our $SIZE_GLOBAL_2_A3cld  = "";     # Global 2x25 GEOS-FP "A3cld"  file size
-our $FILE_GLOBAL_2_A3dyn  = "";     # Global 2x25 GEOS-FP "A3dyn"  file name
-our $SIZE_GLOBAL_2_A3dyn  = "";     # Global 2x25 GEOS-FP "A3dyn"  file size
-our $FILE_GLOBAL_2_A3mstC = "";     # Global 2x25 GEOS-FP "A3mstC" file name
-our $SIZE_GLOBAL_2_A3mstC = "";     # Global 2x25 GEOS-FP "A3mstC" file size
-our $FILE_GLOBAL_2_A3mstE = "";     # Global 2x25 GEOS-FP "A3mstE" file name
-our $SIZE_GLOBAL_2_A3mstE = "";     # Global 2x25 GEOS-FP "A3mstE" file size
-our $FILE_GLOBAL_2_I3     = "";     # Global 2x25 GEOS-FP "I3"     file name
-our $SIZE_GLOBAL_2_I3     = "";     # Global 2x25 GEOS-FP "I3"     file size
+our $FILE_GLOBAL_2_A1     = "";     # Global 2x25 GEOS-IT "A1"     file name
+our $SIZE_GLOBAL_2_A1     = "";     # Global 2x25 GEOS-IT "A1"     file size
+our $FILE_GLOBAL_2_A3cld  = "";     # Global 2x25 GEOS-IT "A3cld"  file name
+our $SIZE_GLOBAL_2_A3cld  = "";     # Global 2x25 GEOS-IT "A3cld"  file size
+our $FILE_GLOBAL_2_A3dyn  = "";     # Global 2x25 GEOS-IT "A3dyn"  file name
+our $SIZE_GLOBAL_2_A3dyn  = "";     # Global 2x25 GEOS-IT "A3dyn"  file size
+our $FILE_GLOBAL_2_A3mstC = "";     # Global 2x25 GEOS-IT "A3mstC" file name
+our $SIZE_GLOBAL_2_A3mstC = "";     # Global 2x25 GEOS-IT "A3mstC" file size
+our $FILE_GLOBAL_2_A3mstE = "";     # Global 2x25 GEOS-IT "A3mstE" file name
+our $SIZE_GLOBAL_2_A3mstE = "";     # Global 2x25 GEOS-IT "A3mstE" file size
+our $FILE_GLOBAL_2_I3     = "";     # Global 2x25 GEOS-IT "I3"     file name
+our $SIZE_GLOBAL_2_I3     = "";     # Global 2x25 GEOS-IT "I3"     file size
 #  
 # !PUBLIC MEMBER FUNCTIONS:
 #  &main()
@@ -662,7 +662,7 @@ sub main() {
 #
   # Scalars
   my $date       = "";
-  my $errMsg     = "Usage: purgeGeosFp YYYYMMDD\n";
+  my $errMsg     = "Usage: purgeGeosIt YYYYMMDD\n";
   my $todaysDate = "";
 
   # Arrays
@@ -673,14 +673,14 @@ sub main() {
   else                        { print "$errMsg\n"; exit(1); }
 
   # Read defaults from the input file
-  if ( &getDefaults( "doGeosFp.input" ) ) {
-    print "ERROR: Could not read 'doGeosFp.input' file!\n";
+  if ( &getDefaults( "doGeosIt.input" ) ) {
+    print "ERROR: Could not read 'doGeosIt.input' file!\n";
     exit(2);
   }  
 
   # Find the dates of raw met field files in the download directory
   @dates =  &getRawMetFieldDates();
-  print "purgeGeosFp: Test if we need to delete met fields for dates @dates!\n";
+  print "purgeGeosIt: Test if we need to delete met fields for dates @dates!\n";
 
   # Loop over each date in the list
   foreach $date ( @dates ) {
@@ -691,7 +691,7 @@ sub main() {
 
       # As a safety feature, we will not delete met data for today's date
       # in the event that we have to restart a met field processing job
-      print "purgeGeosFp: We will not delete met files for today's date: $date\n";
+      print "purgeGeosIt: We will not delete met files for today's date: $date\n";
       
     } else {
 
@@ -701,7 +701,7 @@ sub main() {
 
         # If so, then delete the raw data files for those dates
         # so that we do not run out of space in the download directory
-        print "purgeGeosFp: Removing raw met files for $date\n";
+        print "purgeGeosIt: Removing raw met files for $date\n";
         &purgeRawMetFiles( $date );
       } 
     }

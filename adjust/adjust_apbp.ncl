@@ -5,7 +5,7 @@
 ;
 ; !MODULE: adjust_apbp
 ;
-; !DESCRIPTION: Creates a COARDS-compliant file for the GEOS-FP Ap and Bp
+; !DESCRIPTION: Creates a COARDS-compliant file for the GEOS-IT Ap and Bp
 ;  hybrid-grid parameters.
 ;\\
 ;\\
@@ -24,13 +24,13 @@
 ;
 ; !INPUT PARAMETERS:
 ;  inFile   : Name of GEOS-5.7.2 "Ap/Bp" file w/ input data
-;  outFile  : Name of GEOSFP "Ap/Bp" file w/ vars & atts adjusted for COARDS
+;  outFile  : Name of GEOSIT "Ap/Bp" file w/ vars & atts adjusted for COARDS
 ;
 ; !LOCAL VARIABLES:
 ;  local fIn, time, lat, lon, lev, ap,  bp, fOut
 ;
 ; !REMARKS:
-;  (1) You only have to run this file once, as the GEOS-FP Ap and Bp 
+;  (1) You only have to run this file once, as the GEOS-IT Ap and Bp 
 ;       parameters are the same for all horizontal resolutions. 
 ;  (2) Looks for the input file GEOS572.Input.ApBp.nc in this directory.
 ;
@@ -85,7 +85,7 @@ begin
   ;exit
 
   ; Open output file (remove prior version)
-  outFile                  = "./GEOSFP.ApBp.nc"
+  outFile                  = "./GEOSIT.ApBp.nc"
   system( "rm -f " + outFile )
   fOut                     = addfile( outFile, "c" )
   fOut->lev                = lev
@@ -99,7 +99,7 @@ begin
   ; Redefine some global parameters.  
   ; Ap and Bp do not depend on time, lat, or lon.
   date                      = systemfunc( "date" )
-  fOut@Title                = "GEOS-FP hybrid grid Ap and Bp parameters"
+  fOut@Title                = "GEOS-IT hybrid grid Ap and Bp parameters"
   fOut@Filename             = str_sub_str( outFile, "./", "" )
   fOut@History              = "File created on: " + date
   fOut@ProductionDateTime   = "File created on: " + date

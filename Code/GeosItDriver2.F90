@@ -3,49 +3,49 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !ROUTINE: GeosFpDriver1
+! !ROUTINE: GeosItDriver2
 !
-! !DESCRIPTION: Program GeosFpDriver1 is a top-level driver for the 
-!  GEOS-5.7.x regridding programs. 
+! !DESCRIPTION: Program GeosItDriver2 is the top-level driver for the 
+!  GEOS-5.7.x regridding programs.
 !\\
 !\\
 ! !INTERFACE:
 !
-PROGRAM GeosFpDriver1
+PROGRAM GeosItDriver2
 !
 ! !USES:
 !
-  USE GeosFpA3CldModule
-  USE GeosFpA3DynModule
-  USE GeosFpInputsModule
-  USE GeosFpRegridModule
+  USE GeosItA3MstCModule
+  USE GeosItA3MstEModule
+  USE GeosItInputsModule
+  USE GeosItRegridModule
 
   IMPLICIT NONE
 !
 ! !REMARKS:
-!  GeosFpDriver1 creates the A3cld (3hr time-averaged cloud parameters) and
-!  A3dyn  (3hr time-averaged dynamics parameters) data files for input into 
-!  GEOS-Chem.
+!  GeosItDriver1 creates the A3mstC (3hr time-averaged moist parameters, on
+!  level centers) and A3MstE (3hr time-averaged moist parameters on level
+!  edges) data files for input into GEOS-Chem.
 !                                                                             .
 !  netCDF library modules originally written by Jules Kouatchou, GSFC
 !  and re-packaged into NcdfUtilities by Bob Yantosca, Harvard Univ.
 !
-! !REVISION HISTORY: 
-!  20 Sep 2013 - R. Yantosca - Now renamed Geos57 to GeosFp in routine names
+! !REVISION HISTORY:
+!  20 Sep 2013 - R. Yantosca - Rename Geos57 to GeosIt in routine names
 !------------------------------------------------------------------------------
 
   ! Read filenames and fields to process from an input file
-  CALL GeosFpInitialize
+  CALL GeosItInitialize
 
   ! Initialize GEOS-5 regridding code
-  CALL GeosFpRegridInit
+  CALL GeosItRegridInit
 
-  ! Create the 3-hour average data files
-  CALL GeosFpMakeA3Cld
-  CALL GeosFpMakeA3Dyn
+  ! Create the 3-hour average data file
+  CALL GeosItMakeA3MstC
+  CALL GeosItMakeA3MstE
 
   ! Cleanup and quit 
-  CALL GeosFpCleanup
+  CALL GeosItCleanup
 
-END PROGRAM GeosFpDriver1
+END PROGRAM GeosItDriver2
 !EOP

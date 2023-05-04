@@ -5,10 +5,10 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: schedGeosFpInAdvance
+# !MODULE: schedGeosItInAdvance
 #
-# !DESCRIPTION: schedGeosFpInAdvance is a Perl script which schedules a 
-#  GEOS-FP data for severaly days in advance.  The job is started at the
+# !DESCRIPTION: schedGeosItInAdvance is a Perl script which schedules a 
+#  GEOS-IT data for severaly days in advance.  The job is started at the
 #  same time every day, for ndays intot he future.
 #\\
 #\\
@@ -21,7 +21,7 @@ use Dates qw( &addDate
               &getDayOfWeek ); # Import routines from module Dates.pm
 #
 # !CALLING SEQUENCE:
-#  schedGeosFpInAdvance YYYYMMDD nDays [now]
+#  schedGeosItInAdvance YYYYMMDD nDays [now]
 #
 # !REMARKS:
 #  Uses the Unix "at" command to schedule jobs.  
@@ -37,7 +37,7 @@ use Dates qw( &addDate
 #
 # !IROUTINE: scheduleJobs
 #
-# !DESCRIPTION: Schedules a GEOS-FP met field processing jobs for a number
+# !DESCRIPTION: Schedules a GEOS-IT met field processing jobs for a number
 #  of days in advance of a starting date.
 #\\
 #\\
@@ -95,7 +95,7 @@ sub scheduleJobs(@) {
     
     # Command string for "at"
     # Schedule each job
-    $atCmd = qq(schedGeosFp $today 1 "$when $tomMonth/$tomDay/$tomYear");
+    $atCmd = qq(schedGeosIt $today 1 "$when $tomMonth/$tomDay/$tomYear");
     print "$atCmd\n";
     
     # Schedule the job
@@ -112,7 +112,7 @@ sub scheduleJobs(@) {
 #
 # !IROUTINE: main
 #
-# !DESCRIPTION: Driver routine for the sleepGeosFp script.  Gets arguments
+# !DESCRIPTION: Driver routine for the sleepGeosIt script.  Gets arguments
 #  from the command line and schedules the data procesing job.
 #\\
 #\\
@@ -128,7 +128,7 @@ sub main() {
 
   # Error check # of arguments
   if ( scalar( @ARGV ) != 2 ) {  
-    print "Usage: schedGeosFpInAdvance YYYYMMDD nDays\n"; 
+    print "Usage: schedGeosItInAdvance YYYYMMDD nDays\n"; 
     exit(1); 
   }
 

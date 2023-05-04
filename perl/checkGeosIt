@@ -5,9 +5,9 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: checkGeosFp
+# !MODULE: checkGeosIt
 #
-# !DESCRIPTION: Checks to see if all of the GEOS-FP "raw" met data for a
+# !DESCRIPTION: Checks to see if all of the GEOS-IT "raw" met data for a
 #  given date has been downloaded.  Returns the number of "missing" files.
 #\\
 #\\
@@ -24,11 +24,11 @@
 #  &main()     
 #
 # !CALLING SEQUENCE:
-#  checkGeosFp YYYYMMDD
+#  checkGeosIt YYYYMMDD
 #
 # !REVISION HISTORY: 
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/checkGeos5
-#  20 Sep 2013 - R. Yantosca - Renamed to checkGeosFp, modified for GEOS-FP
+#  20 Sep 2013 - R. Yantosca - Renamed to checkGeosIt, modified for GEOS-IT
 #EOP
 #------------------------------------------------------------------------------
 #          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -38,7 +38,7 @@
 # !IROUTINE: getDefaults
 #
 # !DESCRIPTION: Routine getDefaults reads an input file and returns the
-#  name of the directory where GEOS-FP "raw" met data files are found.
+#  name of the directory where GEOS-IT "raw" met data files are found.
 #\\
 #\\
 # !INTERFACE:
@@ -189,7 +189,7 @@ sub checkFiles($$) {
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/checkGeos5
 #  25 Oct 2011 - R. Yantosca - Now test for 160 files/day (skip D57T1NXOCN)
 #  13 Jan 2012 - R. Yantosca - Test for 144 files (skip D57T3NVODT, D57T3NVQDT)
-#  20 Sep 2013 - R. Yantosca - Updated for GEOS-FP, we no longer need to check
+#  20 Sep 2013 - R. Yantosca - Updated for GEOS-IT, we no longer need to check
 #                              for the tavg3_3d_rad_Nv files.  Now 136 total.
 #  05 Dec 2013 - R. Yantosca - Now restore the tavg3_3d_rad_Nv files
 #EOP
@@ -199,7 +199,7 @@ sub checkFiles($$) {
 # !LOCAL VARIABLES:
 
   # Get the met field directory and GEOS version string
-  my $d     = &getDefaults( "doGeosFp.input", $date );
+  my $d     = &getDefaults( "doGeosIt.input", $date );
 
   # Loop index
   my $GMT   = "";
@@ -248,7 +248,7 @@ sub checkFiles($$) {
   if ( $quiet ) {
     print "$missing";
   } else {
-    print "Number of missing GEOS-FP raw met files for $date: $missing\n";
+    print "Number of missing GEOS-IT raw met files for $date: $missing\n";
   }			       
 
   # Return
@@ -275,14 +275,14 @@ sub main() {
 #
 # !REVISION HISTORY:
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/checkGeos5
-#  20 Sep 2013 - R. Yantosca - Renamed to checkGeosFp
+#  20 Sep 2013 - R. Yantosca - Renamed to checkGeosIt
 #EOP
 #------------------------------------------------------------------------------
 #BOC
 
   # Error message
   my $missing = 0;
-  my $errMsg  = "Usage: checkGeosFp YYYYMMDD SHORTFORMAT\n!";
+  my $errMsg  = "Usage: checkGeosIt YYYYMMDD SHORTFORMAT\n!";
 
   # Call the checkFiles method or return w/ an error message
   if    ( scalar( @ARGV ) == 2 ) { $missing = &checkFiles( @ARGV    ); }

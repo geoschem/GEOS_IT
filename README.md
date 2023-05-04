@@ -1,6 +1,6 @@
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/geoschem/GEOS_FP/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/geoschem/GEOS_IT/blob/master/LICENSE.txt)
 
-GEOS_FP
+GEOS_IT
 =======
 
-Development of the code and scripts used to process the "raw" GEOS-FP met data for input into GEOS-Chem
+Development of the code and scripts used to process the "raw" GEOS-IT met data for input into GEOS-Chem

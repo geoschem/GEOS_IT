@@ -3,29 +3,29 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !ROUTINE: GeosFpDriver
+! !ROUTINE: GeosItDriver
 !
-! !DESCRIPTION: Program GeosFpDriver is the top-level driver for the 
-!  GEOS-5.7.x regridding programs.  GeosFpDriver will call routines to 
+! !DESCRIPTION: Program GeosItDriver is the top-level driver for the 
+!  GEOS-5.7.x regridding programs.  GeosItDriver will call routines to 
 !  extract, regrid, and save the GEOS-5.7.x met data to files for 
 !  input to GEOS-Chem.
 !\\
 !\\
 ! !INTERFACE:
 !
-PROGRAM GeosFpDriver
+PROGRAM GeosItDriver
 !
 ! !USES:
 !
-  USE GeosFpA1Module
-  USE GeosFpA3CldModule
-  USE GeosFpA3DynModule
-  USE GeosFpA3MstCModule
-  USE GeosFpA3MstEModule
-  USE GeosFpCnModule
-  USE GeosFpI3Module
-  USE GeosFpInputsModule
-  USE GeosFpRegridModule
+  USE GeosItA1Module
+  USE GeosItA3CldModule
+  USE GeosItA3DynModule
+  USE GeosItA3MstCModule
+  USE GeosItA3MstEModule
+  USE GeosItCnModule
+  USE GeosItI3Module
+  USE GeosItInputsModule
+  USE GeosItRegridModule
 
   IMPLICIT NONE
 !
@@ -34,32 +34,32 @@ PROGRAM GeosFpDriver
 !  and re-packaged into NcdfUtilities by Bob Yantosca, Harvard Univ.
 !
 ! !REVISION HISTORY: 
-!  20 Sep 2013 - R. Yantosca - Renamed Geos57 to GeosFp in routine names
+!  20 Sep 2013 - R. Yantosca - Renamed Geos57 to GeosIt in routine names
 !------------------------------------------------------------------------------
 
   ! Read filenames and fields to process from an input file
-  CALL GeosFpInitialize
+  CALL GeosItInitialize
 
   ! Initialize GEOS-5 regridding code
-  CALL GeosFpRegridInit
+  CALL GeosItRegridInit
 
   ! Create the constant data file
-  IF ( doMakeCn ) CALL GeosFpMakeCn
+  IF ( doMakeCn ) CALL GeosItMakeCn
 
   ! Create the 1-hour average data file
-  CALL GeosFpMakeA1
+  CALL GeosItMakeA1
 
   ! Create the 3-hour average data files
-  CALL GeosFpMakeA3Cld
-  CALL GeosFpMakeA3Dyn
-  CALL GeosFpMakeA3MstC
-  CALL GeosFpMakeA3MstE
+  CALL GeosItMakeA3Cld
+  CALL GeosItMakeA3Dyn
+  CALL GeosItMakeA3MstC
+  CALL GeosItMakeA3MstE
 
   ! Create the 6-hour instantaneous data file
-  CALL GeosFpMakeI3
+  CALL GeosItMakeI3
 
   ! Cleanup and quit 
-  CALL GeosFpCleanup
+  CALL GeosItCleanup
 
-END PROGRAM GeosFpDriver
+END PROGRAM GeosItDriver
 !EOP

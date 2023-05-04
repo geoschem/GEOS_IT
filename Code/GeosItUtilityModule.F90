@@ -3,15 +3,15 @@
 !------------------------------------------------------------------------------
 !BOP
 !
-! !MODULE: GeosFpUtilityModule
+! !MODULE: GeosItUtilityModule
 !
-! !DESCRIPTION: Module GeosFpUtilModule contains several utility routines
-!  for the GEOS-FP regridding package.
+! !DESCRIPTION: Module GeosItUtilModule contains several utility routines
+!  for the GEOS-IT regridding package.
 !\\
 !\\
 ! !INTERFACE: 
 !
-MODULE GeosFpUtilityModule
+MODULE GeosItUtilityModule
 ! 
 ! !USES:
 !
@@ -45,7 +45,7 @@ MODULE GeosFpUtilityModule
 ! !IROUTINE: GetNFields
 !
 ! !DESCRIPTION: Returns the list of fields and number of fields to regrid
-!  for each GEOS-FP raw data file.
+!  for each GEOS-IT raw data file.
 !\\
 !\\
 ! !INTERFACE:
@@ -95,7 +95,7 @@ MODULE GeosFpUtilityModule
 !
 ! !DESCRIPTION: 
 !  Returns the file name part of a full directory path.  Akin to the GNU
-!  Make "notdir" function.For each GEOS-FP raw data file 
+!  Make "notdir" function.For each GEOS-IT raw data file 
 !\\
 !\\
 ! !INTERFACE:
@@ -354,4 +354,4 @@ MODULE GeosFpUtilityModule
 
   END FUNCTION UnitsForTime
 !EOC
-END MODULE GeosFpUtilityModule
+END MODULE GeosItUtilityModule

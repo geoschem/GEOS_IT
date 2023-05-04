@@ -5,7 +5,7 @@
 ;
 ; !ROUTINE: adjust_cn
 ;
-; !DESCRIPTION: Routine to adjust the existing GEOS-FP "CN" (constant)
+; !DESCRIPTION: Routine to adjust the existing GEOS-IT "CN" (constant)
 ;  data files for better COARDS compliance.
 ;\\
 ;\\
@@ -26,7 +26,7 @@
 ;
 ; !INPUT PARAMETERS:
 ;  inFile   : Name of GEOS-5.7.2 "CN" file w/ input data
-;  outFile  : Name of GEOSFP "CN" file w/ vars & atts adjusted for COARDS
+;  outFile  : Name of GEOSIT "CN" file w/ vars & atts adjusted for COARDS
 ;
 ; !LOCAL VARIABLES:
 ;
@@ -138,7 +138,7 @@ begin
   add_coards_global_atts( fIn, fOut )
  
   ; Redefine the title string
-  fOut@Title             = "GEOS-FP constant parameters (CN), processed for GEOS-Chem input"
+  fOut@Title             = "GEOS-IT constant parameters (CN), processed for GEOS-Chem input"
 
 end
 ;EOC

@@ -29,7 +29,7 @@
 ; !REMARKS:
 ;  (1) Make sure the directory paths end in a "/".
 ;  (2) Assumes all data files for a given day have the same dimensions,
-;      (which is true for GEOS-FP raw data).
+;      (which is true for GEOS-IT raw data).
 ;
 ; !REVISION HISTORY:
 ;  09 Oct 2013 - R. Yantosca - Initial version
@@ -64,12 +64,12 @@ begin
   ;=========================================================================
   ; Compute wind speed from U10M and V10M
   ;
-  ; NOTE: addfiles doesn't work on the GEOS-FP met field files (netCDF-4), 
+  ; NOTE: addfiles doesn't work on the GEOS-IT met field files (netCDF-4), 
   ; probably due  to the chunking settings.  Read files individually.
   ;=========================================================================
 
   ; Find all GEOS572*A1 files in this directory
-  files = systemfunc( "ls -1 " + inDir + "GEOS.fp.*slv_Nx." + date + "*.nc4" )
+  files = systemfunc( "ls -1 " + inDir + "GEOS.it.*slv_Nx." + date + "*.nc4" )
 
   ; Add error check
   if ( any( ismissing( files ) ) ) then
@@ -164,13 +164,13 @@ begin
   ;=========================================================================
 
   ; Open file
-  outFile                   = outDir + "GEOSFP." + date + ".SPEED.025x03125.nc"
+  outFile                   = outDir + "GEOSIT." + date + ".SPEED.025x03125.nc"
   print( "Writing " + outFile + " to disk" )
   system( "rm -f " + outFile )
   fOut                      = addfile( outFile, "c" )
 
   ; Write global attributes
-  fOut@Title                = "GEOS-FP 1-hour native resolution wind speed"
+  fOut@Title                = "GEOS-IT 1-hour native resolution wind speed"
   fOut@Contact              = "GEOS-Chem Support Team (geos-chem-support@as.harvard.edu)" ;
   fOut@References           = "www.geos-chem.org; wiki.geos-chem.org"
   fOut@Filename             = notdir( outFile )
@@ -181,7 +181,7 @@ begin
   fOut@Format               = "netCDF-3"
   fOut@SpatialCoverage      = "global"
   fOut@Conventions          = "COARDS"
-  fOut@Version              = "GEOS-FP"
+  fOut@Version              = "GEOS-IT"
   fOut@Model                = "GEOS-5"
   fOut@Nlayers              = 72
   fOut@Start_Date           = date
