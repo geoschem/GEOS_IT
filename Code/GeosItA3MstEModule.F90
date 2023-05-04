@@ -294,7 +294,8 @@ MODULE GeosItA3MstEModule
     ! Define data arrays
     !-------------------------------------------------------------------------
 
-    IF ( StrPos( 'CMFMC', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'CMFMC', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+    IF ( StrPos( 'CMFMC', mst_tavg_3hr_glo_L576x361_v73 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Upward moist convective mass flux'
@@ -311,7 +312,8 @@ MODULE GeosItA3MstEModule
     ENDIF
 
     ! PFICU
-    IF ( StrPos( 'PFICU', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PFICU', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+    IF ( StrPos( 'PFICU', mst_tavg_3hr_glo_L576x361_v73 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Downward flux of ice precipitation (convective)'
@@ -328,7 +330,8 @@ MODULE GeosItA3MstEModule
     ENDIF
 
     ! PFILSAN
-    IF ( StrPos( 'PFILSAN', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+!ewl   IF ( StrPos( 'PFILSAN', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+    IF ( StrPos( 'PFILSAN', mst_tavg_3hr_glo_L576x361_v73 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Downward flux of ice precipitation (large scale + anvil)'
@@ -345,7 +348,8 @@ MODULE GeosItA3MstEModule
     ENDIF
 
     ! PFLCU
-    IF ( StrPos( 'PFLCU', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+!ewl   IF ( StrPos( 'PFLCU', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+    IF ( StrPos( 'PFLCU', mst_tavg_3hr_glo_L576x361_v73 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Downward flux of liquid precipitation (convective)'
@@ -362,7 +366,8 @@ MODULE GeosItA3MstEModule
     ENDIF
 
     ! PFLLSAN
-    IF ( StrPos( 'PFLLSAN', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PFLLSAN', tavg3_3d_mst_Ne_data ) >= 0 ) THEN
+    IF ( StrPos( 'PFLLSAN', mst_tavg_3hr_glo_L576x361_v73 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Downward flux of liquid precipitation (large scale + anvil)'

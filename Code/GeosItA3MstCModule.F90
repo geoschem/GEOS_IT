@@ -151,7 +151,7 @@ MODULE GeosItA3MstCModule
     CALL NcDef_Glob_Attributes( fOut, 'Title',                TRIM( lName ) )
 
     ! Contact
-    lName = "GEOS-Chem Support Team (geos-chem-support@as.harvard.edu)"
+    lName = "GEOS-Chem Support Team (geos-chem-support@g.harvard.edu)"
     CALL NcDef_Glob_Attributes( fOut, 'Contact',              TRIM( lName ) )
 
     ! References
@@ -296,7 +296,8 @@ MODULE GeosItA3MstCModule
     !-------------------------------------------------------------------------
 
     ! DQRCU
-    IF ( StrPos( 'DQRCU', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'DQRCU', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
+    IF ( StrPos( 'DQRCU', mst_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Precipitation production rate -- convective'
@@ -313,7 +314,8 @@ MODULE GeosItA3MstCModule
     ENDIF
 
     ! DQRLSAN
-    IF ( StrPos( 'DQRLSAN', tavg3_3d_mst_Nv_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'DQRLSAN', tavg3_3d_mst_Nv_Data ) >= 0 ) THEN
+    IF ( StrPos( 'DQRLSAN', mst_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Precipitation production rate -- large scale + anvil'
@@ -330,6 +332,7 @@ MODULE GeosItA3MstCModule
     ENDIF
 
     ! FPCU
+!ewl: did not change. Used in GEOS-Chem?
     IF ( StrPos( 'FPCU', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -347,6 +350,7 @@ MODULE GeosItA3MstCModule
     ENDIF
 
     ! FPLSAN
+!ewl: did not change. Used in GEOS-Chem?
     IF ( StrPos( 'FPLSAN', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -364,7 +368,8 @@ MODULE GeosItA3MstCModule
     ENDIF
 
     ! REEVAPCN
-    IF ( StrPos( 'REEVAPCN', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'REEVAPCN', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
+    IF ( StrPos( 'REEVAPCN', mst_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Evaporation of precipitating convective condensate'
@@ -381,7 +386,8 @@ MODULE GeosItA3MstCModule
     ENDIF
 
     ! REEVAPLS(AN)
-    IF ( StrPos( 'REEVAPLS', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'REEVAPLS', tavg3_3d_mst_Nv_data ) >= 0 ) THEN
+    IF ( StrPos( 'REEVAPLS', mst_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Evaporation of precipitating large-scale & anvil condensate'

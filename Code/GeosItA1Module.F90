@@ -166,7 +166,7 @@ MODULE GeosItA1Module
     CALL NcDef_Glob_Attributes( fOut, 'Title',                TRIM( lName ) )
 
     ! Contact
-    lName = "GEOS-Chem Support Team (geos-chem-support@as.harvard.edu)"
+    lName = "GEOS-Chem Support Team (geos-chem-support@g.harvard.edu)"
     CALL NcDef_Glob_Attributes( fOut, 'Contact',              TRIM( lName ) )
 
     
@@ -318,7 +318,8 @@ MODULE GeosItA1Module
 
 
 !     ALBEDO
-    IF ( StrPos( 'ALBEDO', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'ALBEDO', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'ALBEDO', rad_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface albedo'
        units = '1'
@@ -335,7 +336,8 @@ MODULE GeosItA1Module
 
 !     
 !     CLDTOT
-    IF ( StrPos( 'CLDTOT', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'CLDTOT', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'CLDTOT', rad_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Total cloud fraction'
        units = '1'
@@ -351,7 +353,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     EFLUX
-    IF ( StrPos( 'EFLUX', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'EFLUX', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'EFLUX', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Latent heat flux (positive upward)'
        units = 'W m-2'
@@ -368,7 +371,8 @@ MODULE GeosItA1Module
 
 ! 
 !     EVAP
-    IF ( StrPos( 'EVAP', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'EVAP', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'EVAP', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface evaporation'
        units = 'kg m-2 s-2'
@@ -384,7 +388,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     FRSEAICE
-    IF ( StrPos( 'FRSEAICE', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'FRSEAICE', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'FRSEAICE', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Fraction of sea ice on surface'
        units = '1'
@@ -400,7 +405,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     FRSNO
-    IF ( StrPos( 'FRSNO', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'FRSNO', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'FRSNO', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Fractional snow-covered area'
        units = '1'
@@ -416,7 +422,8 @@ MODULE GeosItA1Module
      ENDIF
 ! 
 !     GRN
-    IF ( StrPos( 'GRN', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'GRN', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'GRN', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Vegetation greenness fraction'
        units = '1'
@@ -432,7 +439,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     GWETROOT
-    IF ( StrPos( 'GWETROOT', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'GWETROOT', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'GWETROOT', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Root zone soil wetness'
        units = '1'
@@ -448,7 +456,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     GWETTOP
-    IF ( StrPos( 'GWETTOP', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'GWETTOP', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'GWETTOP', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Top soil wetness'
        units = '1'
@@ -464,7 +473,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     HFLUX
-    IF ( StrPos( 'HFLUX', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'HFLUX', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'HFLUX', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Sensible heat flux (positive upward)'
        units = 'W m-2'
@@ -480,7 +490,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     LAI
-    IF ( StrPos( 'LAI', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'LAI', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'LAI', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Leaf area index'
        units = 'm2 m-2'
@@ -496,6 +507,7 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     LWI (derived from FRLANDICE + other fields)
+!ewl: did not change. No longer used in GEOS-Chem. Not in GEOS-IT.
     IF ( StrPos( 'FRSEAICE', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Land/water/ice flags'
@@ -512,7 +524,8 @@ MODULE GeosItA1Module
     ENDIF
 !  
 !     LWGNT
-    IF ( StrPos( 'LWGNT', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'LWGNT', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'LWGNT', rad_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Net longwave flux at the ground'
        units = 'W m-2'
@@ -529,6 +542,7 @@ MODULE GeosItA1Module
 ! 
 !  
 !     LWTUP
+!ewl: did not change. Used in GEOS-Chem?
     IF ( StrPos( 'LWTUP', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Upward longwave flux at top of atmosphere (TOA)'
@@ -545,7 +559,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     PARDF
-    IF ( StrPos( 'PARDF', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PARDF', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PARDF', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface downward PAR diffuse flux'
        units = 'W m-2'
@@ -561,7 +576,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     PARDR
-    IF ( StrPos( 'PARDR', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PARDR', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PARDR', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface downward PAR beam flux'
        units = 'W m-2'
@@ -577,7 +593,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     PBLH
-    IF ( StrPos( 'PBLH', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PBLH', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PBLH', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Planetary boundary layer height above surface'
        units = 'm'
@@ -593,7 +610,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     PRECANV
-    IF ( StrPos( 'PRECANV', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PRECANV', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PRECANV', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface precipitation flux from anvils'
        units = 'kg m-2 s-1'
@@ -609,7 +627,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     PRECCON
-    IF ( StrPos( 'PRECCON', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PRECCON', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PRECCON', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface precipitation flux from convection'
        units = 'kg m-2 s-1'
@@ -625,7 +644,8 @@ MODULE GeosItA1Module
     ENDIF
 !  
 !     PRECLSC
-    IF ( StrPos( 'PRECLSC', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PRECLSC', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PRECLSC', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface precipitation flux from large-scale'
        units = 'kg m-2 s-1'
@@ -641,7 +661,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     PRECSNO
-    IF ( StrPos( 'PRECLSC', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PRECLSC', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PRECLSC', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
 
        lName = 'Surface precipitation flux from snow'
@@ -658,7 +679,8 @@ MODULE GeosItA1Module
     ENDIF
 !  
 !     PRECTOT
-    IF ( StrPos( 'PRECTOT', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PRECTOT', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PRECTOT', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Total surface precipitation flux'
@@ -675,7 +697,8 @@ MODULE GeosItA1Module
     ENDIF
 ! 
 !     QV2M
-    IF ( StrPos( 'QV2M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'QV2M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'QV2M', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Specific humidity at 2m above the displacement height'
@@ -691,7 +714,8 @@ MODULE GeosItA1Module
        CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
     ENDIF
 ! 
-    IF ( StrPos( 'FRSEAICE', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'FRSEAICE', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'FRSEAICE', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
 ! 
 !        SEAICE00
        var3  = (/ idLon, idLat, idTime /)
@@ -845,7 +869,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     SLP
-    IF ( StrPos( 'SLP', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'SLP', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'SLP', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Sea level pressure'
@@ -862,7 +887,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     SNODP
-    IF ( StrPos( 'SNODP', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'SNODP', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'SNODP', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Snow depth'
@@ -879,7 +905,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     SNOMAS
-    IF ( StrPos( 'SNOMAS', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'SNOMAS', tavg1_2d_lnd_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'SNOMAS', lnd_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Snow mass'
@@ -896,7 +923,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     SWGDN
-    IF ( StrPos( 'SWGDN', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'SWGDN', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'SWGDN', rad_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Surface incident shortwave flux'
@@ -913,6 +941,7 @@ MODULE GeosItA1Module
     ENDIF
 
 !     SWGNT
+!ewl: not changed. Used in GEOS-Chem?
     IF ( StrPos( 'SWGNT', tavg1_2d_rad_Nx_Data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
@@ -930,7 +959,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     TO3
-    IF ( StrPos( 'TO3', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'TO3', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'TO3', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Total column ozone'
@@ -947,7 +977,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     TROPPT
-    IF ( StrPos( 'TROPPT', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'TROPPT', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'TROPPT', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Temperature-based tropopause pressure'
@@ -964,7 +995,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     TS
-    IF ( StrPos( 'TS', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'TS', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'TS', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Surface skin temperature'
@@ -981,7 +1013,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     T2M
-    IF ( StrPos( 'T2M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'T2M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'T2M', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Temperature 2m above displacement height'
@@ -998,7 +1031,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     U10M
-    IF ( StrPos( 'U10M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'U10M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'U10M', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Eastward wind 10m above displacement height'
@@ -1015,7 +1049,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     USTAR
-    IF ( StrPos( 'USTAR', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'USTAR', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'USTAR', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Friction velocity'
@@ -1032,7 +1067,8 @@ MODULE GeosItA1Module
     ENDIF
 
 !     V10M
-    IF ( StrPos( 'V10M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'V10M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'V10M', slv_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Northward wind 10m above displacement height'
@@ -1049,7 +1085,8 @@ MODULE GeosItA1Module
     ENDIF
  
 !     Z0M
-    IF ( StrPos( 'Z0M', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'Z0M', tavg1_2d_flx_Nx_Data ) >= 0 ) THEN
+    IF ( StrPos( 'Z0M', flx_tavg_1hr_glo_L576x361_slv ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Roughness length, momentum'
@@ -1067,6 +1104,7 @@ MODULE GeosItA1Module
  
 !     saj
 !     T10M
+!ewl: did not change. Used in GEOS-Chem?
     IF ( StrPos( 'T10M', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
@@ -1084,6 +1122,7 @@ MODULE GeosItA1Module
     ENDIF
  
 !    Q850
+!ewl: did not change. Used in GEOS-Chem?
    IF ( StrPos( 'Q850', tavg1_2d_slv_Nx_Data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        

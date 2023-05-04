@@ -297,7 +297,8 @@ MODULE GeosItI3Module
     !-------------------------------------------------------------------------
 
     ! PS
-    IF ( StrPos( 'PS', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'PS', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
+    IF ( StrPos( 'PS', asm_inst_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Surface pressure'
@@ -314,6 +315,7 @@ MODULE GeosItI3Module
     ENDIF
 
     ! PV (aka EPV)
+!ewl: this is not yet changed. Do we need PV?
     IF ( StrPos( 'PV', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -331,7 +333,8 @@ MODULE GeosItI3Module
     ENDIF
 
     ! QV
-    IF ( StrPos( 'QV', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'QV', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
+    IF ( StrPos( 'QV', asm_inst_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Specific humidity'
@@ -348,7 +351,8 @@ MODULE GeosItI3Module
     ENDIF
 
     ! T
-    IF ( StrPos( 'T', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'T', inst3_3d_asm_Nv_Data ) >= 0 ) THEN
+    IF ( StrPos( 'T', asm_inst_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Temperature'

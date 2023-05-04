@@ -300,7 +300,8 @@ MODULE GeosItA3DynModule
     !-------------------------------------------------------------------------
 
     ! DTRAIN
-    IF ( StrPos( 'DTRAIN', tavg3_3d_cld_Nv_data_d ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'DTRAIN', tavg3_3d_cld_Nv_data_d ) >= 0 ) THEN
+    IF ( StrPos( 'DTRAIN', cld_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Detrainment cloud mass flux'
@@ -317,7 +318,8 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! OMEGA
-    IF ( StrPos( 'OMEGA', tavg3_3d_asm_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'OMEGA', tavg3_3d_asm_Nv_data ) >= 0 ) THEN
+    IF ( StrPos( 'OMEGA', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4     = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Vertical pressure velocity'
@@ -334,7 +336,8 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! RH
-    IF ( StrPos( 'RH', tavg3_3d_cld_Nv_data_d ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'RH', tavg3_3d_cld_Nv_data_d ) >= 0 ) THEN
+    IF ( StrPos( 'RH', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Relative humidity'
@@ -351,7 +354,8 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! U
-    IF ( StrPos( 'U', tavg3_3d_asm_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'U', tavg3_3d_asm_Nv_data ) >= 0 ) THEN
+    IF ( StrPos( 'U', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Eastward component of wind'
@@ -368,7 +372,8 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! V
-    IF ( StrPos( 'V', tavg3_3d_asm_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'V', tavg3_3d_asm_Nv_data ) >= 0 ) THEN
+    IF ( StrPos( 'V', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Northward component of wind'

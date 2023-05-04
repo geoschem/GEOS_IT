@@ -312,6 +312,7 @@ MODULE GeosItA3CldModule
     !-------------------------------------------------------------------------
 
     ! CFAN
+!ewl: not changed. Used in GEOS-Chem?
     IF ( StrPos( 'CFAN', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
        !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        !%%% UNCOMMENT THIS CODE IF YOU WANT TO ONLY USE CFAN TO CREATE CLOUD
@@ -344,6 +345,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! CFCU
+!ewl: not changed. Used in GEOS-Chem?
     IF ( StrPos( 'CFCU', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -364,6 +366,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! CFLS
+!ewl: not changed. Used in GEOS-Chem?
     IF ( StrPos( 'CFLS', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
        !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        !%%% UNCOMMENT THIS CODE IF YOU WANT TO ONLY USE CFAN TO CREATE CLOUD
@@ -399,8 +402,9 @@ MODULE GeosItA3CldModule
     !%%% Prior to 12/5/13:
     !%%% Now go back to reading CLOUD from tavg3_3d_rad_Nv (bmy, 12/5/13)
     !%%%IF ( StrPos( 'CLOUD', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
-    IF ( StrPos( 'CLOUD', tavg3_3d_rad_Nv_data ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'CLOUD', tavg3_3d_rad_Nv_data ) >= 0 ) THEN
     !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    IF ( StrPos( 'CLOUD', rad_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Total cloud fraction in grid box'
@@ -417,6 +421,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! OPTDEPTH
+!ewl: not changed. Need to check if in GEOS-IT collection.
     IF ( StrPos( 'OPTDEPTH', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -434,6 +439,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! QCCU
+!ewl: not changed. Used in GEOS-Chem?
     IF ( StrPos( 'QCCU', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -451,7 +457,8 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! QI
-    IF ( StrPos( 'QI', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'QI', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'QI', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Cloud ice water mixing ratio'
@@ -468,7 +475,8 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! QL
-    IF ( StrPos( 'QL', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'QL', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'QL', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Cloud liquid water mixing ratio'
@@ -485,7 +493,10 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! RH
-    IF ( StrPos( 'RH', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+!ewl: RH is also read in the A3DynModule. Need to check on what to use and
+!     if there are two collections with it in GEOS-IT too.
+!ewl    IF ( StrPos( 'RH', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'RH', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Relative humidity'
@@ -502,7 +513,8 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! TAUCLI
-    IF ( StrPos( 'TAUCLI', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'TAUCLI', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'TAUCLI', cld_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'In-cloud ice optical thickness (visible band)'
@@ -519,7 +531,8 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! TAUCLW
-    IF ( StrPos( 'TAUCLW', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+!ewl    IF ( StrPos( 'TAUCLW', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'TAUCLW', cld_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'In-cloud water optical thickness (visible band)'
