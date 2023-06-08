@@ -30,8 +30,8 @@
 ;
 ; !LOCAL VARIABLES:
 ;
- local fIn,      time, lev, lat, lon,    CLOUD, 
-       OPTDEPTH, QCCU, QI,  QL,  TAUCLI, TAUCLW, fOut
+ local fIn,      time, lev, lat,    lon,    CLOUD, 
+       OPTDEPTH, QI,   QL,  TAUCLI, TAUCLW, fOut
 ;
 ; !REMARKS:
 ;  (1) Adds a calendar attribute onto the "time" index variable.
@@ -55,7 +55,6 @@ begin
   lon                    = fIn->lon
   CLOUD                  = fIn->CLOUD
   OPTDEPTH               = fIn->OPTDEPTH
-  QCCU                   = fIn->QCCU
   QI                     = fIn->QI
   QL                     = fIn->QL
   TAUCLI                 = fIn->TAUCLI
@@ -76,7 +75,6 @@ begin
     lat&lat              = lat
     CLOUD&lat            = lat
     OPTDEPTH&lat         = lat
-    QCCU&lat             = lat
     QI&lat               = lat
     QL&lat               = lat
     TAUCLI&lat           = lat
@@ -93,7 +91,6 @@ begin
   time&time              = time
   CLOUD&time             = time
   OPTDEPTH&time          = time
-  QCCU&time              = time
   QI&time                = time
   QL&time                = time
   TAUCLI&time            = time
@@ -105,7 +102,6 @@ begin
   lev&lev                = lev
   CLOUD&lev              = lev
   OPTDEPTH&lev           = lev
-  QCCU&lev               = lev
   QI&lev                 = lev
   QL&lev                 = lev
   TAUCLI&lev             = lev
@@ -120,7 +116,6 @@ begin
   ; Add common COARDS variable attributes
   add_coards_var_atts( CLOUD    )
   add_coards_var_atts( OPTDEPTH )
-  add_coards_var_atts( QCCU     )
   add_coards_var_atts( QI       )
   add_coards_var_atts( QL       )
   add_coards_var_atts( TAUCLI   )
@@ -137,7 +132,6 @@ begin
   ;printVarSummary( lat      )
   ;printVarSummary( CLOUD    )
   ;printVarSummary( OPTDEPTH )
-  ;printVarSummary( QCCU     )
   ;printVarSummary( QI       )
   ;printVarSummary( QL       )
   ;printVarSummary( TAUCLI   )
@@ -153,7 +147,6 @@ begin
   fOut->lon              = lon
   fOut->CLOUD            = CLOUD
   fOut->OPTDEPTH         = OPTDEPTH
-  fOut->QCCU             = QCCU
   fOut->QI               = QI
   fOut->QL               = QL
   fOut->TAUCLI           = TAUCLI

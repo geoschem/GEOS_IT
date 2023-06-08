@@ -55,12 +55,9 @@ MODULE GeosItA3CldModule
 !  and re-packaged into NcdfUtilities by Bob Yantosca, Harvard Univ.
 !
 ! !REVISION HISTORY:
-!  11 Jan 2012 - R. Yantosca - Initial version, based on MERRA
-!  17 Jan 2012 - R. Yantosca - Flip native resolution data after reading
-!  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  28 Feb 2012 - R. Yantosca - Add extra fields
-!  19 Sep 2013 - R. Yantosca - Renamed to GeosItA3CldModule; adjust for COARDS
-!  08 Oct 2013 - R. Yantosca - Now save CH, EU, NA, SE nested grids in one pass
+!  11 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -111,17 +108,9 @@ MODULE GeosItA3CldModule
     INTEGER,          INTENT(INOUT) :: fOut          ! Output netCDF file ID
 !
 ! !REVISION HISTORY:
-!  11 Jan 2012 - R. Yantosca - Initial version, based on MERRA
-!  01 Feb 2012 - R. Yantosca - Make all global attribute names lowercase
-!  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  28 Feb 2012 - R. Yantosca - Added netCDF defs for CFAN, CFCU, CFLS, QCCU
-!  29 Feb 2012 - R. Yantosca - Add logicals for processing CFAN, CFCU, CFLS
-!  19 Sep 2013 - R. Yantosca - Change and/or add attributes for COARDS
-!  19 Sep 2013 - R. Yantosca - Now take CLOUD = min( CFAN + CFLS, 1 )
-!  23 Sep 2013 - R. Yantosca - Add calendar attribute to time
-!  24 Sep 2013 - R. Yantosca - Bug fix: now use correct start & end dates
-!  24 Sep 2013 - R. Yantosca - Now write dims in order: time, lev, lat, lon
-!  08 Oct 2013 - R. Yantosca - Updated CASE statement for gridName
+!  11 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -151,7 +140,7 @@ MODULE GeosItA3CldModule
     WRITE( 6, 100 ) TRIM( gridName )
 100 FORMAT ( '%%% Defining netCDF file vars & attrs for ', a' grid' )
 
-    is_nc4 = .TRUE.   !Output nc4 now to accomodate large file size for global 0.25x0.3125 data (Chi Li)
+    is_nc4 = .TRUE.
 
     ! Open netCDF file for writing
     CALL NcCr_Wr( fOut, TRIM( outFileName ), WRITE_NC4=is_nc4 )
@@ -232,12 +221,7 @@ MODULE GeosItA3CldModule
 
     ! Pick DI and DJ attributes based on the grid
     SELECT CASE ( TRIM( gridName ) )
-       CASE( 'native', 'nested CH', 'nested EU', 'nested NA', 'nested SE', 'nested AS', '0.25 x 0.3125 global' )
-          DI = '0.3125'
-          DJ = '0.25'
-!       CASE ( 'nested 0.5 x 0.625' )
-! (lzh,06/21/2014)
-       CASE( 'nested CH 05', 'nested EU 05', 'nested NA 05', 'nested SE 05', 'nested AS 05' )
+       CASE( 'nested CH 05', 'nested EU 05', 'nested NA 05', 'nested SE 05', 'nested AS 05', '0.5 x 0.625 global')
           DI = '0.625'
           DJ = '0.5'
        CASE( '2 x 2.5 global' )
@@ -312,8 +296,7 @@ MODULE GeosItA3CldModule
     !-------------------------------------------------------------------------
 
     ! CFAN
-!ewl: not changed. Used in GEOS-Chem?
-    IF ( StrPos( 'CFAN', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
+    IF ( StrPos( 'CFAN', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
        !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        !%%% UNCOMMENT THIS CODE IF YOU WANT TO ONLY USE CFAN TO CREATE CLOUD
        !%%% BUT NOT TO SAVE IT OUT TO THE NETCDF FILE (bmy, 9/20/13)
@@ -345,8 +328,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! CFCU
-!ewl: not changed. Used in GEOS-Chem?
-    IF ( StrPos( 'CFCU', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
+    IF ( StrPos( 'CFCU', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = '3D cloud fraction, convective'
@@ -366,8 +348,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! CFLS
-!ewl: not changed. Used in GEOS-Chem?
-    IF ( StrPos( 'CFLS', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
+    IF ( StrPos( 'CFLS', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
        !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        !%%% UNCOMMENT THIS CODE IF YOU WANT TO ONLY USE CFAN TO CREATE CLOUD
        !%%% BUT NOT TO SAVE IT OUT TO THE NETCDF FILE (bmy, 9/20/13)
@@ -400,9 +381,8 @@ MODULE GeosItA3CldModule
 
     !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     !%%% Prior to 12/5/13:
-    !%%% Now go back to reading CLOUD from tavg3_3d_rad_Nv (bmy, 12/5/13)
-    !%%%IF ( StrPos( 'CLOUD', tavg3_3d_cld_Nv_Data_c ) >= 0 ) THEN
-!ewl    IF ( StrPos( 'CLOUD', tavg3_3d_rad_Nv_data ) >= 0 ) THEN
+    !%%% Now go back to reading CLOUD from rad_tavg_3hr_v72 (bmy, 12/5/13)
+    !%%%IF ( StrPos( 'CLOUD', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
     !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     IF ( StrPos( 'CLOUD', rad_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
@@ -421,8 +401,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! OPTDEPTH
-!ewl: not changed. Need to check if in GEOS-IT collection.
-    IF ( StrPos( 'OPTDEPTH', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'OPTDEPTH', cld_tavg_3hr_v72_data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Total in-cloud optical thickness (visible band)'
@@ -438,26 +417,7 @@ MODULE GeosItA3CldModule
        CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
     ENDIF
 
-    ! QCCU
-!ewl: not changed. Used in GEOS-Chem?
-    IF ( StrPos( 'QCCU', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
-       var4  = (/ idLon, idLat, idLev, idTime /)
-       
-       lName = 'Cloud condensate mixing ratio, convective updraft'
-       units = 'kg kg-1'
-       gamap = 'GMAO-3D$'
-       CALL NcDef_Variable      ( fOut, 'QCCU', NF_FLOAT, 4, var4, vId       )
-       CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-    ENDIF
-
     ! QI
-!ewl    IF ( StrPos( 'QI', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
     IF ( StrPos( 'QI', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -475,7 +435,6 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! QL
-!ewl    IF ( StrPos( 'QL', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
     IF ( StrPos( 'QL', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -493,9 +452,6 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! RH
-!ewl: RH is also read in the A3DynModule. Need to check on what to use and
-!     if there are two collections with it in GEOS-IT too.
-!ewl    IF ( StrPos( 'RH', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
     IF ( StrPos( 'RH', asm_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -513,7 +469,6 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! TAUCLI
-!ewl    IF ( StrPos( 'TAUCLI', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
     IF ( StrPos( 'TAUCLI', cld_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -531,7 +486,6 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! TAUCLW
-!ewl    IF ( StrPos( 'TAUCLW', tavg3_3d_cld_Nv_data_c ) >= 0 ) THEN
     IF ( StrPos( 'TAUCLW', cld_tavg_3hr_glo_L576x361_v72 ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -589,17 +543,9 @@ MODULE GeosItA3CldModule
   SUBROUTINE GeosItMakeA3Cld()
 !
 ! !REVISION HISTORY:
-!  11 Jan 2012 - R. Yantosca - Initial version, based on MERRA
-!  12 Jan 2012 - R. Yantosca - Now call StrCompress to remove white space
-!                              in the file name after the token replacement
-!  19 Jan 2012 - R. Yantosca - Now write output to the temporary directories
-!  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  23 Sep 2013 - R. Yantosca - Now define netCDF latitude such that the poles
-!                              are at -90/+90.  This facilitates the GIGC
-!                              using ESMF/MAPL.
-!   8 Oct 2013 - R. Yantosca - Now save out EU and SE nested grids
-!   5 Dec 2013 - R. Yantosca - Now
-
+!  11 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -630,17 +576,17 @@ MODULE GeosItA3CldModule
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
     ! List of all the A-3 fields combined
-    allFieldsList = TRIM( tavg3_3d_cld_Nv_data_c ) // ',' // &
-                    TRIM( tavg3_3d_rad_Nv_data   )
+    allFieldsList = TRIM( cld_tavg_3hr_v72_data_c ) // ',' // &
+                    TRIM( rad_tavg_3hr_v72_data   )
 
     ! Return the list of fields and number of fields to process
     ! from each of the GeosIt raw met data files
-    CALL GetNFields( tavg3_3d_cld_Nv_data_c, nFields_3dCldNv, fields_3dCldNv )
-    CALL GetNFields( tavg3_3d_rad_Nv_data,   nFields_3dRadNv, fields_3dRadNv )
+    CALL GetNFields( cld_tavg_3hr_v72_data_c, nFields_3dCldNv, fields_3dCldNv )
+    CALL GetNFields( rad_tavg_3hr_v72_data,   nFields_3dRadNv, fields_3dRadNv )
     CALL GetNFields( allFieldsList,          nAllFields,      allFields      )
 
     ! Echo info
-    WRITE( IU_LOG, 100 ) TRIM( tavg3_3d_cld_Nv_file ), nFields_3dCldNv
+    WRITE( IU_LOG, 100 ) TRIM( cld_tavg_3hr_v72_file ), nFields_3dCldNv
     WRITE( IU_LOG, 110 ) nAllFields
 
     ! Formats
@@ -651,80 +597,6 @@ MODULE GeosItA3CldModule
     ! Open files for output; define variables, attribute, index arrays
     !=======================================================================
 
-    ! Open nested CH output file
-    IF ( doNestCh ) THEN
-       fName = TRIM( tempDirTmplNestCh ) // TRIM( dataTmplNestCh )
-       gName = 'nested CH'
-       CALL ExpandDate  ( fName,     yyyymmdd,  000000                   )
-       CALL StrRepl     ( fName,     '%%%%%%', 'A3cld '                  )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-       CALL NcOutFileDef( I_NestCh,  J_NestCh,  L025x03125,    TIMES_A3,  &
-                          xMid_025x03125(I0_ch:I1_ch),                    &
-                          yMid_025x03125(J0_ch:J1_ch),                    &
-                          zMid_025x03125,                      a3Mins,    &
-                          gName,    fName,         fOutNestCh            )
-    ENDIF
-
-    ! Open nested EU output file
-    IF ( doNestEu ) THEN
-       fName = TRIM( tempDirTmplNestEu ) // TRIM( dataTmplNestEu )
-       gName = 'nested EU'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
-       CALL StrRepl     ( fName,     '%%%%%%',    'A3cld '               )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-       CALL NcOutFileDef( I_NestEu,  J_NestEu,     L025x03125, TIMES_A3,  &
-                          xMid_025x03125(I0_eu:I1_eu),                    &
-                          yMid_025x03125(J0_eu:J1_eu),                    &
-                          zMid_025x03125,                      a3Mins,    &
-                          gName,     fName,        fOutNestEu            )
-    ENDIF
-
-    ! Open nested NA output file
-    IF ( doNestNa ) THEN
-       fName = TRIM( tempDirTmplNestNa ) // TRIM( dataTmplNestNa )
-       gName = 'nested NA'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
-       CALL StrRepl     ( fName,     '%%%%%%',    'A3cld '               )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-       CALL NcOutFileDef( I_NestNa,  J_NestNa,  L025x03125, TIMES_A3,     &
-                          xMid_025x03125(I0_na:I1_na),                    &
-                          yMid_025x03125(J0_na:J1_na),                    &
-                          zMid_025x03125,                      a3Mins,    &
-                          gName,    fName,         fOutNestNa            )
-    ENDIF
-
-    ! Open nested SE output file
-    IF ( doNestSe ) THEN
-       fName = TRIM( tempDirTmplNestSe ) // TRIM( dataTmplNestSe )
-       gName = 'nested SE'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
-       CALL StrRepl     ( fName,     '%%%%%%',    'A3cld '               )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-       CALL NcOutFileDef( I_NestSe,  J_NestSe,  L025x03125, TIMES_A3,     &
-                          xMid_025x03125(I0_se:I1_se),                    &
-                          yMid_025x03125(J0_se:J1_se),                    &
-                          zMid_025x03125,                      a3Mins,    &
-                          gName,    fName,         fOutNestSe            )
-    ENDIF
-
-    !(jxu, 2015/12/08, add nested Asia)
-    ! Open nested AS output file
-    IF ( doNestAs ) THEN
-       fName = TRIM( tempDirTmplNestAs ) // TRIM( dataTmplNestAs )
-       gName = 'nested As'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
-       CALL StrRepl     ( fName,     '%%%%%%',    'A3cld '               )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-       CALL NcOutFileDef( I_NestAs,  J_NestAs,  L025x03125, TIMES_A3,     &
-                          xMid_025x03125(I0_as:I1_as),                    &
-                          yMid_025x03125(J0_as:J1_as),                    &
-                          zMid_025x03125,                      a3Mins,    &
-                          gName,    fName,         fOutNestAs            )
-    ENDIF
-    !(jxu, end)
-
-    !----- (lzh,06/20/2014)------------
-    ! Open nested 0625 CH output file
     IF ( doNestCh05 ) THEN
        fName = TRIM( tempDirTmplNestCh05 ) // TRIM( dataTmplNestCh05 )
        gName = 'nested CH 05'
@@ -780,7 +652,6 @@ MODULE GeosItA3CldModule
                           gName,    fName,      fOut05NestSe         )
     ENDIF
 
-    !(jxu, 2015/12/08, add nested Asia)
     ! Open nested AS output file
     IF ( doNestAs05 ) THEN
        fName = TRIM( tempDirTmplNestAs05 ) // TRIM( dataTmplNestAs05 )
@@ -794,32 +665,17 @@ MODULE GeosItA3CldModule
                           zMid_05x0625,                a3Mins,    &
                           gName,    fName,      fOut05NestAs         )
     ENDIF
-    !(jxu, end)
-    !------(finish edit)---------------
 
-    !(jxu, 2016/02/13, add 0.25 global)
-    ! Open 0.25x0.3125 output file
-    IF ( do025x03125 ) THEN
-       fName = TRIM( tempDirTmpl025x03125 ) // TRIM( dataTmpl025x03125 )
-       gName = '0.25x0.3125 global'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
-       CALL StrRepl     ( fName,     '%%%%%%',    'A3cld '               )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-       CALL NcOutFileDef( I025x03125,     J025x03125,        L025x03125,      TIMES_A3,  &
-                          xMid_025x03125, yMid_025x03125, zMid_025x03125,  a3Mins,    &
-                          gName,     fName,        fOut025x03125              )
-    ENDIF
-    !(jxu, end)
-
-    IF ( doGlobal05 ) THEN
-      fName = TRIM( tempDirTmplGlobal05 ) // TRIM( dataTmplGlobal05 )
+    ! Open 0.5x0.625 output file
+    IF ( do05x0625 ) THEN
+      fName = TRIM( tempDirTmpl05x0625 ) // TRIM( dataTmpl05x0625 )
       gName = '0.5x0.625 global'
       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
       CALL StrRepl     ( fName,     '%%%%%%',    'A3cld '               )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
-      CALL NcOutFileDef( I05x0625,     J05x0625,        L05x0625,      TIMES_A3,  &
+      CALL NcOutFileDef( I05x0625,     J05x0625,     L05x0625,      TIMES_A3,  &
                          xMid_05x0625, yMid_05x0625, zMid_05x0625,  a3Mins,    &
-                         gName,     fName,        fOutGlobal05              )
+                         gName,     fName,        fOut05x0625              )
    ENDIF
 
     ! Open 2 x 2.5 output file
@@ -849,7 +705,7 @@ MODULE GeosItA3CldModule
     !=======================================================================
     ! Process data
     !=======================================================================
-    CALL Process3dCldNv ( nFields_3dCldNv, fields_3dCldNv ) ! tavg3_3d_cld_Nv
+    CALL Process3dCldNv ( nFields_3dCldNv, fields_3dCldNv ) ! cld_tavg_3hr_v72
     CALL Process3dOptDep(                                 ) ! optical depths
 
     !=======================================================================
@@ -861,30 +717,14 @@ MODULE GeosItA3CldModule
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
     ! Close output files
-    IF ( doNestCh ) CALL NcCl( fOutNestCh )
-    IF ( doNestEu ) CALL NcCl( fOutNestEu )
-    IF ( doNestNa ) CALL NcCl( fOutNestNa )
-    IF ( doNestSe ) CALL NcCl( fOutNestSe )
-    !(jxu, 2015/12/08, add nested Asia)
-    IF ( doNestAs ) CALL NcCl( fOutNestAs )
-    !(jxu, end)
-    !(jxu, 2016/02/13, add 0.25 global)
-    IF ( do025x03125   ) CALL NcCl( fOut025x03125   )
-    !(jxu, end)
-    IF ( do2x25   ) CALL NcCl( fOut2x25   )
-    IF ( do4x5    ) CALL NcCl( fOut4x5    )
-
-    ! (lzh, 06/20/2014) add nested 0.5x0.625
+    IF ( do05x0625  ) CALL NcCl( fOut05x0625  )
+    IF ( do2x25     ) CALL NcCl( fOut2x25     )
+    IF ( do4x5      ) CALL NcCl( fOut4x5      )
     IF ( doNestCh05 ) CALL NcCl( fOut05NestCh )
     IF ( doNestEu05 ) CALL NcCl( fOut05NestEu )
     IF ( doNestNa05 ) CALL NcCl( fOut05NestNa )
     IF ( doNestSe05 ) CALL NcCl( fOut05NestSe )
-    !(jxu, 2015/12/08, add nested Asia)
     IF ( doNestAs05 ) CALL NcCl( fOut05NestAs )
-    !(jxu, end)
-
-    !(lb, 2021/03/22)
-    IF ( doGlobal05   ) CALL NcCl( fOutGlobal05  )
 
     ! Echo info
     msg = '%%%%%%%%%% LEAVING ROUTINE GeosItMakeA3Cld %%%%%%%%%%'
@@ -901,7 +741,7 @@ MODULE GeosItA3CldModule
 ! !IROUTINE: Process3dCldNv
 !
 ! !DESCRIPTION: Subroutine Process3dCldNv regrids the GEOS-IT met fields
-!  from the "tavg3\_3d\_cld\_Nv" file and saves output to netCDF file format.
+!  from the "cld\_tavg\_3hr\_v72" file and saves output to netCDF file format.
 !\\
 !\\
 ! !INTERFACE:
@@ -923,17 +763,9 @@ MODULE GeosItA3CldModule
 !  The QL field is constructed as the sum of QLAN + QLLS.
 !
 ! !REVISION HISTORY:
-!  09 Jan 2012 - R. Yantosca - Initial version
-!  10 Jan 2012 - R. Yantosca - Activate parallel loop over vertical levels
-!  17 Jan 2012 - R. Yantosca - Bug fix: flip data in vertical immediately
-!                              after reading.
-!  17 Jan 2012 - R. Yantosca - Nullify pointers after using them
-!  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  29 Feb 2012 - R. Yantosca - Skip CFAN, CFCU, CFLS, these are handled
-!                              separately in routine ProcessOptDep
-!  19 Sep 2013 - R. Yantosca - Add output for nested EU grid
-!  08 Oct 2013 - R. Yantosca - Add output for nested SE grid
-!  08 Nov 2013 - R. Yantosca - Bug fix: use proper indices for nested EU grid
+!  09 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -946,44 +778,31 @@ MODULE GeosItA3CldModule
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,        Y,        Z,       T
-    INTEGER                 :: XNestCh,  YNestCh,  ZNestCh, TNestCh
-    INTEGER                 :: XNestEu,  YNestEu,  ZNestEu, TNestEu
-    INTEGER                 :: XNestNa,  YNestNa,  ZNestNa, TNestNa
-    INTEGER                 :: XNestSe,  YNestSe,  ZNestSe, TNestSe
-    !(jxu, 2015/12/08, add nested Asia)
-    INTEGER                 :: XNestAs,  YNestAs,  ZNestAs, TNestAs
-    !(jxu, end)
-    !(jxu, 2016/02/13, add 0.25 global)
-      INTEGER                 :: X025x03125, Y025x03125, Z025x03125, T025x03125
-    !(lb, 2021/03/22)
+
     INTEGER                 :: X05x0625, Y05x0625, Z05x0625, T05x0625
-    !(jxu, end)
-    INTEGER                 :: X2x25,    Y2x25,    Z2x25,   T2x25
-    INTEGER                 :: X4x5,     Y4x5,     Z4x5,    T4x5
-    INTEGER                 :: st4d(4),  ct4d(4)
+    INTEGER                 :: X2x25,    Y2x25,    Z2x25,    T2x25
+    INTEGER                 :: X4x5,     Y4x5,     Z4x5,     T4x5
 
-    ! Data arrays
-    REAL*4,  TARGET         :: Q      ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: QI     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: QL     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4                  :: Q2x25  ( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: QI_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: QL_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: Q4x5   ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: QI_4x5 ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: QL_4x5 ( I4x5,       J4x5,       L4x5       )
-
-    ! (lzh,06/20/2014) 0.5x0.625
     INTEGER                 :: XNestCh05,  YNestCh05, ZNestCh05, TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05, ZNestEu05, TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05, ZNestNa05, TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05, ZNestSe05, TNestSe05
-    !(jxu, 2015/12/08, add nested Asia)
     INTEGER                 :: XNestAs05,  YNestAs05, ZNestAs05, TNestAs05
-    !(jxu, end)
-    REAL*4,  TARGET         :: Q05    ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: QI05   ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: QL05   ( I05x0625, J05x0625, L05x0625 )
+
+    INTEGER                 :: st4d(4),  ct4d(4)
+
+    ! Data arrays
+    REAL*4,  TARGET         :: Q      ( I05x0625, J05x0625,   L05x0625   )
+    REAL*4                  :: Q2x25  ( I2x25,    J2x25,      L2x25      )
+    REAL*4                  :: Q4x5   ( I4x5,     J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: QI     ( I05x0625, J05x0625,   L05x0625   )
+    REAL*4                  :: QI_2x25( I2x25,    J2x25,      L2x25      )
+    REAL*4                  :: QI_4x5 ( I4x5,     J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: QL     ( I05x0625, J05x0625,   L05x0625   )
+    REAL*4                  :: QL_2x25( I2x25,    J2x25,      L2x25      )
+    REAL*4                  :: QL_4x5 ( I4x5,     J4x5,       L4x5       )
 
     ! Pointer arrays
     REAL*4,  POINTER        :: Qflip(:,:,:)
@@ -1003,66 +822,15 @@ MODULE GeosItA3CldModule
     WRITE( IU_LOG, '(a)' ) '%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-    ! Nested CH grid
-    IF ( doNestCh ) THEN
-       CALL NcGet_DimLen( fOutNestCh, 'lon',  XNestCh )
-       CALL NcGet_DimLen( fOutNestCh, 'lat',  YNestCh )
-       CALL NcGet_DimLen( fOutNestCh, 'lev',  ZNestCh )
-       CALL NcGet_DimLen( fOutNestCh, 'time', TNestCh )
+   ! 0.5x0.625 global grid
+    IF ( do05x0625 ) THEN
+      CALL NcGet_DimLen( fOut05x0625,   'lon',  X05x0625   )
+      CALL NcGet_DimLen( fOut05x0625,   'lat',  Y05x0625   )
+      CALL NcGet_DimLen( fOut05x0625,   'lev',  Z05x0625   )
+      CALL NcGet_DimLen( fOut05x0625,   'time', T05x0625   )
     ENDIF
 
-    ! Nested NA grid
-    IF ( doNestEu ) THEN
-       CALL NcGet_DimLen( fOutNestEu, 'lon',  XNestEu )
-       CALL NcGet_DimLen( fOutNestEu, 'lat',  YNestEu )
-       CALL NcGet_DimLen( fOutNestEu, 'lev',  ZNestEu )
-       CALL NcGet_DimLen( fOutNestEu, 'time', TNestEu )
-    ENDIF
-
-    ! Nested NA grid
-    IF ( doNestNa ) THEN
-       CALL NcGet_DimLen( fOutNestNa, 'lon',  XNestNa )
-       CALL NcGet_DimLen( fOutNestNa, 'lat',  YNestNa )
-       CALL NcGet_DimLen( fOutNestNa, 'lev',  ZNestNa )
-       CALL NcGet_DimLen( fOutNestNa, 'time', TNestNa )
-    ENDIF
-
-    ! Nested SE grid
-    IF ( doNestSe ) THEN
-       CALL NcGet_DimLen( fOutNestSe, 'lon',  XNestSe )
-       CALL NcGet_DimLen( fOutNestSe, 'lat',  YNestSe )
-       CALL NcGet_DimLen( fOutNestSe, 'lev',  ZNestSe )
-       CALL NcGet_DimLen( fOutNestSe, 'time', TNestSe )
-    ENDIF
-    !(jxu, 2015/12/08, add nested Asia)
-    ! Nested AS grid
-    IF ( doNestAs ) THEN
-       CALL NcGet_DimLen( fOutNestAs, 'lon',  XNestAs )
-       CALL NcGet_DimLen( fOutNestAs, 'lat',  YNestAs )
-       CALL NcGet_DimLen( fOutNestAs, 'lev',  ZNestAs )
-       CALL NcGet_DimLen( fOutNestAs, 'time', TNestAs )
-    ENDIF
-    !(jxu, end)
-
-    !(jxu, 2016/02/13, add 0.25 global)
-    ! 0.25x0.3125 global grid
-    IF ( do025x03125 ) THEN
-       CALL NcGet_DimLen( fOut025x03125,   'lon',  X025x03125   )
-       CALL NcGet_DimLen( fOut025x03125,   'lat',  Y025x03125   )
-       CALL NcGet_DimLen( fOut025x03125,   'lev',  Z025x03125   )
-       CALL NcGet_DimLen( fOut025x03125,   'time', T025x03125   )
-    ENDIF
-   !(jxu, end)
-
-    !(lb, 2021/03/22)
-    IF ( doGlobal05 ) THEN
-      CALL NcGet_DimLen( fOutGlobal05,   'lon',  X05x0625   )
-      CALL NcGet_DimLen( fOutGlobal05,   'lat',  Y05x0625   )
-      CALL NcGet_DimLen( fOutGlobal05,   'lev',  Z05x0625   )
-      CALL NcGet_DimLen( fOutGlobal05,   'time', T05x0625   )
-    ENDIF
-
-    ! 2 x 2.5 global grid
+    ! 2x2.5 global grid
     IF ( do2x25 ) THEN
        CALL NcGet_DimLen( fOut2x25,   'lon',  X2x25   )
        CALL NcGet_DimLen( fOut2x25,   'lat',  Y2x25   )
@@ -1078,7 +846,6 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
 
-    ! (lzh, 06/21/2014) 0.5x0.625
     ! Nested CH grid
     IF ( doNestCh05 ) THEN
        CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
@@ -1111,7 +878,6 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
     ENDIF
 
-    !(jxu, 2015/12/08, add nested Asia)
     ! Nested AS grid
     IF ( doNestAs05 ) THEN
        CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
@@ -1119,7 +885,6 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fOut05NestAs, 'lev',  ZNestAs05 )
        CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
-    !(jxu, end)
 
 
     !=======================================================================
@@ -1133,7 +898,7 @@ MODULE GeosItA3CldModule
        hhmmss = ( ( a3mins(H) / 60 ) * 10000 ) + 3000
 
        ! Create input filename from the template
-       fNameInput = TRIM( inputDataDir ) // TRIM( tavg3_3d_cld_Nv_file )
+       fNameInput = TRIM( inputDataDir ) // TRIM( cld_tavg_3hr_v72_file )
        CALL expandDate( fNameInput, yyyymmdd, hhmmss )
 
        ! Echo info
@@ -1149,6 +914,10 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fIn, 'lev',  Z )
        CALL NcGet_DimLen( fIn, 'time', T )
 
+       !====================================================================
+       ! Process data
+       !====================================================================
+
        ! Zero QI, QL arrays
        QI      = 0e0
        QI_2x25 = 0e0
@@ -1156,12 +925,6 @@ MODULE GeosItA3CldModule
        QL      = 0e0
        QL_2x25 = 0e0
        QL_4x5  = 0e0
-       QI05    = 0e0    ! (lzh)
-       QL05    = 0e0    ! (lzh)
-
-       !====================================================================
-       ! Process data
-       !====================================================================
 
        ! Loop over data fields
        DO F = 1, nFields
@@ -1188,7 +951,6 @@ MODULE GeosItA3CldModule
           Q     = 0e0
           Q2x25 = 0e0
           Q4x5  = 0e0
-          Q05   = 0e0        ! (lzh,06/21/2014)
 
           !-----------------------------------------------------------------
           ! Read data
@@ -1241,10 +1003,6 @@ MODULE GeosItA3CldModule
                    IF ( do4x5 ) THEN
                       CALL RegridGeosItTo4x5 ( 0, Qflip(:,:,L), Q4x5(:,:,L)  )
                    ENDIF
-                   ! Regrid to 0.5 x 0.625 (lzh, 06/21/2014)
-                   IF ( do05x0625 ) THEN
-                      CALL RegridGeosItTo05x0625( 0, Qflip(:,:,L), Q05(:,:,L) )
-                   ENDIF
                 ENDDO
 
                 !-----------------------------------------------------------
@@ -1253,73 +1011,16 @@ MODULE GeosItA3CldModule
                 msg = '%%% Archiving  ' // name
                 WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-                ! Nested China (point to proper slice of global data)
-                IF ( doNestCh ) THEN
-                   Ptr  => Qflip( I0_ch:I1_ch, J0_ch:J1_ch, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestCh, YNestCh, ZNestCh, 1 /)
-                   CALL NcWr( Ptr, fOutNestCh, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )   ! (lzh) add
-                ENDIF
-
-                ! Nested EU (point to proper slice of global data)
-                IF ( doNestEu ) THEN
-                   Ptr  => Qflip( I0_eu:I1_eu, J0_eu:J1_eu, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestEu, YNestEu, ZNestEu, 1 /)
-                   CALL NcWr( Ptr, fOutNestEu, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )   ! (lzh) add
-                ENDIF
-
-                ! Nested NA (point to proper slice of global data)
-                IF ( doNestNa ) THEN
-                   Ptr  => Qflip( I0_na:I1_na, J0_na:J1_na, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestNa, YNestNa, ZNestNa, 1 /)
-                   CALL NcWr( Ptr, fOutNestNa, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )   ! (lzh) add
-                ENDIF
-
-                ! Nested SE (point to proper slice of global data)
-                IF ( doNestSe ) THEN
-                   Ptr  => Qflip( I0_se:I1_se, J0_se:J1_se, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestSe, YNestSe, ZNestSe, 1 /)
-                   CALL NcWr( Ptr, fOutNestSe, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )   ! (lzh) add
-                ENDIF
-
-                !(jxu, 2015/12/08, add nested Asia)
-                ! Nested AS (point to proper slice of global data)
-                IF ( doNestAs ) THEN
-                   Ptr  => Qflip( I0_as:I1_as, J0_as:J1_as, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestAs, YNestAs, ZNestAs, 1 /)
-                   CALL NcWr( Ptr, fOutNestAs, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )   ! (lzh) add
-                ENDIF
-                !(jxu, end)
-
-                !(jxu, 2016/02/13, add 0.25 global)
-                ! Write 0.25x0.3125 data
-                IF ( do025x03125 ) THEN
-                   Ptr  => Qflip
-                   st4d = (/ 1,     1,     1,     H  /)
-                   ct4d = (/ X025x03125, Y025x03125, Z025x03125, 1  /)
-                   CALL NcWr( Ptr, fOut025x03125, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )
-                ENDIF
-                !(jxu, end)
-
-                IF ( doGlobal05 ) THEN
-                  Ptr  => Q05
+                ! Write 0.5x0.625 data
+                IF ( do05x0625 ) THEN
+                  Ptr  => Qflip(:,:,:)
                   st4d = (/ 1,     1,     1,     H  /)
                   ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
-                  CALL NcWr( Ptr, fOutGlobal05, TRIM( name ), st4d, ct4d )
+                  CALL NcWr( Ptr, fOut05x0625, TRIM( name ), st4d, ct4d )
                   NULLIFY( Ptr )
                 ENDIF
 
-                ! Write 2 x 2.5 data
+                ! Write 2x2.5 data
                 IF ( do2x25 ) THEN
                    st4d = (/ 1,     1,     1,     H  /)
                    ct4d = (/ X2x25, Y2x25, Z2x25, 1  /)
@@ -1332,10 +1033,10 @@ MODULE GeosItA3CldModule
                    ct4d  = (/ X4x5, Y4x5, Z4x5, 1 /)
                    CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st4d, ct4d )
                 ENDIF
-                !-------(lzh, 06/21/2014)----------
+
                 ! Nested China (point to proper slice of global data)
                 IF ( doNestCh05 ) THEN
-                   Ptr  => Q05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+                   Ptr  => Qflip( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
                    st4d = (/ 1,       1,       1,       H /)
                    ct4d = (/ XNestCh05, YNestCh05, ZNestCh05, 1 /)
                    CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st4d, ct4d )
@@ -1344,7 +1045,7 @@ MODULE GeosItA3CldModule
 
                 ! Nested EU (point to proper slice of global data)
                 IF ( doNestEu05 ) THEN
-                   Ptr  => Q05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+                   Ptr  => Qflip( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
                    st4d = (/ 1,       1,       1,       H /)
                    ct4d = (/ XNestEu05, YNestEu05, ZNestEu05, 1 /)
                    CALL NcWr( Ptr, fOut05NestEu, TRIM( name ), st4d, ct4d )
@@ -1353,7 +1054,7 @@ MODULE GeosItA3CldModule
 
                 ! Nested NA (point to proper slice of global data)
                 IF ( doNestNa05 ) THEN
-                   Ptr  => Q05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+                   Ptr  => Qflip( I0_na05:I1_na05, J0_na05:J1_na05, : )
                    st4d = (/ 1,       1,       1,       H /)
                    ct4d = (/ XNestNa05, YNestNa05, ZNestNa05, 1 /)
                    CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st4d, ct4d )
@@ -1362,25 +1063,22 @@ MODULE GeosItA3CldModule
 
                 ! Nested SE (point to proper slice of global data)
                 IF ( doNestSe05 ) THEN
-                   Ptr  => Q05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+                   Ptr  => Qflip( I0_se05:I1_se05, J0_se05:J1_se05, : )
                    st4d = (/ 1,       1,       1,       H /)
                    ct4d = (/ XNestSe05, YNestSe05, ZNestSe05, 1 /)
                    CALL NcWr( Ptr, fOut05NestSe, TRIM( name ), st4d, ct4d )
                    NULLIFY( Ptr )
                 ENDIF
 
-                !(jxu, 2015/12/08, add nested Asia)
                 ! Nested AS (point to proper slice of global data)
                 IF ( doNestAs05 ) THEN
-                   Ptr  => Q05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+                   Ptr  => Qflip( I0_as05:I1_as05, J0_as05:J1_as05, : )
                    st4d = (/ 1,       1,       1,       H /)
                    ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
                    CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st4d, ct4d )
                    NULLIFY( Ptr )
                 ENDIF
-                !(jxu, end)
 
-                !-------(finish edit)--------------
           END SELECT
 
           ! Free pointer memory
@@ -1407,11 +1105,7 @@ MODULE GeosItA3CldModule
              CALL RegridGeosItTo4x5 ( 0, QI(:,:,L), QI_4x5(:,:,L)  )
              CALL RegridGeosItTo4x5 ( 0, QL(:,:,L), QL_4x5(:,:,L)  )
           ENDIF
-          ! Regrid to 0.5 x 0.625   ! (lzh,06/21/2014)
-          IF ( do05x0625 ) THEN
-             CALL RegridGeosItTo05x0625( 0, QI(:,:,L), QI05(:,:,L) )
-             CALL RegridGeosItTo05x0625( 0, QL(:,:,L), QL05(:,:,L) )
-          ENDIF
+
        ENDDO
 
        !====================================================================
@@ -1421,157 +1115,25 @@ MODULE GeosItA3CldModule
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
        !-----------------------------
-       ! NESTED CH GRID
-       !-----------------------------
-       IF ( doNestCh ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestCh, YNestCh, ZNestCh, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_ch:I1_ch, J0_ch:J1_ch, : )
-          CALL NcWr( Ptr, fOutNestCh, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_ch:I1_ch, J0_ch:J1_ch, : )
-          CALL NcWr( Ptr, fOutNestCh, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-
-       !-----------------------------
-       ! NESTED EU GRID
-       !-----------------------------
-       IF ( doNestEu ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestEu, YNestEu, ZNestEu, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_eu:I1_eu, J0_eu:J1_eu, : )
-          CALL NcWr( Ptr, fOutNestEu, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_eu:I1_eu, J0_eu:J1_eu, : )
-          CALL NcWr( Ptr, fOutNestEu, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-
-       !-----------------------------
-       ! NESTED NA GRID
-       !-----------------------------
-       IF ( doNestNa ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestNa, YNestNa, ZNestNa, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_na:I1_na, J0_na:J1_na, : )
-          CALL NcWr( Ptr, fOutNestNa, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_na:I1_na, J0_na:J1_na, : )
-          CALL NcWr( Ptr, fOutNestNa, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-
-       !-----------------------------
-       ! NESTED SE GRID
-       !-----------------------------
-       IF ( doNestSe ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestSe, YNestSe, ZNestSe, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_se:I1_se, J0_se:J1_se, : )
-          CALL NcWr( Ptr, fOutNestSe, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_se:I1_se, J0_se:J1_se, : )
-          CALL NcWr( Ptr, fOutNestSe, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-
-       !(jxu, 2015/12/08, add nested Asia)
-       !-----------------------------
-       ! NESTED AS GRID
-       !-----------------------------
-       IF ( doNestAs ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestAs, YNestAs, ZNestAs, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_as:I1_as, J0_as:J1_as, : )
-          CALL NcWr( Ptr, fOutNestAs, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_as:I1_as, J0_as:J1_as, : )
-          CALL NcWr( Ptr, fOutNestAs, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-       !(jxu, end)
-
-       !(jxu, 2016/02/13, add 0.25 global)
-       !-----------------------------
-       ! 0.25x0.3125 GLOBAL GRID
-       !-----------------------------
-       IF ( do025x03125 ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,     1,     1,     H  /)
-          ct4d = (/ X025x03125, Y025x03125, Z025x03125, 1  /)
-
-          ! QI
-          Ptr  => QI(:,:,:)
-          CALL NcWr( Ptr, fOut025x03125, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL(:,:,:)
-          CALL NcWr( Ptr, fOut025x03125, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-       !(jxu, end)
-
-       !(lb, 2021/03/22)
-       !-----------------------------
        ! 0.5x0.625 GLOBAL GRID
        !-----------------------------
-       IF ( doGlobal05 ) THEN
+       IF ( do05x0625 ) THEN
 
          ! netCDF indices
          st4d = (/ 1,     1,     1,     H  /)
          ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
 
          ! QI
-         Ptr  => QI05(:,:,:)
-         CALL NcWr( Ptr, fOutGlobal05, 'QI', st4d, ct4d )
+         Ptr  => QI(:,:,:)
+         CALL NcWr( Ptr, fOut05x0625, 'QI', st4d, ct4d )
          NULLIFY( Ptr )
 
          ! QL
-         Ptr  => QL05(:,:,:)
-         CALL NcWr( Ptr, fOutGlobal05, 'QL', st4d, ct4d )
+         Ptr  => QL(:,:,:)
+         CALL NcWr( Ptr, fOut05x0625, 'QL', st4d, ct4d )
          NULLIFY( Ptr )
 
        ENDIF
-       !(jxu, end)
 
        !-----------------------------
        ! 2 x 2.5 GLOBAL GRID
@@ -1602,7 +1164,7 @@ MODULE GeosItA3CldModule
           CALL NcWr( QL_4x5, fOut4x5, 'QL', st4d, ct4d )
 
        ENDIF
-    !-------(lzh, 06/21/2014) add 0.5x0.625---------
+
        !-----------------------------
        ! NESTED 0625 CH GRID
        !-----------------------------
@@ -1613,12 +1175,12 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestCh05, YNestCh05, ZNestCh05, 1 /)
 
           ! QI
-          Ptr  => QI05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          Ptr  => QI( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
           CALL NcWr( Ptr, fOut05NestCh, 'QI', st4d, ct4d )
           NULLIFY( Ptr )
 
           ! QL
-          Ptr  => QL05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          Ptr  => QL( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
           CALL NcWr( Ptr, fOut05NestCh, 'QL', st4d, ct4d )
           NULLIFY( Ptr )
 
@@ -1634,12 +1196,12 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestEu05, YNestEu05, ZNestEu05, 1 /)
 
           ! QI
-          Ptr  => QI05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+          Ptr  => QI( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
           CALL NcWr( Ptr, fOut05NestEu, 'QI', st4d, ct4d )
           NULLIFY( Ptr )
 
           ! QL
-          Ptr  => QL05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+          Ptr  => QL( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
           CALL NcWr( Ptr, fOut05NestEu, 'QL', st4d, ct4d )
           NULLIFY( Ptr )
 
@@ -1655,12 +1217,12 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestNa05, YNestNa05, ZNestNa05, 1 /)
 
           ! QI
-          Ptr  => QI05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+          Ptr  => QI( I0_na05:I1_na05, J0_na05:J1_na05, : )
           CALL NcWr( Ptr, fOut05NestNa, 'QI', st4d, ct4d )
           NULLIFY( Ptr )
 
           ! QL
-          Ptr  => QL05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+          Ptr  => QL( I0_na05:I1_na05, J0_na05:J1_na05, : )
           CALL NcWr( Ptr, fOut05NestNa, 'QL', st4d, ct4d )
           NULLIFY( Ptr )
 
@@ -1676,18 +1238,17 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestSe05, YNestSe05, ZNestSe05, 1 /)
 
           ! QI
-          Ptr  => QI05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+          Ptr  => QI( I0_se05:I1_se05, J0_se05:J1_se05, : )
           CALL NcWr( Ptr, fOut05NestSe, 'QI', st4d, ct4d )
           NULLIFY( Ptr )
 
           ! QL
-          Ptr  => QL05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+          Ptr  => QL( I0_se05:I1_se05, J0_se05:J1_se05, : )
           CALL NcWr( Ptr, fOut05NestSe, 'QL', st4d, ct4d )
           NULLIFY( Ptr )
 
        ENDIF
 
-       !(jxu, 2015/12/08, add nested Asia)
        !-----------------------------
        ! NESTED 0625 AS GRID
        !-----------------------------
@@ -1698,19 +1259,16 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
 
           ! QI
-          Ptr  => QI05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+          Ptr  => QI( I0_as05:I1_as05, J0_as05:J1_as05, : )
           CALL NcWr( Ptr, fOut05NestAs, 'QI', st4d, ct4d )
           NULLIFY( Ptr )
 
           ! QL
-          Ptr  => QL05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+          Ptr  => QL( I0_as05:I1_as05, J0_as05:J1_as05, : )
           CALL NcWr( Ptr, fOut05NestAs, 'QL', st4d, ct4d )
           NULLIFY( Ptr )
 
        ENDIF
-       !(jxu, end)
-
-    !-------(finish edit)---------------------------
 
        !--------------------------------------------------------------------
        ! Close input file
@@ -1750,12 +1308,9 @@ MODULE GeosItA3CldModule
 !  Hongyu Liu (cf. routine RegridTau).  OPTDEPTH = TAUCLI + TAUCLW.
 !
 ! !REVISION HISTORY:
-!  09 Jan 2012 - R. Yantosca - Initial version
-!  17 Jan 2012 - R. Yantosca - Bug fix: flip data in vertical immediately
-!                              after reading.  Use pointers for efficiency
-!  17 Jan 2012 - R. Yantosca - Nullify pointers after using them
-!  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
-!  20 Sep 2013 - R. Yantosca - Now save output to nested Europe grid
+!  09 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -1768,60 +1323,48 @@ MODULE GeosItA3CldModule
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,        Y,        Z,       T
-    INTEGER                 :: XNestCh,  YNestCh,  ZNestCh, TNestCh
-    INTEGER                 :: XNestEu,  YNestEu,  ZNestEu, TNestEu
-    INTEGER                 :: XNestNa,  YNestNa,  ZNestNa, TNestNa
-    INTEGER                 :: XNestSe,  YNestSe,  ZNestSe, TNestSe
-    !(jxu, 2015/12/08, add nested Asia)
-    INTEGER                 :: XNestAs,  YNestAs,  ZNestAs, TNestAs
-    !(jxu, end)
-    !(jxu, 2016/02/13, add 0.25 global)
-    INTEGER                 :: X025x03125, Y025x03125, Z025x03125, T025x03125
-    !(lb, 2021/03/22)
-    INTEGER                 :: X05x0625, Y05x0625, Z05x0625, T05x0625
-    !(jxu, end)
-    INTEGER                 :: X2x25,    Y2x25,    Z2x25,   T2x25
-    INTEGER                 :: X4x5,     Y4x5,     Z4x5,    T4x5
-    INTEGER                 :: st3d(3),  st4d(4)
-    INTEGER                 :: ct3d(3),  ct4d(4)
 
-    ! Data arrays
-    REAL*4,  TARGET         :: Cld      ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: CfAn     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: CfCu     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: CfLs     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: OptD     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: TauI     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,  TARGET         :: TauW     ( I025x03125, J025x03125, L025x03125 )
-    REAL*4                  :: Cld_2x25 ( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: CfAn_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: CfCu_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: CfLs_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: OptD_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: TauI_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: TauW_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: Cld_4x5  ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: CfAn_4x5 ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: CfCu_4x5 ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: CfLs_4x5 ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: OptD_4x5 ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: TauI_4x5 ( I4x5,       J4x5,       L4x5       )
-    REAL*4                  :: TauW_4x5 ( I4x5,       J4x5,       L4x5       )
-    ! (lzh,06/20/2014) 0.5x0.625
+    INTEGER                 :: X05x0625, Y05x0625, Z05x0625, T05x0625 ! ewl
+    INTEGER                 :: X2x25,    Y2x25,    Z2x25,    T2x25
+    INTEGER                 :: X4x5,     Y4x5,     Z4x5,     T4x5
+
     INTEGER                 :: XNestCh05,  YNestCh05, ZNestCh05, TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05, ZNestEu05, TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05, ZNestNa05, TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05, ZNestSe05, TNestSe05
-    !(jxu, 2015/12/08, add nested Asia)
     INTEGER                 :: XNestAs05,  YNestAs05, ZNestAs05, TNestAs05
-    !(jxu, end)
-    REAL*4,  TARGET         :: Cld05    ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: CfAn05   ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: CfCu05   ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: CfLs05   ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: OptD05   ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: TauI05   ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,  TARGET         :: TauW05   ( I05x0625, J05x0625, L05x0625 )
+
+    INTEGER                 :: st3d(3),  st4d(4)
+    INTEGER                 :: ct3d(3),  ct4d(4)
+
+    ! Data arrays
+    REAL*4,  TARGET         :: Cld      ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: Cld_2x25 ( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: Cld_4x5  ( I4x5,       J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: CfAn     ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: CfAn_2x25( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: CfAn_4x5 ( I4x5,       J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: CfCu     ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: CfCu_2x25( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: CfCu_4x5 ( I4x5,       J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: CfLs     ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: CfLs_2x25( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: CfLs_4x5 ( I4x5,       J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: OptD     ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: OptD_2x25( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: OptD_4x5 ( I4x5,       J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: TauI     ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: TauI_2x25( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: TauI_4x5 ( I4x5,       J4x5,       L4x5       )
+
+    REAL*4,  TARGET         :: TauW     ( I05x0625,   J05x0625,   L05x0625   )
+    REAL*4                  :: TauW_2x25( I2x25,      J2x25,      L2x25      )
+    REAL*4                  :: TauW_4x5 ( I4x5,       J4x5,       L4x5       )
 
     ! Pointer arrays
     REAL*4,  POINTER        :: ptr(:,:,:)
@@ -1840,69 +1383,16 @@ MODULE GeosItA3CldModule
     WRITE( IU_LOG, '(a)' ) '%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-    ! Nested CH grid
-    IF ( doNestCh ) THEN
-       CALL NcGet_DimLen( fOutNestCh, 'lon',  XNestCh )
-       CALL NcGet_DimLen( fOutNestCh, 'lat',  YNestCh )
-       CALL NcGet_DimLen( fOutNestCh, 'lev',  ZNestCh )
-       CALL NcGet_DimLen( fOutNestCh, 'time', TNestCh )
-    ENDIF
-
-    ! Nested EU grid
-    IF ( doNestEu ) THEN
-       CALL NcGet_DimLen( fOutNestEu, 'lon',  XNestEu )
-       CALL NcGet_DimLen( fOutNestEu, 'lat',  YNestEu )
-       CALL NcGet_DimLen( fOutNestEu, 'lev',  ZNestEu )
-       CALL NcGet_DimLen( fOutNestEu, 'time', TNestEu )
-    ENDIF
-
-    ! Nested NA grid
-    IF ( doNestNa ) THEN
-       CALL NcGet_DimLen( fOutNestNa, 'lon',  XNestNa )
-       CALL NcGet_DimLen( fOutNestNa, 'lat',  YNestNa )
-       CALL NcGet_DimLen( fOutNestNa, 'lev',  ZNestNa )
-       CALL NcGet_DimLen( fOutNestNa, 'time', TNestNa )
-    ENDIF
-
-    ! Nested SE grid
-    IF ( doNestSe ) THEN
-       CALL NcGet_DimLen( fOutNestSe, 'lon',  XNestSe )
-       CALL NcGet_DimLen( fOutNestSe, 'lat',  YNestSe )
-       CALL NcGet_DimLen( fOutNestSe, 'lev',  ZNestSe )
-       CALL NcGet_DimLen( fOutNestSe, 'time', TNestSe )
-    ENDIF
-
-    !(jxu, 2015/12/08, add nested Asia)
-    ! Nested As grid
-    IF ( doNestAs ) THEN
-       CALL NcGet_DimLen( fOutNestAs, 'lon',  XNestAs )
-       CALL NcGet_DimLen( fOutNestAs, 'lat',  YNestAs )
-       CALL NcGet_DimLen( fOutNestAs, 'lev',  ZNestAs )
-       CALL NcGet_DimLen( fOutNestAs, 'time', TNestAs )
-    ENDIF
-    !(jxu, end)
-
-    !(jxu, 2016/02/13, add 0.25 global)
-    ! 0.25x0.3125 global grid
-    IF ( do025x03125 ) THEN
-       CALL NcGet_DimLen( fOut025x03125,   'lon',  X025x03125   )
-       CALL NcGet_DimLen( fOut025x03125,   'lat',  Y025x03125   )
-       CALL NcGet_DimLen( fOut025x03125,   'lev', Z025x03125   )
-       CALL NcGet_DimLen( fOut025x03125,   'time', T025x03125   )
-    ENDIF
-    !(jxu, end)
-
-    
-    !(lb, 2021/03/22)
-    IF ( doGlobal05 ) THEN
-      CALL NcGet_DimLen( fOutGlobal05,   'lon',  X05x0625   )
-      CALL NcGet_DimLen( fOutGlobal05,   'lat',  Y05x0625   )
-      CALL NcGet_DimLen( fOutGlobal05,   'lev',  Z05x0625   )
-      CALL NcGet_DimLen( fOutGlobal05,   'time', T05x0625   )
+    ! 0.5x0.625 global grid
+    IF ( do05x0625 ) THEN
+      CALL NcGet_DimLen( fOut05x0625,   'lon',  X05x0625   )
+      CALL NcGet_DimLen( fOut05x0625,   'lat',  Y05x0625   )
+      CALL NcGet_DimLen( fOut05x0625,   'lev',  Z05x0625   )
+      CALL NcGet_DimLen( fOut05x0625,   'time', T05x0625   )
    ENDIF
 
 
-    ! 2 x 2.5 global grid
+    ! 2x2.5 global grid
     IF ( do2x25 ) THEN
        CALL NcGet_DimLen( fOut2x25,   'lon',  X2x25   )
        CALL NcGet_DimLen( fOut2x25,   'lat',  Y2x25   )
@@ -1917,7 +1407,7 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fOut4x5,    'lev',  Z4x5    )
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
-    ! (lzh, 06/21/2014) 0.5x0.625
+
     ! Nested CH grid
     IF ( doNestCh05 ) THEN
        CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
@@ -1950,7 +1440,6 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
     ENDIF
 
-    !(jxu, 2015/12/08, add nested Asia)
     ! Nested AS grid
     IF ( doNestAs05 ) THEN
        CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
@@ -1958,17 +1447,10 @@ MODULE GeosItA3CldModule
        CALL NcGet_DimLen( fOut05NestAs, 'lev',  ZNestAs05 )
        CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
-    !(jxu, end)
 
     !=======================================================================
     ! Open input file
     !=======================================================================
-
-    ! Zero arrays
-    Cld   = 0e0
-    OptD  = 0e0
-    TauI  = 0e0
-    Tauw  = 0e0
 
     ! Loop over the number of files per day
     DO H = 1, TIMES_A3
@@ -1977,30 +1459,28 @@ MODULE GeosItA3CldModule
        Cld       = 0e0
        Cld_2x25  = 0e0
        Cld_4x5   = 0e0
+
        TauI      = 0e0
        TauI_2x25 = 0e0
        TauI_4x5  = 0e0
+
        TauW      = 0e0
        TauW_2x25 = 0e0
        TauW_4x5  = 0e0
+
        OptD      = 0e0
        OptD_2x25 = 0e0
        OptD_4x5  = 0e0
-       ! (lzh,06/21/2014)
-       Cld05     = 0e0
-       TauI05    = 0e0
-       TauW05    = 0e0
-       OptD05    = 0e0
 
        ! GMT time of day (hh:mm:ss)
        hhmmss    = ( ( a3mins(H) / 60 ) * 10000 ) + 3000
 
        !==================================================================
-       ! Read CLOUD data from tavg3_3d_rad_Nv
+       ! Read CLOUD data from rad_tavg_3hr_v72
        !==================================================================
 
        ! Create input filename from the template
-       fNameInput = TRIM( inputDataDir ) // TRIM( tavg3_3d_rad_Nv_file )
+       fNameInput = TRIM( inputDataDir ) // TRIM( rad_tavg_3hr_v72_file )
        CALL expandDate( fNameInput, yyyymmdd, hhmmss )
 
        ! Echo info
@@ -2021,9 +1501,10 @@ MODULE GeosItA3CldModule
        st4d = (/ 1, 1, 1, 1 /)
        ct4d = (/ X, Y, Z, 1 /)
 
-       ! CLOUD
+       ! Read CLOUD
        msg = '%%% Reading    CLOUD'
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
+
        CALL NcRd( Cld, fIn, 'CLOUD', st4d, ct4d )
        WHERE( Cld == FILL_VALUE ) Cld = 0e0
 
@@ -2033,11 +1514,11 @@ MODULE GeosItA3CldModule
        CALL NcCl( fIn )
 
        !==================================================================
-       ! Read TAUCLI, TAUCLW, CFAN, CFCU, CFLS from tavg3_3d_cld_Nv
+       ! Read TAUCLI, TAUCLW, CFAN, CFCU, CFLS from cld_tavg_3hr_v72
        !==================================================================
 
        ! Create input filename from the template
-       fNameInput = TRIM( inputDataDir ) // TRIM( tavg3_3d_cld_Nv_file )
+       fNameInput = TRIM( inputDataDir ) // TRIM( cld_tavg_3hr_v72_file )
        CALL expandDate( fNameInput, yyyymmdd, hhmmss )
 
        ! Echo info
@@ -2058,19 +1539,21 @@ MODULE GeosItA3CldModule
        st4d = (/ 1, 1, 1, 1 /)
        ct4d = (/ X, Y, Z, 1 /)
 
-       ! TAUCLI
+       ! Read TAUCLI
        msg = '%%% Reading    TAUCLI'
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
+
        CALL NcRd( TauI, fIn, 'TAUCLI', st4d, ct4d )
        WHERE( TauI == FILL_VALUE ) TauI = 0e0
 
-       ! TAUCLW
+       ! Read TAUCLW
        msg = '%%% Reading    TAUCLW'
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
+
        CALL NcRd( TauW, fIn, 'TAUCLW', st4d, ct4d )
        WHERE( TauW == FILL_VALUE ) TauI = 0e0
 
-       ! OPTDEPTH (construct from TAUCLI and TAUCLW)
+       ! Compute OPTDEPTH (construct from TAUCLI and TAUCLW)
        OptD = TauI + TauW
 
        ! CFAN
@@ -2099,7 +1582,7 @@ MODULE GeosItA3CldModule
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !%%% Prior to 12/5/13:
-!%%% Go back to reading CLOUD from tavg3_3d_rad_Nv collection (bmy, 12/5/13)
+!%%% Go back to reading CLOUD from rad_tavg_3hr_v72 collection
 !%%%       ! Create CLOUD as min( CFAN + CFLS, 1e0 )
 !%%%       Cld = CfAn + CfLs
 !%%%       WHERE( Cld > 1e0 ) Cld = 1e0
@@ -2135,15 +1618,6 @@ MODULE GeosItA3CldModule
                           CfLs,      CfLs_4x5,                     &
                           mapTo4x5,  I4x5,      J4x5,  L4x5       )
        ENDIF
-       ! (lzh, 06/21/2014) add 0.5x0.625
-       ! Regrid to 2 x 2.5 (reverse levels of output array Q2x25)
-       IF ( do05x0625 ) THEN
-          CALL RegridTau( OptD,      OptD05, TauI,  TauI05,  &
-                          TauW,      TauW05, Cld,   Cld05,   &
-                          CfAn,      CfAn05, CfCu,  CfCu05,  &
-                          CfLs,      CfLs05,                    &
-                          mapTo05x0625, I05x0625,   J05x0625, L05x0625 )
-       ENDIF
 
        !====================================================================
        ! Write to netCDF
@@ -2151,341 +1625,56 @@ MODULE GeosItA3CldModule
 
        msg = '%%% Archiving  CLOUD, TAUCLI, TAUCLW, OPTDEPTH'
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
-
+ 
        !----------------------------------------
-       ! NESTED CH GRID  (flip in vertical)
+       ! 0.5x0.625 GLOBAL GRID (flip in vertical)
        !----------------------------------------
-       IF ( doNestCh ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestCh, YNestCh, ZNestCh, 1 /)
-
-          ! CLOUD
-          Ptr  => Cld( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-          CALL NcWr( Ptr, fOutNestCh, 'CLOUD',    st4d, ct4d )
-
-          ! TAUCLI
-          Ptr  => TauI( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-          CALL NcWr( Ptr, fOutNestCh, 'TAUCLI',   st4d, ct4d )
-
-          ! TAUCLW
-          Ptr  => TauW( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-          CALL NcWr( Ptr, fOutNestCh, 'TAUCLW',   st4d, ct4d )
-
-          ! OPTDEPTH
-          Ptr  => OptD( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-          CALL NcWr( Ptr, fOutNestCh, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-             CALL NcWr( Ptr, fOutNestCh, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-             CALL NcWr( Ptr, fOutNestCh, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_ch:I1_ch, J0_ch:J1_ch, ZNestCh:1:-1 )
-             CALL NcWr( Ptr, fOutNestCh, 'CFlS',  st4d, ct4d )
-          ENDIF
-
-          ! Free pointer memory
-          NULLIFY( Ptr )
-       ENDIF
-
-       !----------------------------------------
-       ! NESTED EU GRID (flip in vertical)
-       !----------------------------------------
-       IF ( doNestEu ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestEu, YNestEu, ZNestEu, 1 /)
-
-          ! CLOUD
-          Ptr  => Cld( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-          CALL NcWr( Ptr, fOutNestEu, 'CLOUD',    st4d, ct4d )
-
-          ! TAUCLI
-          Ptr  => TauI( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-          CALL NcWr( Ptr, fOutNestEu, 'TAUCLI',   st4d, ct4d )
-
-          ! TAUCLW
-          Ptr  => TauW( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-          CALL NcWr( Ptr, fOutNestEu, 'TAUCLW',   st4d, ct4d )
-
-          ! OPTDEPTH
-          Ptr  => OptD( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-          CALL NcWr( Ptr, fOutNestEu, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-             CALL NcWr( Ptr, fOutNestEu, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-             CALL NcWr( Ptr, fOutNestEu, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_eu:I1_eu, J0_eu:J1_eu, ZNestEu:1:-1 )
-             CALL NcWr( Ptr, fOutNestEu, 'CFLS',  st4d, ct4d )
-          ENDIF
-
-          ! Free pointer memory
-          NULLIFY( Ptr )
-       ENDIF
-
-       !----------------------------------------
-       ! NESTED NA GRID (flip in vertical)
-       !----------------------------------------
-       IF ( doNestNa ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestNa, YNestNa, ZNestNa, 1 /)
-
-          ! CLOUD
-          Ptr  => Cld( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-          CALL NcWr( Ptr, fOutNestNa, 'CLOUD',    st4d, ct4d )
-
-          ! TAUCLI
-          Ptr  => TauI( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-          CALL NcWr( Ptr, fOutNestNa, 'TAUCLI',   st4d, ct4d )
-
-          ! TAUCLW
-          Ptr  => TauW( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-          CALL NcWr( Ptr, fOutNestNa, 'TAUCLW',   st4d, ct4d )
-
-          ! OPTDEPTH
-          Ptr  => OptD( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-          CALL NcWr( Ptr, fOutNestNa, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-             CALL NcWr( Ptr, fOutNestNa, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-             CALL NcWr( Ptr, fOutNestNa, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_na:I1_na, J0_na:J1_na, ZNestNa:1:-1 )
-             CALL NcWr( Ptr, fOutNestNa, 'CFLS',  st4d, ct4d )
-          ENDIF
-
-          ! Free pointer memory
-          NULLIFY( Ptr )
-       ENDIF
-
-       !----------------------------------------
-       ! NESTED SE GRID (flip in vertical)
-       !----------------------------------------
-       IF ( doNestSe ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestSe, YNestSe, ZNestSe, 1 /)
-
-          ! CLOUD
-          Ptr  => Cld( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-          CALL NcWr( Ptr, fOutNestSe, 'CLOUD',    st4d, ct4d )
-
-          ! TAUCLI
-          Ptr  => TauI( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-          CALL NcWr( Ptr, fOutNestSe, 'TAUCLI',   st4d, ct4d )
-
-          ! TAUCLW
-          Ptr  => TauW( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-          CALL NcWr( Ptr, fOutNestSe, 'TAUCLW',   st4d, ct4d )
-
-          ! OPTDEPTH
-          Ptr  => OptD( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-          CALL NcWr( Ptr, fOutNestSe, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-             CALL NcWr( Ptr, fOutNestSe, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-             CALL NcWr( Ptr, fOutNestSe, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_se:I1_se, J0_se:J1_se, ZNestSe:1:-1 )
-             CALL NcWr( Ptr, fOutNestSe, 'CFLS',  st4d, ct4d )
-          ENDIF
-
-          ! Free pointer memory
-          NULLIFY( Ptr )
-       ENDIF
-
-       !(jxu, 2015/12/08, add nested Asia)
-       !----------------------------------------
-       ! NESTED As GRID (flip in vertical)
-       !----------------------------------------
-       IF ( doNestAs ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestAs, YNestAs, ZNestAs, 1 /)
-
-          ! CLOUD
-          Ptr  => Cld( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-          CALL NcWr( Ptr, fOutNestAs, 'CLOUD',    st4d, ct4d )
-
-          ! TAUCLI
-          Ptr  => TauI( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-          CALL NcWr( Ptr, fOutNestAs, 'TAUCLI',   st4d, ct4d )
-
-          ! TAUCLW
-          Ptr  => TauW( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-          CALL NcWr( Ptr, fOutNestAs, 'TAUCLW',   st4d, ct4d )
-
-          ! OPTDEPTH
-          Ptr  => OptD( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-          CALL NcWr( Ptr, fOutNestAs, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-             CALL NcWr( Ptr, fOutNestAs, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-             CALL NcWr( Ptr, fOutNestAs, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_as:I1_as, J0_as:J1_as, ZNestAs:1:-1 )
-             CALL NcWr( Ptr, fOutNestAs, 'CFLS',  st4d, ct4d )
-          ENDIF
-
-          ! Free pointer memory
-          NULLIFY( Ptr )
-       ENDIF
-       !(jxu, end)
-
-
-       !(jxu, 2016/02/13, add 0.25 global)
-       !----------------------------------------
-       ! 0.25x0.3125 GLOBAL GRID (flip in vertical, Chi Li)
-       !----------------------------------------
-       IF ( do025x03125 ) THEN
+       IF ( do05x0625 ) THEN
 
           ! netCDF indices
           st4d = (/ 1,     1,     1,     H  /)
-          ct4d = (/ X025x03125, Y025x03125, Z025x03125, 1  /)
+          ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
+          
           ! CLOUD
-          Ptr  => Cld( :, :, Z025x03125:1:-1 )
-          CALL NcWr( Ptr, fOut025x03125, 'CLOUD',    st4d, ct4d )
-
+          Ptr  => Cld( :, :, Z05x0625:1:-1 )
+          CALL NcWr( Ptr, fOut05x0625, 'CLOUD',    st4d, ct4d )
+          
           ! TAUCLI
-          Ptr  => TauI( :, :, Z025x03125:1:-1 )
-          CALL NcWr( Ptr, fOut025x03125, 'TAUCLI',   st4d, ct4d )
-
+          Ptr  => TauI( :, :, Z05x0625:1:-1 )
+          CALL NcWr( Ptr, fOut05x0625, 'TAUCLI',   st4d, ct4d )
+          
           ! TAUCLW
-          Ptr  => TauW( :, :, Z025x03125:1:-1 )
-          CALL NcWr( Ptr, fOut025x03125, 'TAUCLW',   st4d, ct4d )
-
+          Ptr  => TauW( :, :, Z05x0625:1:-1 )
+          CALL NcWr( Ptr, fOut05x0625, 'TAUCLW',   st4d, ct4d )
+          
           ! OPTDEPTH
-          Ptr  => OptD( :, :, Z025x03125:1:-1 )
-          CALL NcWr( Ptr, fOut025x03125, 'OPTDEPTH', st4d, ct4d )
-
+          Ptr  => OptD( :, :, Z05x0625:1:-1 )
+          CALL NcWr( Ptr, fOut05x0625, 'OPTDEPTH', st4d, ct4d )
+          
           ! CFAN (if necessary)
           IF ( use_CfAn ) THEN
-             Ptr  => CfAn( :, :, Z025x03125:1:-1 )
-             CALL NcWr( Ptr, fOut025x03125, 'CFAN',  st4d, ct4d )
-         ENDIF
+             Ptr  => CfAn( :, :, Z05x0625:1:-1 )
+             CALL NcWr( Ptr, fOut05x0625, 'CFAN',  st4d, ct4d )
+          ENDIF
 
           ! CFCU (if necessary)
           IF ( use_CfCu ) THEN
-             Ptr  => CfCu( :, :, Z025x03125:1:-1 )
-             CALL NcWr( Ptr, fOut025x03125, 'CFCU',  st4d, ct4d )
+             Ptr  => CfCu( :, :, Z05x0625:1:-1 )
+             CALL NcWr( Ptr, fOut05x0625, 'CFCU',  st4d, ct4d )
           ENDIF
-
+          
           ! CFLS (if necessary)
           IF ( use_CfLs ) THEN
-             Ptr  => CfLs( :, :, Z025x03125:1:-1 )
-             CALL NcWr( Ptr, fOut025x03125, 'CFlS',  st4d, ct4d )
+             Ptr  => CfLs( :, :, Z05x0625:1:-1 )
+             CALL NcWr( Ptr, fOut05x0625, 'CFlS',  st4d, ct4d )
           ENDIF
-
+          
           ! Free pointer memory
           NULLIFY( Ptr )
        ENDIF
 
-       !(lb, 2021/03/22)
        !----------------------------------------
-       ! 0.5x0.625 GLOBAL GRID (flip in vertical, Chi Li)
-       !----------------------------------------
-       IF ( doGlobal05 ) THEN
-
-         ! netCDF indices
-         st4d = (/ 1,     1,     1,     H  /)
-         ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
-         ! CLOUD
-         Ptr  => Cld05( :, :, Z05x0625:1:-1 )
-         CALL NcWr( Ptr, fOutGlobal05, 'CLOUD',    st4d, ct4d )
-
-         ! TAUCLI
-         Ptr  => TauI05( :, :, Z05x0625:1:-1 )
-         CALL NcWr( Ptr, fOutGlobal05, 'TAUCLI',   st4d, ct4d )
-
-         ! TAUCLW
-         Ptr  => TauW05( :, :, Z05x0625:1:-1 )
-         CALL NcWr( Ptr, fOutGlobal05, 'TAUCLW',   st4d, ct4d )
-
-         ! OPTDEPTH
-         Ptr  => OptD05( :, :, Z05x0625:1:-1 )
-         CALL NcWr( Ptr, fOutGlobal05, 'OPTDEPTH', st4d, ct4d )
-
-         ! CFAN (if necessary)
-         IF ( use_CfAn ) THEN
-            Ptr  => CfAn05( :, :, Z05x0625:1:-1 )
-            CALL NcWr( Ptr, fOutGlobal05, 'CFAN',  st4d, ct4d )
-        ENDIF
-
-         ! CFCU (if necessary)
-         IF ( use_CfCu ) THEN
-            Ptr  => CfCu05( :, :, Z05x0625:1:-1 )
-            CALL NcWr( Ptr, fOutGlobal05, 'CFCU',  st4d, ct4d )
-         ENDIF
-
-         ! CFLS (if necessary)
-         IF ( use_CfLs ) THEN
-            Ptr  => CfLs05( :, :, Z05x0625:1:-1 )
-            CALL NcWr( Ptr, fOutGlobal05, 'CFlS',  st4d, ct4d )
-         ENDIF
-
-         ! Free pointer memory
-         NULLIFY( Ptr )
-       ENDIF
-
-       !----------------------------------------
-       ! 2 x 2.5 GLOBAL GRID
+       ! 2 x 2.5 GLOBAL GRID (already flipped in vertical)
        !----------------------------------------
        IF ( do2x25 ) THEN
 
@@ -2507,7 +1696,7 @@ MODULE GeosItA3CldModule
        ENDIF
 
        !----------------------------------------
-       ! 4 x 5 GLOBAL GRID
+       ! 4 x 5 GLOBAL GRID (already flipped in vertical)
        !----------------------------------------
        IF ( do4x5 ) THEN
 
@@ -2527,10 +1716,9 @@ MODULE GeosItA3CldModule
           IF ( use_CfLs ) CALL NcWr( CfLs_4x5,  fOut4x5, 'CFLS', st4d, ct4d )
 
        ENDIF
-    !--------(lzh,06/21/2014) add 0.5x0.625-----------
-    !--For 0.5x0.625, it is regridded first so do not flip vertically here (Chi Li)
+
        !----------------------------------------
-       ! NESTED CH GRID 
+       ! NESTED CH GRID (flip in vertical)
        !----------------------------------------
        IF ( doNestCh05 ) THEN
 
@@ -2539,36 +1727,36 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestCh05, YNestCh05, ZNestCh05, 1 /)
 
           ! CLOUD
-          Ptr  => Cld05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          Ptr  => Cld( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
           CALL NcWr( Ptr, fOut05NestCh, 'CLOUD',    st4d, ct4d )
 
           ! TAUCLI
-          Ptr  => TauI05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          Ptr  => TauI( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
           CALL NcWr( Ptr, fOut05NestCh, 'TAUCLI',   st4d, ct4d )
 
           ! TAUCLW
-          Ptr  => TauW05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          Ptr  => TauW( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
           CALL NcWr( Ptr, fOut05NestCh, 'TAUCLW',   st4d, ct4d )
 
           ! OPTDEPTH
-          Ptr  => OptD05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          Ptr  => OptD( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
           CALL NcWr( Ptr, fOut05NestCh, 'OPTDEPTH', st4d, ct4d )
 
           ! CFAN (if necessary)
           IF ( use_CfAn ) THEN
-             Ptr  => CfAn05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+             Ptr  => CfAn( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
              CALL NcWr( Ptr, fOut05NestCh, 'CFAN',  st4d, ct4d )
          ENDIF
 
           ! CFCU (if necessary)
           IF ( use_CfCu ) THEN
-             Ptr  => CfCu05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+             Ptr  => CfCu( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
              CALL NcWr( Ptr, fOut05NestCh, 'CFCU',  st4d, ct4d )
           ENDIF
 
           ! CFLS (if necessary)
           IF ( use_CfLs ) THEN
-             Ptr  => CfLs05( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+             Ptr  => CfLs( I0_ch05:I1_ch05, J0_ch05:J1_ch05, ZnestCh:1:-1 )
              CALL NcWr( Ptr, fOut05NestCh, 'CFlS',  st4d, ct4d )
           ENDIF
 
@@ -2577,7 +1765,7 @@ MODULE GeosItA3CldModule
        ENDIF
 
        !----------------------------------------
-       ! NESTED EU GRID
+       ! NESTED EU GRID (flip in vertical)
        !----------------------------------------
        IF ( doNestEu05 ) THEN
 
@@ -2586,36 +1774,36 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestEu05, YNestEu05, ZNestEu05, 1 /)
 
           ! CLOUD
-          Ptr  => Cld05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+          Ptr  => Cld( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
           CALL NcWr( Ptr, fOut05NestEu, 'CLOUD',    st4d, ct4d )
 
           ! TAUCLI
-          Ptr  => TauI05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+          Ptr  => TauI( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
           CALL NcWr( Ptr, fOut05NestEu, 'TAUCLI',   st4d, ct4d )
 
           ! TAUCLW
-          Ptr  => TauW05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+          Ptr  => TauW( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
           CALL NcWr( Ptr, fOut05NestEu, 'TAUCLW',   st4d, ct4d )
 
           ! OPTDEPTH
-          Ptr  => OptD05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+          Ptr  => OptD( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
           CALL NcWr( Ptr, fOut05NestEu, 'OPTDEPTH', st4d, ct4d )
 
           ! CFAN (if necessary)
           IF ( use_CfAn ) THEN
-             Ptr  => CfAn05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+             Ptr  => CfAn( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
              CALL NcWr( Ptr, fOut05NestEu, 'CFAN',  st4d, ct4d )
           ENDIF
 
           ! CFCU (if necessary)
           IF ( use_CfCu ) THEN
-             Ptr  => CfCu05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+             Ptr  => CfCu( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
              CALL NcWr( Ptr, fOut05NestEu, 'CFCU',  st4d, ct4d )
           ENDIF
 
           ! CFLS (if necessary)
           IF ( use_CfLs ) THEN
-             Ptr  => CfLs05( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+             Ptr  => CfLs( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu:1:-1 )
              CALL NcWr( Ptr, fOut05NestEu, 'CFLS',  st4d, ct4d )
           ENDIF
 
@@ -2624,7 +1812,7 @@ MODULE GeosItA3CldModule
        ENDIF
 
        !----------------------------------------
-       ! NESTED NA GRID
+       ! NESTED NA GRID (flip in vertical)
        !----------------------------------------
        IF ( doNestNa05 ) THEN
 
@@ -2633,36 +1821,36 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestNa05, YNestNa05, ZNestNa05, 1 /)
 
           ! CLOUD
-          Ptr  => Cld05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+          Ptr  => Cld( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
           CALL NcWr( Ptr, fOut05NestNa, 'CLOUD',    st4d, ct4d )
 
           ! TAUCLI
-          Ptr  => TauI05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+          Ptr  => TauI( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
           CALL NcWr( Ptr, fOut05NestNa, 'TAUCLI',   st4d, ct4d )
 
           ! TAUCLW
-          Ptr  => TauW05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+          Ptr  => TauW( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
           CALL NcWr( Ptr, fOut05NestNa, 'TAUCLW',   st4d, ct4d )
 
           ! OPTDEPTH
-          Ptr  => OptD05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+          Ptr  => OptD( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
           CALL NcWr( Ptr, fOut05NestNa, 'OPTDEPTH', st4d, ct4d )
 
           ! CFAN (if necessary)
           IF ( use_CfAn ) THEN
-             Ptr  => CfAn05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+             Ptr  => CfAn( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
              CALL NcWr( Ptr, fOut05NestNa, 'CFAN',  st4d, ct4d )
           ENDIF
 
           ! CFCU (if necessary)
           IF ( use_CfCu ) THEN
-             Ptr  => CfCu05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+             Ptr  => CfCu( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
              CALL NcWr( Ptr, fOut05NestNa, 'CFCU',  st4d, ct4d )
           ENDIF
 
           ! CFLS (if necessary)
           IF ( use_CfLs ) THEN
-             Ptr  => CfLs05( I0_na05:I1_na05, J0_na05:J1_na05, : )
+             Ptr  => CfLs( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa:1:-1 )
              CALL NcWr( Ptr, fOut05NestNa, 'CFLS',  st4d, ct4d )
           ENDIF
 
@@ -2671,7 +1859,7 @@ MODULE GeosItA3CldModule
        ENDIF
 
        !----------------------------------------
-       ! NESTED SE GRID
+       ! NESTED SE GRID (flip in vertical)
        !----------------------------------------
        IF ( doNestSe05 ) THEN
 
@@ -2680,36 +1868,36 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestSe05, YNestSe05, ZNestSe05, 1 /)
 
           ! CLOUD
-          Ptr  => Cld05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+          Ptr  => Cld( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
           CALL NcWr( Ptr, fOut05NestSe, 'CLOUD',    st4d, ct4d )
 
           ! TAUCLI
-          Ptr  => TauI05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+          Ptr  => TauI( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
           CALL NcWr( Ptr, fOut05NestSe, 'TAUCLI',   st4d, ct4d )
 
           ! TAUCLW
-          Ptr  => TauW05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+          Ptr  => TauW( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
           CALL NcWr( Ptr, fOut05NestSe, 'TAUCLW',   st4d, ct4d )
 
           ! OPTDEPTH
-          Ptr  => OptD05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+          Ptr  => OptD( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
           CALL NcWr( Ptr, fOut05NestSe, 'OPTDEPTH', st4d, ct4d )
 
           ! CFAN (if necessary)
           IF ( use_CfAn ) THEN
-             Ptr  => CfAn05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+             Ptr  => CfAn( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
              CALL NcWr( Ptr, fOut05NestSe, 'CFAN',  st4d, ct4d )
           ENDIF
 
           ! CFCU (if necessary)
           IF ( use_CfCu ) THEN
-             Ptr  => CfCu05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+             Ptr  => CfCu( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
              CALL NcWr( Ptr, fOut05NestSe, 'CFCU',  st4d, ct4d )
           ENDIF
 
           ! CFLS (if necessary)
           IF ( use_CfLs ) THEN
-             Ptr  => CfLs05( I0_se05:I1_se05, J0_se05:J1_se05, : )
+             Ptr  => CfLs( I0_se05:I1_se05, J0_se05:J1_se05, ZNestSe:1:-1 )
              CALL NcWr( Ptr, fOut05NestSe, 'CFLS',  st4d, ct4d )
           ENDIF
 
@@ -2717,9 +1905,8 @@ MODULE GeosItA3CldModule
           NULLIFY( Ptr )
        ENDIF
 
-       !(jxu, 2015/12/08, add nested Asia)
        !----------------------------------------
-       ! NESTED AS GRID
+       ! NESTED AS GRID (flip in vertical)
        !----------------------------------------
        IF ( doNestAs05 ) THEN
 
@@ -2728,45 +1915,43 @@ MODULE GeosItA3CldModule
           ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
 
           ! CLOUD
-          Ptr  => Cld05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+          Ptr  => Cld( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
           CALL NcWr( Ptr, fOut05NestAs, 'CLOUD',    st4d, ct4d )
 
           ! TAUCLI
-          Ptr  => TauI05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+          Ptr  => TauI( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
           CALL NcWr( Ptr, fOut05NestAs, 'TAUCLI',   st4d, ct4d )
 
           ! TAUCLW
-          Ptr  => TauW05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+          Ptr  => TauW( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
           CALL NcWr( Ptr, fOut05NestAs, 'TAUCLW',   st4d, ct4d )
 
           ! OPTDEPTH
-          Ptr  => OptD05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+          Ptr  => OptD05( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
           CALL NcWr( Ptr, fOut05NestAs, 'OPTDEPTH', st4d, ct4d )
 
           ! CFAN (if necessary)
           IF ( use_CfAn ) THEN
-             Ptr  => CfAn05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+             Ptr  => CfAn( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
              CALL NcWr( Ptr, fOut05NestAs, 'CFAN',  st4d, ct4d )
           ENDIF
 
           ! CFCU (if necessary)
           IF ( use_CfCu ) THEN
-             Ptr  => CfCu05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+             Ptr  => CfCu( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
              CALL NcWr( Ptr, fOut05NestAs, 'CFCU',  st4d, ct4d )
           ENDIF
 
           ! CFLS (if necessary)
           IF ( use_CfLs ) THEN
-             Ptr  => CfLs05( I0_as05:I1_as05, J0_as05:J1_as05, : )
+             Ptr  => CfLs( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs:1:-1 )
              CALL NcWr( Ptr, fOut05NestAs, 'CFLS',  st4d, ct4d )
           ENDIF
 
           ! Free pointer memory
           NULLIFY( Ptr )
        ENDIF
-       !(jxu, end)
 
-    !--------(finish edit)----------------------------
     ENDDO
 
     !=======================================================================
@@ -2784,7 +1969,7 @@ MODULE GeosItA3CldModule
 !
 ! !IROUTINE: RegridTau
 !
-! !DESCRIPTION: This routine regrids the GEOS-5 optical depth and cloud
+! !DESCRIPTION: This routine was developed to regrid the GEOS-5 optical depth and cloud
 !  fraction fields from the 0.5 x 0.666 native resolution grid to a GEOS-Chem
 !  "coarse" grid (e.g. 1 x 1.25, 2 x 2.5, 4 x 5).
 ! !REFERENCE: Liu, H., Crawford, J. H., Considine, D. B., Platnick, S., Norris, P. M., Duncan, B. N., Pierce, R. B., Chen, G., and Yantosca, R. M. (2009), Sensitivity of photolysis frequencies and key tropospheric oxidants in a global model to cloud vertical distributions and optical properties, J. Geophys. Res., 114, D10305, doi:10.1029/2008JD011503.
@@ -2844,19 +2029,19 @@ MODULE GeosItA3CldModule
     TYPE(MapObj), POINTER     :: map(:,:)
 
     ! Input total in-cloud optical depth (= water OD + ice OD)
-    REAL*4,       INTENT(IN)  :: optIn  ( I025x03125, J025x03125, L025x03125 )
+    REAL*4,       INTENT(IN)  :: optIn  ( I05x0625, J05x0625, L05x0625 )
 
     ! Input in-cloud ice optical depth
-    REAL*4,       INTENT(IN)  :: tauiIn ( I025x03125, J025x03125, L025x03125 )
+    REAL*4,       INTENT(IN)  :: tauiIn ( I05x0625, J05x0625, L05x0625 )
 
     ! Input in-cloud water optical depth
-    REAL*4,       INTENT(IN)  :: tauwIn ( I025x03125, J025x03125, L025x03125 )
+    REAL*4,       INTENT(IN)  :: tauwIn ( I05x0625, J05x0625, L05x0625 )
 
     ! Input cloud fractions (total, anvil, convective, large-scale)
-    REAL*4,       INTENT(IN)  :: fIn    ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,       INTENT(IN)  :: fAnIn  ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,       INTENT(IN)  :: fCuIn  ( I025x03125, J025x03125, L025x03125 )
-    REAL*4,       INTENT(IN)  :: fLsIn  ( I025x03125, J025x03125, L025x03125 )
+    REAL*4,       INTENT(IN)  :: fIn    ( I05x0625, J05x0625, L05x0625 )
+    REAL*4,       INTENT(IN)  :: fAnIn  ( I05x0625, J05x0625, L05x0625 )
+    REAL*4,       INTENT(IN)  :: fCuIn  ( I05x0625, J05x0625, L05x0625 )
+    REAL*4,       INTENT(IN)  :: fLsIn  ( I05x0625, J05x0625, L05x0625 )
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -2876,9 +2061,9 @@ MODULE GeosItA3CldModule
     REAL*4,       INTENT(OUT) :: fLsOut ( IMX, JMX, LMX )
 !
 ! !REVISION HISTORY:
-!  29 Jul 2010 - R. Yantosca - Initial version, based on GEOS-5
-!  02 Aug 2010 - R. Yantosca - Now flip output arrays in vertical
-!  29 Feb 2012 - R. Yantosca - Now pass optional CFAN, CFCU, CFLS
+!  29 Jul 2010 - R. Yantosca - Initial version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history, based on GEOS-5
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -3048,7 +2233,9 @@ MODULE GeosItA3CldModule
     LOGICAL            :: isSafe   ! Returns TRUE if it's safe to divide N/D
 !
 ! !REVISION HISTORY:
-!   29 Sep 2008 - R. Yantosca - Initial Version
+!  29 Sep 2008 - R. Yantosca - Initial Version for GEOS-FP
+!  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
 !BOC

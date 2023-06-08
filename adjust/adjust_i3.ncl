@@ -31,7 +31,7 @@
 ;
 ; !LOCAL VARIABLES:
 ;
- local fIn, time, lev, lat, lon, PS, PV, QV, T, fOut
+ local fIn, time, lev, lat, lon, PS, QV, T, fOut
 ;
 ; !REMARKS:
 ;  Also add a calendar attribute onto the "time" index variable.
@@ -52,7 +52,6 @@ begin
   lat                    = fIn->lat
   lon                    = fIn->lon
   PS                     = fIn->PS
-  PV                     = fIn->PV
   QV                     = fIn->QV
   T                      = fIn->T
 
@@ -70,7 +69,6 @@ begin
     ; Redefine the latitude dimension for all relevant variables
     lat&lat              = lat
     PS&lat               = lat
-    PV&lat               = lat
     QV&lat               = lat
     T&lat                = lat
   end if
@@ -84,7 +82,6 @@ begin
   time@calendar          = "gregorian"
   time&time              = time
   PS&time                = time
-  PV&time                = time
   QV&time                = time
   T&time                 = time
 
@@ -92,13 +89,11 @@ begin
   ; Redefine "lev" for all relevant variables
   lev@units              = "1"
   lev&lev                = lev
-  PV&lev                 = lev
   QV&lev                 = lev
   T&lev                  = lev
 
   ; Add common COARDS variable attributes
   add_coards_var_atts( PS )
-  add_coards_var_atts( PV )
   add_coards_var_atts( QV )
   add_coards_var_atts( T  )
 
@@ -112,7 +107,6 @@ begin
   ;printVarSummary( lon  )
   ;printVarSummary( lat  )
   ;printVarSummary( PS   )
-  ;printVarSummary( PV   )
   ;printVarSummary( QV   )
   ;printVarSummary( T    )
   ;exit
@@ -125,7 +119,6 @@ begin
   fOut->lat              = lat
   fOut->lon              = lon
   fOut->PS               = PS
-  fOut->PV               = PV
   fOut->QV               = QV
   fOut->T                = T
 

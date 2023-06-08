@@ -32,12 +32,12 @@
 ;
  local fIn,      time,     lat,      lon,      ALBEDO,   CLDTOT,  
        EFLUX,    EVAP,     FRSEAICE, FRSNO,    GRN,      GWETROOT, GWETTOP, 
-       HFLUX,    LAI,      LWI,      LWGNT,    LWTUP,    PARDF,    PARDR,    
+       HFLUX,    LAI,      LWGNT,    LWTUP,    PARDF,    PARDR,    
        PBLH,     PRECANV,  PRECCON,  PRECLSC,  PRECSNO,  PRECTOT,  QV2M,
        SEAICE00, SEAICE10, SEAICE20, SEAICE30, SEAICE40, SEAICE50, SEAICE60,
        SEAICE70, SEAICE80, SEAICE90, SLP,      SNODP,    SNOMAS,   SWGDN,
        TROPPT,   TS,       T2M,      U10M,     USTAR,    V10M,     Z0M,
-       T10M,     Q850,     fOut
+       fOut
 ;
 ; !REMARKS:
 ;  (1) Adds a calendar attribute onto the "time" index variable.
@@ -68,7 +68,6 @@ begin
   GWETTOP                = fIn->GWETTOP
   HFLUX                  = fIn->HFLUX
   LAI                    = fIn->LAI
-  LWI                    = fIn->LWI
   LWGNT                  = fIn->LWGNT
   LWTUP                  = fIn->LWTUP
   PARDF                  = fIn->PARDF
@@ -101,8 +100,6 @@ begin
   USTAR                  = fIn->USTAR
   V10M                   = fIn->V10M
   Z0M                    = fIn->Z0M
-  T10M                   = fIn->T10M
-  Q850                   = fIn->Q850 
 
   ;=========================================================================
   ; For ESMF/MAPL, we need to make sure that the latitudes at the poles
@@ -128,7 +125,6 @@ begin
     GWETTOP&lat          = lat
     HFLUX&lat            = lat
     LAI&lat              = lat
-    LWI&lat              = lat
     LWGNT&lat            = lat
     LWTUP&lat            = lat
     PARDF&lat            = lat
@@ -161,8 +157,6 @@ begin
     USTAR&lat            = lat
     V10M&lat             = lat
     Z0M&lat              = lat
-    T10M&lat             = lat
-    Q850&lat             = lat
   end if
 
   ;=========================================================================
@@ -184,7 +178,6 @@ begin
   GWETTOP&time           = time
   HFLUX&time             = time
   LAI&time               = time
-  LWI&time               = time
   LWGNT&time             = time
   LWTUP&time             = time
   PARDF&time             = time
@@ -217,8 +210,6 @@ begin
   USTAR&time             = time
   V10M&time              = time
   Z0M&time               = time
-  T10M&time              = time
-  Q850&time              = time
 
   ; Quantities that are unitless need to have a unit string of "1"
   ALBEDO@units           = "1" ;
@@ -228,7 +219,6 @@ begin
   GRN@units              = "1" ;
   GWETROOT@units         = "1" ;
   GWETTOP@units          = "1" ;
-  LWI@units              = "1" ;
   SEAICE00@units         = "1" ;
   SEAICE10@units         = "1" ;
   SEAICE20@units         = "1" ;
@@ -256,7 +246,6 @@ begin
   add_coards_var_atts( GWETTOP  )
   add_coards_var_atts( HFLUX    )
   add_coards_var_atts( LAI      )
-  add_coards_var_atts( LWI      )
   add_coards_var_atts( LWGNT    )
   add_coards_var_atts( LWTUP    )
   add_coards_var_atts( PARDF    )
@@ -289,8 +278,6 @@ begin
   add_coards_var_atts( USTAR    )
   add_coards_var_atts( V10M     )
   add_coards_var_atts( Z0M      )
-  add_coards_var_atts( T10M     )
-  add_coards_var_atts( Q850     )  
 
   ;=========================================================================
   ; Save to output file
@@ -311,7 +298,6 @@ begin
   ;printVarSummary( GWETTOP  )
   ;printVarSummary( HFLUX    )
   ;printVarSummary( LAI      )
-  ;printVarSummary( LWI      )
   ;printVarSummary( LWGNT    )
   ;printVarSummary( LWTUP    )
   ;printVarSummary( PARDF    )
@@ -344,8 +330,6 @@ begin
   ;printVarSummary( USTAR    )
   ;printVarSummary( V10M     )
   ;printVarSummary( Z0M      )
-  ;printVarSummary( T10M     )
-  ;printVarSummary( Q850     )  
   ;exit
 
   ; Open output file (remove prior version)
@@ -365,7 +349,6 @@ begin
   fOut->GWETTOP          = GWETTOP
   fOut->HFLUX            = HFLUX
   fOut->LAI              = LAI
-  fOut->LWI              = LWI
   fOut->LWGNT            = LWGNT
   fOut->LWTUP            = LWTUP
   fOut->PARDF            = PARDF
@@ -398,8 +381,6 @@ begin
   fOut->USTAR            = USTAR 
   fOut->V10M             = V10M
   fOut->Z0M              = Z0M
-  fOut->T10M             = T10M
-  fOut->Q850             = Q850
 
   ; Copy global attributes from the input file and
   ; adjust the attribute names to be COARDS compliant

@@ -8,7 +8,7 @@
 # !MODULE: getGeosIt
 #
 # !DESCRIPTION: Perl script getGeosIT downloads 1 day of GEOS-IT raw met
-#  data (0.25 x 0.3125 degree horizontal resolution).  We download the data
+#  data (0.5 x 0.625 degree horizontal resolution).  We download the data
 #  directly from the GMAO FTP site with the Unix Wget command.
 #\\
 #\\
@@ -28,11 +28,16 @@ use Dates qw( &addDate
 our $MET_DIR     = "";
 
 # GEOS-IT file collection names
-our @COLLECTIONS = ( "tavg1_2d_flx_Nx", "tavg1_2d_lnd_Nx", 
-		     "tavg1_2d_rad_Nx", "tavg1_2d_slv_Nx", 
-		     "inst3_3d_asm_Nv", "tavg3_3d_asm_Nv",
-		     "tavg3_3d_cld_Nv", "tavg3_3d_mst_Ne", 
-		     "tavg3_3d_mst_Nv", "tavg3_3d_rad_Nv"  );
+our @COLLECTIONS = ( "flx_tavg_1hr_glo_L576x361_slv",
+                     "lnd_tavg_1hr_glo_L576x361_slv", 
+		     "rad_tavg_1hr_glo_L576x361_slv",
+                     "slv_tavg_1hr_glo_L576x361_slv", 
+		     "asm_inst_3hr_glo_L576x361_v72",
+                     "asm_tavg_3hr_glo_L576x361_v72",
+		     "cld_tavg_3hr_glo_L576x361_v72",
+                     "mst_tavg_3hr_glo_L576x361_v73", 
+		     "mst_tavg_3hr_glo_L576x361_v72",
+                     "rad_tavg_3hr_glo_L576x361_v72"  );
 
 # Number of expected files
 our $N_FILES     = 144;

@@ -208,16 +208,16 @@ sub checkFiles($$) {
   my $found = 0;
 
   # File names from each of the relevant collections
-  my $flx_x = "$d/GEOS.fp.asm.tavg1_2d_flx_Nx.YYYYMMDD_hhmm.V01.nc4";
-  my $lnd_x = "$d/GEOS.fp.asm.tavg1_2d_lnd_Nx.YYYYMMDD_hhmm.V01.nc4";
-  my $rad_x = "$d/GEOS.fp.asm.tavg1_2d_rad_Nx.YYYYMMDD_hhmm.V01.nc4";
-  my $slv_x = "$d/GEOS.fp.asm.tavg1_2d_slv_Nx.YYYYMMDD_hhmm.V01.nc4";
-  my $ins_v = "$d/GEOS.fp.asm.inst3_3d_asm_Nv.YYYYMMDD_hhmm.V01.nc4";
-  my $asm_v = "$d/GEOS.fp.asm.tavg3_3d_asm_Nv.YYYYMMDD_hhmm.V01.nc4";
-  my $cld_v = "$d/GEOS.fp.asm.tavg3_3d_cld_Nv.YYYYMMDD_hhmm.V01.nc4";
-  my $mst_v = "$d/GEOS.fp.asm.tavg3_3d_mst_Nv.YYYYMMDD_hhmm.V01.nc4"; 
-  my $mst_e = "$d/GEOS.fp.asm.tavg3_3d_mst_Ne.YYYYMMDD_hhmm.V01.nc4";
-  my $rad_v = "$d/GEOS.fp.asm.tavg3_3d_rad_Nv.YYYYMMDD_hhmm.V01.nc4";
+  my $flx_x = "$d/d5294_geosit_jan18.flx_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4";
+  my $lnd_x = "$d/d5294_geosit_jan18.lnd_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4";
+  my $rad_x = "$d/d5294_geosit_jan18.rad_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4";
+  my $slv_x = "$d/d5294_geosit_jan18.slv_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4";
+  my $ins_v = "$d/d5294_geosit_jan18.asm_inst_3hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4";
+  my $asm_v = "$d/d5294_geosit_jan18.asm_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4";
+  my $cld_v = "$d/d5294_geosit_jan18.cld_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4";
+  my $mst_v = "$d/d5294_geosit_jan18.mst_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4"; 
+  my $mst_e = "$d/d5294_geosit_jan18.mst_tavg_3hr_glo_L576x361_v73.YYYY-MM-DDThhmmZ.nc4";
+  my $rad_v = "$d/d5294_geosit_jan18.rad_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4";
  
   # Times of day at which files are produced
   my @GMT3i = qw( 0000 0300 0600 0900 1200 1500 1800 2100 );

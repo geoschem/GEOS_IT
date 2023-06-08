@@ -1,12 +1,12 @@
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
 ! !MODULE: GeosItRegridModule
 !
 ! !DESCRIPTION: Module GeosItRegridModule contains arrays and variables used 
-!  to regrid the GEOS-5 data from 0.25 x 0.3125 to coarser resolution grids.
+!  to regrid the MERRA2 data from 0.5 x 0.625 to coarser resolution grids.
 !
 !\subsection*{Overview}
 !  GeosRegridModule uses the regridding software MAP\_A2A from S-J Lin.  
@@ -86,13 +86,10 @@ MODULE GeosItRegridModule
 ! 
 ! !USES:
 !
-  USE GeosItInputsModule, ONLY : I025x03125, J025x03125, L025x03125
-  USE GeosItInputsModule, ONLY : I05x0666,   J05x0666,   L05x0666
-  USE GeosItInputsModule, ONLY : I1x125,     J1x125,     L1x125  
-  USE GeosItInputsModule, ONLY : I2x25,      J2x25,      L2x25   
-  USE GeosItInputsModule, ONLY : I4x5,       J4x5,       L4x5   
-  ! (lzh,06/20/2014)
-  USE GeosItInputsModule, ONLY : I05x0625,   J05x0625,   L05x0625   
+  USE GeosItInputsModule, ONLY : I05x0625, J05x0625, L05x0625   
+  USE GeosItInputsModule, ONLY : I1x125,   J1x125,   L1x125  
+  USE GeosItInputsModule, ONLY : I2x25,    J2x25,    L2x25   
+  USE GeosItInputsModule, ONLY : I4x5,     J4x5,     L4x5   
 
   IMPLICIT NONE
   PRIVATE
@@ -113,32 +110,9 @@ MODULE GeosItRegridModule
   PUBLIC         :: RegridGeosItto2x25
   PUBLIC         :: RegridGeosItto4x5
   PUBLIC         :: GeosItRegridInit
-  PUBLIC         :: RegridGeosItto05x0625    ! (lzh,06/20/2014)  
 !
 ! !PUBLIC DATA MEMBERS:
 ! 
-  !--------------------------
-  ! 0.25 x 0.3125 resolution
-  !--------------------------
-  REAL*4, PUBLIC :: xedge_025x03125( I025x03125 + 1 )  ! Lon edges
-  REAL*4, PUBLIC :: yedge_025x03125( J025x03125 + 1 )  ! Lat edges
-  REAL*4, PUBLIC :: zedge_025x03125( L025x03125 + 1 )  ! Vertical edges
-  REAL*4, PUBLIC :: sine_025x03125 ( J025x03125 + 1 )  ! SIN( lat edges ) 
-  REAL*4, PUBLIC :: xmid_025x03125 ( I025x03125     )  ! Lon centers
-  REAL*4, PUBLIC :: ymid_025x03125 ( J025x03125     )  ! Lat centers
-  REAL*4, PUBLIC :: zmid_025x03125 ( L025x03125     )  ! Vertical levels
-
-  !--------------------------
-  ! 0.5 x 0.666 resolution
-  !--------------------------
-  REAL*4, PUBLIC :: xedge_05x0666( I05x0666 + 1 )      ! Lon edges
-  REAL*4, PUBLIC :: yedge_05x0666( J05x0666 + 1 )      ! Lat edges
-  REAL*4, PUBLIC :: zedge_05x0666( L05x0666 + 1 )      ! Vertical edges
-  REAL*4, PUBLIC :: sine_05x0666 ( J05x0666 + 1 )      ! SIN( lat edges ) 
-  REAL*4, PUBLIC :: xmid_05x0666 ( I05x0666     )      ! Lon centers
-  REAL*4, PUBLIC :: ymid_05x0666 ( J05x0666     )      ! Lat centers
-  REAL*4, PUBLIC :: zmid_05x0666 ( L05x0666     )      ! Vertical levels
-  
   !--------------------------
   ! 0.5 x 0.625 resolution
   !--------------------------
@@ -189,9 +163,9 @@ MODULE GeosItRegridModule
   ! For netCDF: force poles 
   ! to be -90/+90 for MAPL
   !--------------------------
-  REAL*4, PUBLIC :: nc_ymid_1x125( J1x125 )
-  REAL*4, PUBLIC :: nc_ymid_2x25 ( J2x25  )
-  REAL*4, PUBLIC :: nc_ymid_4x5  ( J4x5   )
+  REAL*4, PUBLIC :: nc_ymid_1x125  ( J1x125   )
+  REAL*4, PUBLIC :: nc_ymid_2x25   ( J2x25    )
+  REAL*4, PUBLIC :: nc_ymid_4x5    ( J4x5     )
   REAL*4, PUBLIC :: nc_ymid_05x0625( J05x0625 )   ! (lzh,06/20/2014)
   
 !
@@ -200,19 +174,13 @@ MODULE GeosItRegridModule
 ! Modified by Bob Yantosca and placed into F90 module format
 !
 ! !REMARKS:
-!  The GEOS-5.7.x 0.25 x 0.3125 grid is centered on (-180,-90).
+!  The MERRA-2    0.5  x 0.625  grid is centered on (-180,-90).
 !  The GEOS-Chem  1.0  x 1.25   grid is centered on (-180,-90).
 !  The GEOS-Chem  2.0  x 2.5    grid is centered on (-180,-90).
 !  The GEOS-Chem  4.0  x 5.0    grid is centered on (-180,-90).
 !
 ! !REVISION HISTORY:
-!  23 Jul 2010 - R. Yantosca - Initial version, based on MerraRegridModule.f90
-!  26 Oct 2011 - R. Yantosca - Now make all lon & lat arrays public
-!  03 Jan 2012 - R. Yantosca - Now define index arrays for vertical levels
-!  12 Jan 2012 - R. Yantosca - Now define index arrays for vertical edges
-!  23 Sep 2013 - R. Yantosca - Define adjusted polar arrays for netCDF files
-!                              since ESMF/MAPL expects the poles to always
-!                              be at -90 and +90 degrees
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -225,15 +193,15 @@ MODULE GeosItRegridModule
   CONTAINS
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
 ! !IROUTINE: RegridGeosItto1x125
 !
 ! !DESCRIPTION: Subroutine RegridGeosItto1x125 is a wrapper for MAP\_A2A.  
-!  It is called to regrid from the GEOS-5.7.x chemistry forcing ("F") 
-!  grid (1 x 1.25) to the GEOS-Chem 4 x 5 grid.
+!  It is called to regrid from the MERRA2 native grid (0.5 x 0.625) to
+!  the GEOS-Chem 1 x 1.25 grid.
 !\\
 !\\
 ! !INTERFACE:
@@ -246,7 +214,7 @@ MODULE GeosItRegridModule
     INTEGER, INTENT(IN)  :: iv
 
     ! Input data on 1 x 1.25 grid
-    REAL*4,  INTENT(IN)  :: q1(I025x03125,J025x03125)
+    REAL*4,  INTENT(IN)  :: q1(I05x0625,J05x0625)
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -254,7 +222,7 @@ MODULE GeosItRegridModule
     REAL*4,  INTENT(OUT) :: q2(I1x125,J1x125)
 !
 ! !REVISION HISTORY: 
-!  26 Jul 2010 - R. Yantosca - Initial version
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -268,77 +236,22 @@ MODULE GeosItRegridModule
     ENDIF
 
     ! Call MAP_A2A to do the horizontal regridding
-    CALL map_a2a( I025x03125,     J025x03125,  xedge_025x03125,  &
-                  sine_025x03125, q1,          I1x125,           &
+    CALL map_a2a( I05x0625,       J05x0625,    xedge_05x0625,    &
+                  sine_05x0625,   q1,          I1x125,           &
                   J1x125,         xedge_1x125, sine_1x125,       &
                   q2,             0,           iv               )
 
   END SUBROUTINE RegridGeosItto1x125
 !EOC
-
-!======= (lzh, 06/20/2014)============
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
-!------------------------------------------------------------------------------
-!BOP
-!
-! !IROUTINE: RegridGeosItto05x0625
-!
-! !DESCRIPTION: Subroutine RegridGeosItto1x125 is a wrapper for MAP\_A2A.  
-!  It is called to regrid from the GEOS-5.7.x chemistry forcing ("F") 
-!  grid (1 x 1.25) to the GEOS-Chem 4 x 5 grid.
-!\\
-!\\
-! !INTERFACE:
-!
-  SUBROUTINE RegridGeosItto05x0625( iv, q1, q2 )
-!
-! !INPUT PARAMETERS:
-!
-    ! IV = 0 is scalar field; IV = 1 is vector field
-    INTEGER, INTENT(IN)  :: iv
-
-    ! Input data on 0.25 x 0.3125 grid
-    REAL*4,  INTENT(IN)  :: q1(I025x03125,J025x03125)
-!
-! !OUTPUT PARAMETERS:
-!
-    ! Output data on 0.5 x 0.625 grid
-    REAL*4,  INTENT(OUT) :: q2(I05x0625,J05x0625)
-!
-! !REVISION HISTORY: 
-!  26 Jul 2010 - R. Yantosca - Initial version
-!EOP
-!------------------------------------------------------------------------------
-!BOC
-
-    INTEGER :: T
-
-    ! If all elements of q1 are zero, then set q2=0 and return
-    IF ( ALL( q1 == 0e0 ) ) THEN
-       q2 = 0e0
-       RETURN
-    ENDIF
-
-    ! Call MAP_A2A to do the horizontal regridding
-    CALL map_a2a( I025x03125,     J025x03125,  xedge_025x03125,  &
-                  sine_025x03125, q1,          I05x0625,         &
-                  J05x0625,       xedge_05x0625, sine_05x0625,   &
-                  q2,             0,           iv               )
-
-  END SUBROUTINE RegridGeosItto05x0625
-!EOC
-!======= (finish edit) ===============
-
-!------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
 ! !IROUTINE: RegridGeosItTo2x25
 !
 ! !DESCRIPTION: Subroutine RegridGeosItTo2x25 is a wrapper for MAP\_A2A.
-!  It is called to regrid from the GEOS-5.7.x native grid (0.25 x0 x 0.3125)
+!  It is called to regrid from the MERRA2 native grid (0.5 x 0.625)
 !  to the GEOS-Chem 2 x 2.5 grid.
 !\\
 !\\
@@ -352,7 +265,7 @@ MODULE GeosItRegridModule
     INTEGER, INTENT(IN)  :: iv
     
     ! Input data on 0.5 x 0.666 grid
-    REAL*4,  INTENT(IN)  :: q1(I025x03125,J025x03125)  
+    REAL*4,  INTENT(IN)  :: q1(I05x0625,J05x0625)  
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -360,7 +273,7 @@ MODULE GeosItRegridModule
     REAL*4,  INTENT(OUT) :: q2(I2x25,J2x25)
 !
 ! !REVISION HISTORY: 
-!  26 Jul 2010 - R. Yantosca - Initial version
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -373,22 +286,22 @@ MODULE GeosItRegridModule
     ENDIF
 
     ! Call MAP_A2A to do the horizontal regridding
-    CALL map_a2a( I025x03125,     J025x03125,  xedge_025x03125,  &
-                  sine_025x03125, q1,          I2x25,            &
+    CALL map_a2a( I05x0625,       J05x0625,    xedge_05x0625,    &
+                  sine_05x0625,   q1,          I2x25,            &
                   J2x25,          xedge_2x25,  sine_2x25,        &
                   q2,             0,           iv               )
 
   END SUBROUTINE RegridGeosItTo2x25
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
 ! !IROUTINE: RegridGeosItNTo4x5
 !
 ! !DESCRIPTION: Subroutine RegridGeosItNTo2x25 is a wrapper for MAP\_A2A.
-!  It is called to regrid from the GEOS-5.7.x native ("N") grid (0.5 x 0.666)
+!  It is called to regrid from the MERRA2 native grid (0.5 x 0.625)
 !  to the GEOS-Chem 4 x 5 grid.
 !\\
 !\\
@@ -401,8 +314,8 @@ MODULE GeosItRegridModule
     ! IV = 0 is scalar field; IV = 1 is vector field
     INTEGER, INTENT(IN)  :: iv
 
-    ! Input data on 0.5 x 0.666 grid
-    REAL*4,  INTENT(IN)  :: q1(I025x03125,J025x03125)  
+    ! Input data on 0.5 x 0.625 grid
+    REAL*4,  INTENT(IN)  :: q1(I05x0625,J05x0625)  
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -410,7 +323,7 @@ MODULE GeosItRegridModule
     REAL*4,  INTENT(OUT) :: q2(I4x5,J4x5)
 !
 ! !REVISION HISTORY: 
-!  26 Jul 2010 - R. Yantosca - Initial version
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -424,15 +337,15 @@ MODULE GeosItRegridModule
     ENDIF
 
     ! Call MAP_A2A to do the horizontal regridding
-    CALL map_a2a( I025x03125,     J025x03125,  xedge_025x03125,  &
-                  sine_025x03125, q1,          I4x5,             &
+    CALL map_a2a( I05x0625,       J05x0625,    xedge_05x0625,    &
+                  sine_05x0625,   q1,          I4x5,             &
                   J4x5,           xedge_4x5,   sine_4x5,         &
                   q2,             0,           iv               )
 
   END SUBROUTINE RegridGeosItto4x5
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -482,12 +395,7 @@ MODULE GeosItRegridModule
 !   Original subroutine by S-J Lin (GSFC)
 !
 ! !REVISION HISTORY: 
-!   21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                               into "Geos3RegridModule".  Added F90 type 
-!                               declarations to be consistent with  
-!                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -530,7 +438,7 @@ MODULE GeosItRegridModule
   END SUBROUTINE Map_A2A
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -592,12 +500,7 @@ MODULE GeosItRegridModule
 !   Apr 1, 2000
 !
 ! !REVISION HISTORY: 
-!   21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                               into "Geos3RegridModule".  Added F90 type 
-!                               declarations to be consistent with  
-!                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -705,7 +608,7 @@ MODULE GeosItRegridModule
   END SUBROUTINE Ymap
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -741,12 +644,7 @@ MODULE GeosItRegridModule
 !  Written by S-J Lin
 !
 ! !REVISION HISTORY: 
-!   21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                               into "Geos3RegridModule".  Added F90 type 
-!                               declarations to be consistent with  
-!                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -916,7 +814,7 @@ MODULE GeosItRegridModule
   END SUBROUTINE Ppm_Lat
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -967,12 +865,7 @@ MODULE GeosItRegridModule
 !   Apr 1, 2000
 !
 ! !REVISION HISTORY: 
-!   21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                               into "Geos3RegridModule".  Added F90 type 
-!                               declarations to be consistent with  
-!                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -1131,7 +1024,7 @@ MODULE GeosItRegridModule
    END SUBROUTINE Xmap
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -1157,12 +1050,7 @@ MODULE GeosItRegridModule
 !   Originally written by S-J Lin 
 !
 ! !REVISION HISTORY: 
-!   21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                               into "Geos3RegridModule".  Added F90 type 
-!                               declarations to be consistent with  
-!                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -1214,7 +1102,7 @@ MODULE GeosItRegridModule
    END SUBROUTINE Ppm_cycle
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -1245,12 +1133,7 @@ MODULE GeosItRegridModule
 !   Originally written by S-J Lin 
 !
 ! !REVISION HISTORY: 
-!   21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                               into "Geos3RegridModule".  Added F90 type 
-!                               declarations to be consistent with  
-!                               TypeModule.f90.  Also updated comments. 
-!   08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!   12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -1329,7 +1212,7 @@ MODULE GeosItRegridModule
    END SUBROUTINE Lmppm
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
@@ -1355,12 +1238,7 @@ MODULE GeosItRegridModule
 !   Originally written by S-J Lin 
 !
 ! !REVISION HISTORY: 
-!  21 Sep 2000 - R. Yantosca - Converted to F90 freeform format and inserted
-!                              into "Geos3RegridModule".  Added F90 type 
-!                              declarations to be consistent with  
-!                              TypeModule.f90.  Also updated comments. 
-!  08 Nov 2006 - R. Yantosca - Inserted into GeosItRegridModule.f90
-!  12 Dec 2008 - R. Yantosca - Added ProTeX documentation headers
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -1433,14 +1311,14 @@ MODULE GeosItRegridModule
   END SUBROUTINE Huynh
 !EOC
 !------------------------------------------------------------------------------
-!          Harvard University Atmospheric Chemistry Modeling Group            !
+!                  GEOS-Chem Global Chemical Transport Model                  !
 !------------------------------------------------------------------------------
 !BOP
 !
 ! !IROUTINE: GeosItRegridInit
 !
 ! !DESCRIPTION: Subroutine GeosItRegridInit initializes the longitude and 
-!  latitude edge arrays for 0.5 x 0.666, 1 x 1.25, 2 x 2.5, and 4 x 5 grids.
+!  latitude edge arrays for 0.5 x 0.625, 1 x 1.25, 2 x 2.5, and 4 x 5 grids.
 !\\
 !\\
 ! !INTERFACE:
@@ -1452,13 +1330,7 @@ MODULE GeosItRegridModule
 !  to get correct values for the high-resolution grids. 
 !
 ! !REVISION HISTORY: 
-!  25 Oct 2011 - R. Yantosca - InitialVersion, based on MerraRegridModule
-!  26 Oct 2011 - R. Yantosca - Now initialize lon & lat center arrays
-!  03 Jan 2012 - R. Yantosca - Now define index arrays for vertical levels
-!  12 Jan 2012 - R. Yantosca - Now define index arrays for vertical edges
-!  23 Sep 2013 - R. Yantosca - Define special output lat arrays for netCDF
-!                              files so that the poles are -90/+90 degrees.
-!                              This facilitates the standalone GIGC w/ MAPL.
+!  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -1469,106 +1341,7 @@ MODULE GeosItRegridModule
     REAL*8  :: DI, DJ
 
     !======================================================================
-    ! GEOS-5.7.x NATIVE GRID
-    ! 0.25 x 0.3125 resolution; centered on (-180,-90)
-    !======================================================================
-
-    ! Size of box
-    DI = 0.3125d0
-    DJ = 0.25d0
-
-    ! Lon edges
-    DO I = 0, I025x03125
-       xedge_025x03125(I+1)       = -180d0 - DI/2d0 + ( DI * I )
-    ENDDO
-
-    ! Lat edges
-    DO J = 0, J025x03125 
-       yedge_025x03125(J+1)       =  -90d0 - DJ/2d0 + ( DJ * J )
-    ENDDO
-
-    ! Lon centers
-    DO I = 0, I025x03125-1
-       xmid_025x03125(I+1)        = -180d0          + ( DI * I )
-    ENDDO                         
-                                  
-    ! Lat centers                 
-    DO J = 0, J025x03125-1              
-       ymid_025x03125(J+1)        =  -90d0          + ( DJ * J ) 
-    ENDDO  
-
-    ! Reset poles
-    yedge_025x03125(1           ) = -90e0
-    yedge_025x03125(J025x03125+1) = +90e0
-    ymid_025x03125 (1           ) = -89.9375d0
-    ymid_025x03125 (J025x03125  ) = +89.9375d0
-
-    ! Sine of latitude edges
-    DO J = 1, J025x03125+1
-       sine_025x03125(J)          = SIN( yedge_025x03125(J) * D2R )
-    ENDDO
-
-    ! Vertical levels
-    DO L = 1, L025x03125
-       zmid_025x03125(L) = L
-    ENDDO
-
-    ! Vertical edges
-    DO L = 1, L025x03125+1
-       zedge_025x03125(L) = L
-    ENDDO
-
-    !======================================================================
-    ! 0.5 x 0.666 resolution; centered on (-180,-90)
-    !======================================================================
-
-    ! Size of box
-    DI = 2d0 / 3d0
-    DJ = 0.5d0
-
-    ! Lon edges
-    DO I = 0, I05x0666
-       xedge_05x0666(I+1)         = -180d0 - DI/2d0 + ( DI * I )
-    ENDDO                         
-                                  
-    ! Lat edges                   
-    DO J = 0, J05x0666            
-       yedge_05x0666(J+1)         =  -90d0 - DJ/2d0 + ( DJ * J )
-    ENDDO                         
-        
-    ! Lon centers
-    DO I = 0, I05x0666-1
-       xmid_05x0666(I+1)          = -180d0          + ( DI * I )
-    ENDDO                         
-                                  
-    ! Lat centers                 
-    DO J = 0, J05x0666-1              
-       ymid_05x0666(J+1)          =  -90d0          + ( DJ * J ) 
-    ENDDO  
-                          
-    ! Reset poles                 
-    yedge_05x0666(1         )     = -90e0
-    yedge_05x0666(J05x0666+1)     = +90e0
-    ymid_05x0666 (1         )     = -89.875d0
-    ymid_05x0666 (J05x0666  )     = +89.87500
-                                  
-    ! Sine of latitude edges      
-    DO J = 1, J05x0666+1          
-       sine_05x0666(J)            = SIN( yedge_05x0666(J) * D2R )
-    ENDDO
-
-    ! Vertical levels
-    DO L = 1, L05x0666
-       zmid_05x0666(L) = L
-    ENDDO
-
-    ! Vertical edges
-    DO L = 1, L05x0666+1
-       zedge_05x0666(L) = L
-    ENDDO
-    
-!----- (lzh, 06/20/2014)--------
-    !======================================================================
+    ! MERRA-2 NATIVE RESOLUTION
     ! 0.5 x 0.625 resolution; centered on (-180,-90)
     !======================================================================
 
@@ -1616,8 +1389,6 @@ MODULE GeosItRegridModule
     DO L = 1, L05x0625+1
        zedge_05x0625(L) = L
     ENDDO
-
-!----- (finish edit)------------    
 
     !======================================================================
     ! 1 x 1.25 resolution; centered on (-180,-90)

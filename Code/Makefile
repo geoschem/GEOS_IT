@@ -57,7 +57,6 @@ DOC     = ../doc
 EXE0    = GeosItDriver0.x
 EXE1    = GeosItDriver1.x
 EXE2    = GeosItDriver2.x
-EXE3    = GeosItFixA3Cld.x
 LIB     = ../lib
 MOD     = ../mod
 
@@ -263,12 +262,6 @@ GeosItDriver2.o          : GeosItDriver2.F90            \
                            GeosItRegridModule.o         \
                            GeosItA3MstCModule.o         \
                            GeosItA3MstEModule.o
-
-
-GeosItFixA3Cld.o         : GeosItFixA3Cld.F90           \
-                           GeosItInputsModule.o         \
-                           GeosItRegridModule.o         \
-                           GeosItA3CldModule.o
 
 #==============================================================================
 # Makefile targets
