@@ -588,7 +588,6 @@ MODULE GeosItI3Module
     REAL*4,  POINTER        :: Qflip (:,:,:)
 
     ! Character strings and arrays
-    CHARACTER(LEN=8       ) :: name8
     CHARACTER(LEN=9       ) :: name
     CHARACTER(LEN=MAX_CHAR) :: fNameInput
     CHARACTER(LEN=MAX_CHAR) :: fNameNested
@@ -814,10 +813,10 @@ MODULE GeosItI3Module
              !--------------------------------------------------------------
              ! Read data
              !--------------------------------------------------------------
-             msg = '%%% Reading     ' // name8
+             msg = '%%% Reading     ' // name
              WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-             CALL NcRd( Q3d, fIn, TRIM( name8 ), st4d, ct4d )
+             CALL NcRd( Q3d, fIn, TRIM( name ), st4d, ct4d )
 
              ! Replace missing values with zeroes
              WHERE( Q3d == FILL_VALUE ) Q3d = 0e0
