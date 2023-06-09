@@ -429,7 +429,7 @@ qx( echo                                               >> \$sLog );
 qx( ls $TEMP_DIRECTORY > /dev/null );
 
 # Run the GEOS-5 data extraction code
-qx( umask 022; cd $CODE_DIRECTORY; $exeFile < $DATE_FILE >> \$sLog );
+qx( umask 022; cd $CODE_DIRECTORY; ./$exeFile < $DATE_FILE >> \$sLog );
 
 # Move files from the temp directory to the data directory
 qx( ./moveGeosIt $DATE_STRING $fileTypes >> \$sLog );
@@ -560,7 +560,7 @@ sub main() {
   # Quick & dirty test if all the files are present in the met dir
   # Not an exhaustive check but this should be good enough to prevent the
   # met field code from starting if there aren't enough files. (bmy, 8/7/13)
-  $listCmd = "ls -1 $MET_DIRECTORY/GEOS.fp*"."@ARGV"."*";
+  $listCmd = "ls -1 $MET_DIRECTORY/*geosit*"."@ARGV"."*";
   chomp( @files = qx( $listCmd ) );
 
 #------------------------------------------------------------------------------
