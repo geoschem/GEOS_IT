@@ -25,18 +25,9 @@
 #
 # !REVISION HISTORY: 
 #  24 Oct 2011 - R. Yantosca - Initial version (based on doGeos5.input)
-#  13 Jan 2012 - R. Yantosca - Executable is now named "Geos57Driver.x"
-#  20 Jan 2012 - R. Yantosca - Now add variable for the file containing
-#                              the default settings for the executable
-#  06 Aug 2013 - R. Yantosca - Now add list of emails for notification
-#  06 Aug 2013 - R. Yantosca - Now add sleep time between tries [s]
-#  20 Sep 2013 - R. Yantosca - Renamed to doGeosIt.input
-#  25 Sep 2013 - R. Yantosca - Updated file sizes for GEOSIT files
-#  11 Feb 2014 - R. Yantosca - Now added file sizes for EU, SE grids
-#
 
 ==> Raw Met Data Directory
-/storage1/fs1/rvmartin/Active/GEOS-Chem-shared/MetFieldProcessing/GEOS_IT-raw/2021/03/
+/gpfsm/dnb34/ewlundgr/data/GEOSIT_processing/GEOS_IT-raw/2018/01/
 
 ==> Code Directory
 ../bin
@@ -48,7 +39,7 @@
 ../logs
 
 ==> Temporary Directory
-/storage1/fs1/rvmartin/Active/GEOS-Chem-shared/MetFieldProcessing/scratch/GEOS_IT/2021/03/
+/gpfsm/dnb34/ewlundgr/data/GEOSIT_processing/scratch/GEOS_IT/2018/01/
 
 ==> Program Executable
 GeosItDriver{THREAD}.x
