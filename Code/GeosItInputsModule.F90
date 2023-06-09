@@ -242,16 +242,7 @@ MODULE GeosItInputsModule
   SUBROUTINE GeosItInitialize
 !
 ! !REVISION HISTORY:
-!  30 Aug 2011 - R. Yantosca - Initial version, based on MerraInputsModule
-!  21 Dec 2011 - R. Yantosca - Now also initialize a3Mins, a3MinsI, a1Mins
-!  11 Jan 2012 - R. Yantosca - Split fields from the cld_tavg_3hr_v72 and
-!                              tavg3_3d_Mst_Ne collections into multiple
-!                              netCDF output files.
-!  15 Feb 2012 - R. Yantosca - Read information about nested NA grid
-!  16 May 2013 - R. Yantosca - Bug fix: set doNative=T if doNestNa=T
-!  19 Sep 2013 - R. Yantosca - Added nested Europe grid (EU)
-!  19 Sep 2013 - R. Yantosca - Adjust reading of data fields to GEOS-IT vars
-!  08 Oct 2013 - R. Yantosca - Added nested SE asia grid (SE)
+!  30 Aug 2011 - R. Yantosca - Initial version
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -260,7 +251,7 @@ MODULE GeosItInputsModule
     CHARACTER(LEN=MAX_CHAR) :: line, temp
 
     !-----------------------------------------------------------------------
-    ! Read the file with the date (passed from the Perl script "doGeos5")
+    ! Read the file with the date (passed from the Perl script)
     !-----------------------------------------------------------------------
 
     ! Get day of year (YYYY-MM-DD)
@@ -357,49 +348,49 @@ MODULE GeosItInputsModule
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmpl4x5
              READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmpl4x5
 
-          CASE( '==> asm_const_0hr_glo_L576x361_slv' )
+          CASE( '==> asm_const_0hr_slv' )
              READ( IU_TXT, '(a)',    ERR=999 ) asm_const_0hr_slv_file
              READ( IU_TXT, '(a)',    ERR=999 ) asm_const_0hr_slv_data
              READ( IU_TXT,   *,      ERR=999 ) doMakeCn
 
-          CASE( '==>  flx_tavg_1hr_glo_L576x361_slv' )
+          CASE( '==> flx_tavg_1hr_slv' )
              READ( IU_TXT, '(a)',    ERR=999 ) flx_tavg_1hr_slv_file
              READ( IU_TXT, '(a)',    ERR=999 ) flx_tavg_1hr_slv_data
 
-          CASE( '==> lnd_tavg_1hr_glo_L576x361_slv' )
+          CASE( '==> lnd_tavg_1hr_slv' )
              READ( IU_TXT, '(a)',    ERR=999 ) lnd_tavg_1hr_slv_file
              READ( IU_TXT, '(a)',    ERR=999 ) lnd_tavg_1hr_slv_data
 
-          CASE( '==>  rad_tavg_1hr_glo_L576x361_slv' )
+          CASE( '==> rad_tavg_1hr_slv' )
              READ( IU_TXT, '(a)',    ERR=999 ) rad_tavg_1hr_slv_file
              READ( IU_TXT, '(a)',    ERR=999 ) rad_tavg_1hr_slv_data
 
-          CASE( '==>  slv_tavg_1hr_glo_L576x361_slv' )
+          CASE( '==> slv_tavg_1hr_slv' )
              READ( IU_TXT, '(a)',    ERR=999 ) slv_tavg_1hr_slv_file
              READ( IU_TXT, '(a)',    ERR=999 ) slv_tavg_1hr_slv_data
 
-          CASE( '==> asm_tavg_3hr_glo_L576x361_v72' )
+          CASE( '==> asm_tavg_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) asm_tavg_3hr_v72_file
              READ( IU_TXT, '(a)',    ERR=999 ) asm_tavg_3hr_v72_data
 
-          CASE( '==> cld_tavg_3hr_glo_L576x361_v72' )
+          CASE( '==> cld_tavg_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) cld_tavg_3hr_v72_file
              READ( IU_TXT, '(7x,a)', ERR=999 ) cld_tavg_3hr_v72_data_c
              READ( IU_TXT, '(7x,a)', ERR=999 ) cld_tavg_3hr_v72_data_d
 
-          CASE( '==> mst_tavg_3hr_glo_L576x361_v73' )
+          CASE( '==> mst_tavg_3hr_v73' )
              READ( IU_TXT, '(a)',    ERR=999 ) mst_tavg_3hr_v73_file
              READ( IU_TXT, '(a)',    ERR=999 ) mst_tavg_3hr_v73_data
 
-          CASE( '==> mst_tavg_3hr_glo_L576x361_v72' )
+          CASE( '==> mst_tavg_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) mst_tavg_3hr_v72_file
              READ( IU_TXT, '(a)',    ERR=999 ) mst_tavg_3hr_v72_data
 
-          CASE( '==> rad_tavg_3hr_glo_L576x361_v72' )
+          CASE( '==> rad_tavg_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) rad_tavg_3hr_v72_file
              READ( IU_TXT, '(a)',    ERR=999 ) rad_tavg_3hr_v72_data
 
-          CASE( '==> asm_inst_3hr_glo_L576x361_v72' )
+          CASE( '==> asm_inst_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) asm_inst_3hr_v72_file
              READ( IU_TXT, '(a)',    ERR=999 ) asm_inst_3hr_v72_data
 
@@ -503,75 +494,96 @@ MODULE GeosItInputsModule
     ! Verbose output for debugging
     !-----------------------------------------------------------------------
     IF ( VERBOSE ) THEN
-       PRINT*, 'aMins      : ', a1Mins
-       PRINT*, 'a3MinsI    : ', a3MinsI
-       PRINT*, 'a3Mins     : ', a3Mins
+       PRINT*, 'inputDataDir : ', TRIM( inputDataDir )
        PRINT*, 'YYYYMMDD source file str : ', yyyymmdd_source_string
        PRINT*, 'YYYYMMDD target file str : ', yyyymmdd_string
+       PRINT*, 'A1 file minutes   : '
+       PRINT*, a1Mins
+       PRINT*, 'A3 file minutes : '
+       PRINT*, a3MinsI
+       PRINT*, 'A3 file minutes  : '
+       PRINT*, a3Mins
        PRINT*, 'doMakeCn   : ', doMakeCn
        PRINT*, 'doNative   : ', doNative
        PRINT*, 'do05x0625  : ', do05x0625
+       IF ( do05x0625 ) THEN
+          PRINT*, '  --> dataTmpl05x0625    : ', TRIM( dataTmpl05x0625    )
+          PRINT*, '  --> tempDirTmpl05x0625 : ', TRIM( tempDirTmpl05x0625 )
+          PRINT*, '  --> dataDirTmpl05x0625 : ', TRIM( dataDirTmpl05x0625 )
+       ENDIF
        PRINT*, 'do2x25     : ', do2x25
+       IF ( do2x25 ) THEN
+          PRINT*, '  --> dataTmpl2x25       : ', TRIM( dataTmpl2x25    )
+          PRINT*, '  --> tempDirTmpl2x25    : ', TRIM( tempDirTmpl2x25 )
+          PRINT*, '  --> dataDirTmpl2x25    : ', TRIM( dataDirTmpl2x25 )
+       ENDIF
        PRINT*, 'do4x5      : ', do4x5
+       IF ( do4x5 ) THEN
+          PRINT*, '  --> dataTmpl4x5        : ', TRIM( dataTmpl4x5     )
+          PRINT*, '  --> tempDirTmpl4x5     : ', TRIM( tempDirTmpl4x5 )
+          PRINT*, '  --> dataDirTmpl4x5     : ', TRIM( dataDirTmpl4x5 )
+       ENDIF
        PRINT*, 'doNestEu05 : ', doNestEu05
-       PRINT*, '  --> I0, J0, I1, J1 : ', I0_eu05, J0_eu05, I1_eu05, J1_eu05
-       PRINT*, '  --> INA, JNA       : ', I_NestEu05, J_NestEu05
+       IF ( doNestEu05 ) THEN
+          PRINT*, '  --> I0, J0, I1, J1     : ', I0_eu05,J0_eu05,I1_eu05,J1_eu05
+          PRINT*, '  --> INA, JNA           : ', I_NestEu05, J_NestEu05
+          PRINT*, '  --> dataTmplNestEu05   : ', TRIM( dataTmplNestEu05    )
+          PRINT*, '  --> tempDirNestEu05    : ', TRIM( tempDirTmplNestEu05 )
+          PRINT*, '  --> dataDirNestEu05    : ', TRIM( dataDirTmplNestEu05 )
+       ENDIF
        PRINT*, 'doNestNa05 : ', doNestNa05
-       PRINT*, '  --> I0, J0, I1, J1 : ', I0_na05, J0_na05, I1_na05, J1_na05
-       PRINT*, '  --> INA, JNA       : ', I_NestNa05, J_NestNa05
+       IF ( doNestNa05 ) THEN
+          PRINT*, '  --> I0, J0, I1, J1     : ', I0_na05,J0_na05,I1_na05,J1_na05
+          PRINT*, '  --> INA, JNA           : ', I_NestNa05, J_NestNa05
+          PRINT*, '  --> dataTmplNestNa05   : ', TRIM( dataTmplNestNa05    )
+          PRINT*, '  --> tempDirNestNa05    : ', TRIM( tempDirTmplNestNa05 )
+          PRINT*, '  --> dataDirNestNa05    : ', TRIM( dataDirTmplNestNa05 )
+       ENDIF
        PRINT*, 'doNestAs05 : ', doNestAs05
-       PRINT*, '  --> I0, J0, I1, J1 : ', I0_as05, J0_as05, I1_as05, J1_as05
-       PRINT*, '  --> IIN, JIN       : ', I_NestAs05, J_NestAs05
-       PRINT*, ' '
-       PRINT*, 'inputDataDir      : ', TRIM( inputDataDir           )
-       PRINT*, ' '
-       PRINT*, 'dataTmpl05x0625   : ', TRIM( dataTmpl05x0625          )
-       PRINT*, 'dataTmpl2x25      : ', TRIM( dataTmpl2x25              )
-       PRINT*, 'dataTmpl2x25      : ', TRIM( dataTmpl2x25              )
-       PRINT*, ' '
-       PRINT*, 'tempDirTmpl05x0625: ', TRIM( tempDirTmpl05x0625       )
-       PRINT*, 'tempDirTmpl2x25   : ', TRIM( tempDirTmpl2x25           )
-       PRINT*, 'tempDirTmpl4x5    : ', TRIM( tempDirTmpl4x5            )
-       PRINT*, ' '
-       PRINT*, 'dataDirTmpl05x0625: ', TRIM( dataDirTmpl05x0625       )
-       PRINT*, 'dataDirTmpl2x25   : ', TRIM( dataDirTmpl2x25           )
-       PRINT*, 'dataDirTmpl4x5    : ', TRIM( dataDirTmpl4x5            )
-       PRINT*, ' '
-       PRINT*, 'dataTmplNestEu05  : ', TRIM( dataTmplNestEu05          )
-       PRINT*, 'dataTmplNestNa05  : ', TRIM( dataTmplNestNa05          )
-       PRINT*, 'dataTmplNestAs05  : ', TRIM( dataTmplNestAs05          )
-       PRINT*, ' '
-       PRINT*, 'tempDirNestEu05   : ', TRIM( tempDirTmplNestEu05       )
-       PRINT*, 'tempDirNestNa05   : ', TRIM( tempDirTmplNestNa05       )
-       PRINT*, 'tempDirNestAs05   : ', TRIM( tempDirTmplNestAs05       )
-       PRINT*, ' '
-       PRINT*, 'dataDirNestEu05   : ', TRIM( dataDirTmplNestEu05       )
-       PRINT*, 'dataDirNestNa05   : ', TRIM( dataDirTmplNestNa05       )
-       PRINT*, 'dataDirNestAs05   : ', TRIM( dataDirTmplNestAs05       )
-       PRINT*, ' '
-       PRINT*, 'asm_const_0hr_slv : ', TRIM( asm_const_0hr_slv_file    )
-       PRINT*, '                    ', TRIM( asm_const_0hr_slv_data    )
-       PRINT*, 'flx_tavg_1hr_slv  : ', TRIM( flx_tavg_1hr_slv_file    )
-       PRINT*, '                    ', TRIM( flx_tavg_1hr_slv_data    )
-       PRINT*, 'lnd_tavg_1hr_slv  : ', TRIM( lnd_tavg_1hr_slv_file    )
-       PRINT*, '                    ', TRIM( lnd_tavg_1hr_slv_data    )
-       PRINT*, 'rad_tavg_1hr_slv  : ', TRIM( rad_tavg_1hr_slv_file    )
-       PRINT*, '                    ', TRIM( rad_tavg_1hr_slv_data    )
-       PRINT*, 'slv_tavg_1hr_slv  : ', TRIM( slv_tavg_1hr_slv_file    )
-       PRINT*, '                    ', TRIM( slv_tavg_1hr_slv_data    )
-       PRINT*, 'asm_tavg_3hr_v72  : ', TRIM( asm_tavg_3hr_v72_file    )
-       PRINT*, '                    ', TRIM( asm_tavg_3hr_v72_data    )
-       PRINT*, 'cld_tavg_3hr_v72  : ', TRIM( cld_tavg_3hr_v72_file    )
-       PRINT*, '                    ', TRIM( cld_tavg_3hr_v72_data_c  )
-       PRINT*, '                    ', TRIM( cld_tavg_3hr_v72_data_d  )
-       PRINT*, 'mst_tavg_3hr_v72  : ', TRIM( mst_tavg_3hr_v73_file    )
-       PRINT*, '                    ', TRIM( mst_tavg_3hr_v73_data    )
-       PRINT*, 'mst_tavg_3hr_v73  : ', TRIM( mst_tavg_3hr_v72_file    )
-       PRINT*, '                    ', TRIM( mst_tavg_3hr_v72_data    )
-       PRINT*, 'asm_inst_3hr_v72  : ', TRIM( asm_inst_3hr_v72_file    )
-       PRINT*, '                    ', TRIM( asm_inst_3hr_v72_data    )
-       PRINT*, 'WeightsNxTo2x25   : ', TRIM( weightFileTo2x25        )
-       PRINT*, 'WeightsNxTo4x5    : ', TRIM( weightFileTo4x5         )
+       IF ( doNestAs05 ) THEN
+          PRINT*, '  --> I0, J0, I1, J1     : ', I0_as05,J0_as05,I1_as05,J1_as05
+          PRINT*, '  --> IIN, JIN           : ', I_NestAs05, J_NestAs05
+          PRINT*, '  --> dataTmplNestAs05   : ', TRIM( dataTmplNestAs05    )
+          PRINT*, '  --> tempDirNestAs05    : ', TRIM( tempDirTmplNestAs05 )
+          PRINT*, '  --> dataDirNestAs05    : ', TRIM( dataDirTmplNestAs05 )
+       ENDIF
+       PRINT*, 'COLLECTIONS:'
+       PRINT*, '  asm_const_0hr_slv : '
+       PRINT*, '    --> filename  : ', TRIM( asm_const_0hr_slv_file    )
+       PRINT*, '    --> variables : ', TRIM( asm_const_0hr_slv_data    )
+       PRINT*, '  flx_tavg_1hr_slv  : '
+       PRINT*, '    --> filename  : ', TRIM( flx_tavg_1hr_slv_file    )
+       PRINT*, '    --> variables : ', TRIM( flx_tavg_1hr_slv_data    )
+       PRINT*, '  lnd_tavg_1hr_slv  : '
+       PRINT*, '    --> filename  : ', TRIM( lnd_tavg_1hr_slv_file    )
+       PRINT*, '    --> variables : ', TRIM( lnd_tavg_1hr_slv_data    )
+       PRINT*, '  rad_tavg_1hr_slv  : '
+       PRINT*, '    --> filename  : ', TRIM( rad_tavg_1hr_slv_file    )
+       PRINT*, '    --> variables : ', TRIM( rad_tavg_1hr_slv_data    )
+       PRINT*, '  slv_tavg_1hr_slv  : '
+       PRINT*, '    --> filename  : ', TRIM( slv_tavg_1hr_slv_file    )
+       PRINT*, '    --> variables : ', TRIM( slv_tavg_1hr_slv_data    )
+       PRINT*, '  asm_tavg_3hr_v72  : '
+       PRINT*, '    --> filename  : ', TRIM( asm_tavg_3hr_v72_file    )
+       PRINT*, '    --> variables : ', TRIM( asm_tavg_3hr_v72_data    )
+       PRINT*, '  cld_tavg_3hr_v72  : '
+       PRINT*, '    --> filename  : ', TRIM( cld_tavg_3hr_v72_file    )
+       PRINT*, '    --> variables : ', TRIM( cld_tavg_3hr_v72_data_c  )
+       PRINT*, '    --> variables : ', TRIM( cld_tavg_3hr_v72_data_d  )
+       PRINT*, '  mst_tavg_3hr_v72  : '
+       PRINT*, '    --> filename  : ', TRIM( mst_tavg_3hr_v73_file    )
+       PRINT*, '    --> variables : ', TRIM( mst_tavg_3hr_v73_data    )
+       PRINT*, '  mst_tavg_3hr_v73  : '
+       PRINT*, '    --> filename  : ', TRIM( mst_tavg_3hr_v72_file    )
+       PRINT*, '    --> variables : ', TRIM( mst_tavg_3hr_v72_data    )
+       PRINT*, '  asm_inst_3hr_v72  : '
+       PRINT*, '    --> filename  : ', TRIM( asm_inst_3hr_v72_file    )
+       PRINT*, '    --> variables : ', TRIM( asm_inst_3hr_v72_data    )
+       PRINT*, 'WEIGHTS:'
+       PRINT*, '  WeightsNxTo2x25   : '
+       PRINT*, '    --> ', TRIM( weightFileTo2x25        )
+       PRINT*, '  WeightsNxTo4x5    : '
+       PRINT*, '    --> ', TRIM( weightFileTo4x5         )
     ENDIF
 
     ! Write a message to denote if we are using pressure-weighting
