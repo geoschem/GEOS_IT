@@ -36,6 +36,7 @@
   our $CODE_DIRECTORY    = "";
   our $DATE_FILE         = "";
   our $DATE_STRING       = "";
+  our $FILE_DATE_STRING  = "";
   our $DAY_STRING        = "";
   our $EMAIL_STRING      = "";
   our $EXECUTABLE        = "";
@@ -155,8 +156,16 @@ sub getDefaults($$) {
   $MONTH_STRING = substr( $date, 4, 2 );
   $DAY_STRING   = substr( $date, 6, 2 );
 
+  # Create source file date string to include dashes
+  $FILE_DATE_STRING = "$YEAR_STRING-$MONTH_STRING-$DAY_STRING";
+
   # File to pass date to F90 code
-  $DATE_FILE    = "$TEMP_DIRECTORY/$DATE_STRING.$$";
+  $DATE_FILE    = "$TEMP_DIRECTORY/$FILE_DATE_STRING.$$";
+
+  # Summary date variables
+  print "Global var DATE_STRING is $DATE_STRING\n";
+  print "Global var FILE_DATE_STRING is $FILE_DATE_STRING\n";
+  print "Global var DATE_FILE (to pass date to F90 code) is $DATE_FILE\n";
 
   # Log error file
   $LOG_ERR      = "$LOG_DIRECTORY/log.doGeosItMulti.error-{THREAD}";
@@ -396,7 +405,8 @@ sub makeJobFile($) {
 
   # Save date in a file to pass to the F90 code
   open( O, ">$DATE_FILE" ) or die "Cannot open $DATE_FILE!\n";
-  print O "$DATE_STRING\n";
+  #ewl  print O "$DATE_STRING\n";
+  print O "$FILE_DATE_STRING\n";
   close( O );
 
   #-----------------------------------------
@@ -556,10 +566,8 @@ sub main() {
   # Get default values
   &getDefaults( "doGeosIt.input", $ARGV[0] );
 
-  # Quick & dirty test if all the files are present in the met dir
-  # Not an exhaustive check but this should be good enough to prevent the
-  # met field code from starting if there aren't enough files. (bmy, 8/7/13)
-  $listCmd = "ls -1 $MET_DIRECTORY/*geosit*"."@ARGV"."*";
+  # Test if at least some files are present in the met dir with expected format
+  $listCmd = "ls -1 $MET_DIRECTORY/*geosit*"."$FILE_DATE_STRING"."*";
   chomp( @files = qx( $listCmd ) );
 
 #------------------------------------------------------------------------------

@@ -105,8 +105,6 @@ MODULE GeosItInputsModule
   INTEGER                 :: I_NestNa05, J_NestNa05   ! NestNa dimensions
   INTEGER                 :: I_NestAs05, J_NestAs05   ! NestAs dimensions
 
-  INTEGER                 :: yyyymmdd                 ! Today's date
-
   INTEGER                 :: fIn                      ! NC fId; input
 
   INTEGER                 :: fout05x0625              ! NC fId, output 0.5x0.625
@@ -120,7 +118,12 @@ MODULE GeosItInputsModule
   REAL*4                  :: Ap(L05x0625+1)           ! Hybrid grid "A" array
   REAL*4                  :: Bp(L05x0625+1)           ! Hybrid grid "B" array
 
-  CHARACTER(LEN=8)        :: yyyymmdd_string          ! String for YYYYMMDD
+  ! Date variables
+  ! GEOS-IT raw filenames use YYYY-MM-DD; processed data files use YYYYMMDD
+  CHARACTER(LEN=10)       :: yyyymmdd_source_string   ! String for YYYY-MM-DD
+  CHARACTER(LEN=8)        :: yyyymmdd_target_string   ! String for YYYYMMDD
+  CHARACTER(LEN=8)        :: yyyymmdd_string   ! for backward compatibility
+  INTEGER                 :: yyyymmdd                 ! Integer for YYYYMMDD
 
   CHARACTER(LEN=MAX_CHAR) :: inputDataDir             ! netCDF data dir
 
@@ -260,11 +263,21 @@ MODULE GeosItInputsModule
     ! Read the file with the date (passed from the Perl script "doGeos5")
     !-----------------------------------------------------------------------
 
-    ! Get day of year
-    READ( 5, '(i8)', ERR=990 ) yyyymmdd
+    ! Get day of year (YYYY-MM-DD)
+    READ( 5, '(a10)', ERR=990 ) yyyymmdd_source_string
+
+    ! Strip dashes (YYYYMMDD)
+    yyyymmdd_target_string = yyyymmdd_source_string(1:4) // &
+                             yyyymmdd_source_string(6:7) // &
+                             yyyymmdd_source_string(9:10)
+
+    ! For backwards compatibility (temporary)
+    yyyymmdd_string = yyyymmdd_target_string
+
+    ! Store as integer (YYYYMMDD)
+    READ( yyyymmdd_target_string, '(i8)' ) yyyymmdd
 
     ! Save day of year in a string
-    WRITE( yyyymmdd_string, '(i8)' ) yyyymmdd
 
     ! 1-hourly data timestamps
     DO T = 1, TIMES_A1
@@ -490,10 +503,11 @@ MODULE GeosItInputsModule
     ! Verbose output for debugging
     !-----------------------------------------------------------------------
     IF ( VERBOSE ) THEN
-       PRINT*, 'YYYYMMDD   : ', yyyymmdd
        PRINT*, 'aMins      : ', a1Mins
        PRINT*, 'a3MinsI    : ', a3MinsI
        PRINT*, 'a3Mins     : ', a3Mins
+       PRINT*, 'YYYYMMDD source file str : ', yyyymmdd_source_string
+       PRINT*, 'YYYYMMDD target file str : ', yyyymmdd_string
        PRINT*, 'doMakeCn   : ', doMakeCn
        PRINT*, 'doNative   : ', doNative
        PRINT*, 'do05x0625  : ', do05x0625
