@@ -40,7 +40,7 @@ our @COLLECTIONS = ( "flx_tavg_1hr_glo_L576x361_slv",
                      "rad_tavg_3hr_glo_L576x361_v72"  );
 
 # Number of expected files
-our $N_FILES     = 144;
+our $N_FILES     = 268;
 
 # Today's date
 our $DATE        = "";

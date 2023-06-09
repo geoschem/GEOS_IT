@@ -47,7 +47,6 @@
   our $LOG_FILE          = "";
   our $MET_DIRECTORY     = "";
   our $MONTH_STRING      = "";
-  our $N_FILES           = 144;
   our $SUBMIT            = "";
   our $TEMP_DIRECTORY    = "";
   our $USER_ID           = "";
@@ -572,14 +571,6 @@ sub main() {
 #------------------------------------------------------------------------------
   # Check if files have been downloaded properly
   foreach $file ( @files ) { if ( -f  $file ) { $status++; } }
-
-  # Make sure we match the expected # of files
-  if ( $status == $N_FILES ) { 
-    print "doGeosItMulti: All files present!  Now processing met for $ARGV[0]!\n"; 
-  } else {
-    print "doGeosItMulti: Not enough raw met files for $ARGV[0]!\n"; 
-    exit(1); 
-  }
 
   # Get system variables
   &getSysVars();
