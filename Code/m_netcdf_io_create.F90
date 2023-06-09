@@ -83,7 +83,8 @@ CONTAINS
 !BOC
 !
 ! !LOCAL VARIABLES:
-    character (len=128) :: err_msg
+    character (len=256) :: err_msg
+    character (len=3)   :: ierr
     integer             :: ierr
     INTEGER             :: mode
     LOGICAL             :: TMP_NC4
@@ -109,7 +110,8 @@ CONTAINS
     ENDIF
 
     if (ierr /= NF_NOERR) then
-       err_msg = 'In Nccr_Wr, cannot create:  ' // Trim (filname)
+       read( ierr, '(i3)' ) ierr_str
+       err_msg = 'In Nccr_Wr, ierr '//trim(ierr_str)//', cannot create:  '//Trim(filname)
        call Do_Err_Out (err_msg, .true., 0, 0, 0, 0 , 0.0d0, 0.0d0)
     end if
 
