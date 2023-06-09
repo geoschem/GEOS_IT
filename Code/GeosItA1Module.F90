@@ -637,7 +637,7 @@ MODULE GeosItA1Module
     ENDIF
 
     ! QV2M
-    IF ( StrPos( 'QV2M', slv_tavg_1hr_glo_slv_data ) >= 0 ) THEN
+    IF ( StrPos( 'QV2M', slv_tavg_1hr_slv_data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        
        lName = 'Specific humidity at 2m above the displacement height'
@@ -1138,20 +1138,6 @@ MODULE GeosItA1Module
     ! Open files for output; define variables, attribute, index arrays
     !=======================================================================
 
-    ! Open nested 0625 CH output file
-    IF ( doNestCh05 ) THEN
-       fName = TRIM( tempDirTmplNestCh05 ) // TRIM( dataTmplNestCh05 )
-       gName = 'nested CH 05'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000      )
-       CALL StrRepl     ( fName,     '%%%%%%',     'A1    '    )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
-       CALL NcOutFileDef( I_NestCh05,  J_NestCh05,     TIMES_A1,  &
-                          xMid_05x0625(I0_ch05:I1_ch05),          &
-                          yMid_05x0625(J0_ch05:J1_ch05),          &
-                          a1Mins,    gName,        fName,         &
-                          fOut05NestCh                           )
-    ENDIF
-
     ! Open nested EU output file
     IF ( doNestEu05 ) THEN
        fName = TRIM( tempDirTmplNestEu05 ) // TRIM( dataTmplNestEu05 )
@@ -1178,19 +1164,6 @@ MODULE GeosItA1Module
                           yMid_05x0625(J0_na05:J1_na05),          &
                           a1Mins,    gName,        fName,         &
                           fOut05NestNa                           )
-    ENDIF
-    ! Open nested SE output file
-    IF ( doNestSe05 ) THEN
-       fName = TRIM( tempDirTmplNestSe05 ) // TRIM( dataTmplNestSe05 )
-       gName = 'nested SE 05'
-       CALL ExpandDate  ( fName,     yyyymmdd,     000000      )
-       CALL StrRepl     ( fName,     '%%%%%%',     'A1    '    )
-       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
-       CALL NcOutFileDef( I_NestSe05,  J_NestSe05,     TIMES_A1,  &
-                          xMid_05x0625(I0_se05:I1_se05),          &
-                          yMid_05x0625(J0_se05:J1_se05),          &
-                          a1Mins,    gName,        fName,         &
-                          fOut05NestSe                           )
     ENDIF
 
     ! Open nested AS output file
@@ -1264,10 +1237,8 @@ MODULE GeosItA1Module
     IF ( do05x0625  ) CALL NcCl( fOut05x0625  )
     IF ( do2x25     ) CALL NcCl( fOut2x25     )
     IF ( do4x5      ) CALL NcCl( fOut4x5      )
-    IF ( doNestCh05 ) CALL NcCl( fOut05NestCh )
     IF ( doNestEu05 ) CALL NcCl( fOut05NestEu )
     IF ( doNestNa05 ) CALL NcCl( fOut05NestNa )
-    IF ( doNestSe05 ) CALL NcCl( fOut05NestSe )
     IF ( doNestAs05 ) CALL NcCl( fOut05NestAs )
 
     ! Echo info
@@ -1317,10 +1288,8 @@ MODULE GeosItA1Module
     INTEGER                 :: X2x25,    Y2x25,    T2x25
     INTEGER                 :: X4x5,     Y4x5,     T4x5
 
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
-    INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
     INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
 
     INTEGER                 :: ct3d(3),  st3d(3)
@@ -1373,13 +1342,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
 
-    ! Nested CH grid 05x0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
-    ENDIF
-
     ! Nested EU grid 05x0625
     IF ( doNestEu05 ) THEN
        CALL NcGet_DimLen( fOut05NestEu, 'lon',  XNestEu05 )
@@ -1392,13 +1354,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut05NestNa, 'lon',  XNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'lat',  YNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'time', TNestNa05 )
-    ENDIF
-
-    ! Nested SE grid 05x0625
-    IF ( doNestSe05 ) THEN
-       CALL NcGet_DimLen( fOut05NestSe, 'lon',  XNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'lat',  YNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
     ENDIF
 
     ! Nested AS grid 05x0625
@@ -1482,6 +1437,8 @@ MODULE GeosItA1Module
              msg = '%%% Computing fractional sea ice coverage'
              WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
+200          FORMAT( 'SEAICE', i1, '0' )
+
              ! 0.5x0.625 grid: Sea ice bins
              IF ( doNative ) THEN
 
@@ -1499,18 +1456,6 @@ MODULE GeosItA1Module
                      CALL NcWr( Ptr, fOut05x0625, name2, st3d, ct3d )
                      NULLIFY( Ptr )
                   ENDDO
-                ENDIF
-
-                ! Nested CH grid
-                IF ( doNestCh05 ) THEN
-                   DO S = 1, N_ICE
-                      WRITE( name2, 200 ) S-1
-                      Ptr  => ice( I0_ch05:I1_ch05, J0_ch05:J1_ch05, S )
-                      st3d = (/ 1,       1,       H  /)
-                      ct3d = (/ XNestCh05, YNestCh05, 1  /)
-                      CALL NcWr( Ptr, fOut05NestCh, name2, st3d, ct3d )
-                      NULLIFY( Ptr )
-                   ENDDO
                 ENDIF
 
                 ! Nested EU grid
@@ -1533,18 +1478,6 @@ MODULE GeosItA1Module
                       st3d = (/ 1,       1,       H  /)
                       ct3d = (/ XNestNa05, YNestNa05, 1  /)
                       CALL NcWr( Ptr, fOut05NestNa, name2, st3d, ct3d )
-                      NULLIFY( Ptr )
-                   ENDDO
-                ENDIF
-
-                ! Nested SE grid
-                IF ( doNestSe05 ) THEN
-                   DO S = 1, N_ICE
-                      WRITE( name2, 200 ) S-1
-                      Ptr  => ice( I0_se05:I1_se05, J0_se05:J1_se05, S )
-                      st3d = (/ 1,       1,       H  /)
-                      ct3d = (/ XNestSe05, YNestSe05, 1  /)
-                      CALL NcWr( Ptr, fOut05NestSe, name2, st3d, ct3d )
                       NULLIFY( Ptr )
                    ENDDO
                 ENDIF
@@ -1649,15 +1582,6 @@ MODULE GeosItA1Module
              CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st3d, ct3d )
           ENDIF
 
-          ! Nested CH
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
           ! Nested EU
           IF ( doNestEu05 ) THEN
              Ptr  => Q( I0_eu05:I1_eu05, J0_eu05:J1_eu05 )
@@ -1673,15 +1597,6 @@ MODULE GeosItA1Module
              st3d = (/ 1,       1,       H /)
              ct3d = (/ XNestNa05, YNestNa05, 1 /)
              CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
-          ! Nested SE
-          IF ( doNestSe05 ) THEN
-             Ptr  => Q( I0_se05:I1_se05, J0_se05:J1_se05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestSe05, YNestSe05, 1 /)
-             CALL NcWr( Ptr, fOut05NestSe, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -1752,10 +1667,8 @@ MODULE GeosItA1Module
     INTEGER                 :: X2x25,    Y2x25,    T2x25
     INTEGER                 :: X4x5,     Y4x5,     T4x5
 
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
-    INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
     INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
 
     INTEGER                 :: ct3d(3),  st3d(3)
@@ -1803,13 +1716,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
 
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
-    ENDIF
-
     ! Nested EU grid 0625
     IF ( doNestEu05 ) THEN
        CALL NcGet_DimLen( fOut05NestEu, 'lon',  XNestEu05 )
@@ -1822,13 +1728,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut05NestNa, 'lon',  XNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'lat',  YNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'time', TNestNa05 )
-    ENDIF
-
-    ! Nested SE grid 0625
-    IF ( doNestSe05 ) THEN
-       CALL NcGet_DimLen( fOut05NestSe, 'lon',  XNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'lat',  YNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
     ENDIF
 
     ! Nested AS grid 0625
@@ -1961,15 +1860,6 @@ MODULE GeosItA1Module
              CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st3d, ct3d )
           ENDIF
 
-          ! Nested CH
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
           ! Nested EU 
           IF ( doNestEu05 ) THEN
              Ptr  => Q( I0_eu05:I1_eu05, J0_eu05:J1_eu05 )
@@ -1985,15 +1875,6 @@ MODULE GeosItA1Module
              st3d = (/ 1,       1,       H /)
              ct3d = (/ XNestNa05, YNestNa05, 1 /)
              CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
-          ! Nested SE
-          IF ( doNestSe05 ) THEN
-             Ptr  => Q( I0_se05:I1_se05, J0_se05:J1_se05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestSe05, YNestSe05, 1 /)
-             CALL NcWr( Ptr, fOut05NestSe, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -2066,10 +1947,8 @@ MODULE GeosItA1Module
     INTEGER                 :: X2x25,    Y2x25,    T2x25
     INTEGER                 :: X4x5,     Y4x5,     T4x5
 
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
-    INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
     INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
 
     INTEGER                 :: ct3d(3),  st3d(3)
@@ -2118,13 +1997,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
 
-    ! Nested CH grid 05x0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
-    ENDIF
-
     ! Nested EU grid 05x0625
     IF ( doNestEu05 ) THEN
        CALL NcGet_DimLen( fOut05NestEu, 'lon',  XNestEu05 )
@@ -2138,21 +2010,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut05NestNa, 'lat',  YNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'time', TNestNa05 )
     ENDIF
-
-    ! Nested SE grid 05x0625
-    IF ( doNestSe05 ) THEN
-       CALL NcGet_DimLen( fOut05NestSe, 'lon',  XNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'lat',  YNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
-    ENDIF
-
-    ! Nested SE grid 05x0625
-    IF ( doNestAs05 ) THEN
-       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
-       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
-       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
-    ENDIF
-
 
     !=======================================================================
     ! Open input file
@@ -2279,15 +2136,6 @@ MODULE GeosItA1Module
              CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st3d, ct3d )
           ENDIF
 
-          ! Nested CH
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
           ! Nested EU
           IF ( doNestEu05 ) THEN
              Ptr  => Q( I0_eu05:I1_eu05, J0_eu05:J1_eu05 )
@@ -2303,15 +2151,6 @@ MODULE GeosItA1Module
              st3d = (/ 1,       1,       H /)
              ct3d = (/ XNestNa05, YNestNa05, 1 /)
              CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
-          ! Nested SE
-          IF ( doNestSe05 ) THEN
-             Ptr  => Q( I0_se05:I1_se05, J0_se05:J1_se05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestSe05, YNestSe05, 1 /)
-             CALL NcWr( Ptr, fOut05NestSe, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -2382,10 +2221,8 @@ MODULE GeosItA1Module
     INTEGER                 :: X2x25,    Y2x25,    T2x25
     INTEGER                 :: X4x5,     Y4x5,     T4x5
 
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
-    INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
     INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
 
     INTEGER                 :: ct3d(3),  st3d(3)
@@ -2437,13 +2274,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
 
-    ! Nested CH grid 05x0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
-    ENDIF
-
     ! Nested EU grid 05x0625
     IF ( doNestEu05 ) THEN
        CALL NcGet_DimLen( fOut05NestEu, 'lon',  XNestEu05 )
@@ -2456,13 +2286,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut05NestNa, 'lon',  XNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'lat',  YNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'time', TNestNa05 )
-    ENDIF
-
-    ! Nested SE grid 05x0625
-    IF ( doNestSe05 ) THEN
-       CALL NcGet_DimLen( fOut05NestSe, 'lon',  XNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'lat',  YNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
     ENDIF
 
     ! Nested AS grid 05x0625
@@ -2642,15 +2465,6 @@ MODULE GeosItA1Module
              CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st3d, ct3d )
           ENDIF
 
-          ! Nested CH
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
           ! Nested EU
           IF ( doNestEu05 ) THEN
              Ptr  => Q( I0_eu05:I1_eu05, J0_eu05:J1_eu05 )
@@ -2666,15 +2480,6 @@ MODULE GeosItA1Module
              st3d = (/ 1,       1,       H /)
              ct3d = (/ XNestNa05, YNestNa05, 1 /)
              CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st3d, ct3d )
-             NULLIFY( Ptr )
-          ENDIF
-
-          ! Nested SE
-          IF ( doNestSe05 ) THEN
-             Ptr  => Q( I0_se05:I1_se05, J0_se05:J1_se05 )
-             st3d = (/ 1,       1,       H /)
-             ct3d = (/ XNestSe05, YNestSe05, 1 /)
-             CALL NcWr( Ptr, fOut05NestSe, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -2750,16 +2555,14 @@ MODULE GeosItA1Module
     INTEGER                 :: X2x25,    Y2x25,    T2x25
     INTEGER                 :: X4x5,     Y4x5,     T4x5
 
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
-    INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
     INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
 
     INTEGER                 :: ct3d(3),  st3d(3)
 
     ! Data arrays
-    REAL*4, TARGET          :: Q    ( I05x0625,   J05x0625             )
+    REAL*4, TARGET          :: Q    ( I05x0625,   J05x0625, TIMES_A1   )
     REAL*4                  :: Q2x25( I2x25,      J2x25                )
     REAL*4                  :: Q4x5 ( I4x5,       J4x5                 )
 
@@ -2800,13 +2603,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut4x5,    'time', T4x5    )
     ENDIF
 
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
-    ENDIF
-
     ! Nested EU grid 0625
     IF ( doNestEu05 ) THEN
        CALL NcGet_DimLen( fOut05NestEu, 'lon',  XNestEu05 )
@@ -2819,13 +2615,6 @@ MODULE GeosItA1Module
        CALL NcGet_DimLen( fOut05NestNa, 'lon',  XNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'lat',  YNestNa05 )
        CALL NcGet_DimLen( fOut05NestNa, 'time', TNestNa05 )
-    ENDIF
-
-    ! Nested SE grid 0625
-    IF ( doNestSe05 ) THEN
-       CALL NcGet_DimLen( fOut05NestSe, 'lon',  XNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'lat',  YNestSe05 )
-       CALL NcGet_DimLen( fOut05NestSe, 'time', TNestSe05 )
     ENDIF
 
     ! Nested AS grid 0625
@@ -2930,7 +2719,7 @@ MODULE GeosItA1Module
 
        ! Write 0.5x0.625 data
        IF ( do05x0625 ) THEN
-         Ptr => Q
+         Ptr => Q(:,:,1)
          st3d = (/ 1,       1,       H /)
          ct3d = (/ X05x0625, Y05x0625, 1 /)
          CALL NcWr( Ptr, fOut05x0625, 'ALBEDO', st3d, ct3d )
@@ -2951,18 +2740,9 @@ MODULE GeosItA1Module
           CALL NcWr( Q4x5, fOut4x5, 'ALBEDO', st3d, ct3d )
        ENDIF
 
-       ! Nested CH
-       IF ( doNestCh05 ) THEN
-          Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
-          st3d = (/ 1,       1,       H /)
-          ct3d = (/ XNestCh05, YNestCh05, 1 /)
-          CALL NcWr( Ptr, fOut05NestCh, 'ALBEDO', st3d, ct3d )
-          NULLIFY( Ptr )
-       ENDIF
-
        ! Nested EU
        IF ( doNestEu05 ) THEN
-          Ptr  => Q( I0_eu05:I1_eu05, J0_eu05:J1_eu05 )
+          Ptr  => Q( I0_eu05:I1_eu05, J0_eu05:J1_eu05, 1 )
           st3d = (/ 1,       1,       H /)
           ct3d = (/ XNestEu05, YNestEu05, 1 /)
           CALL NcWr( Ptr, fOut05NestEu, 'ALBEDO', st3d, ct3d )
@@ -2971,25 +2751,16 @@ MODULE GeosItA1Module
 
        ! Nested NA
        IF ( doNestNa05 ) THEN
-          Ptr  => Q( I0_na05:I1_na05, J0_na05:J1_na05 )
+          Ptr  => Q( I0_na05:I1_na05, J0_na05:J1_na05, 1 )
           st3d = (/ 1,       1,       H /)
           ct3d = (/ XNestNa05, YNestNa05, 1 /)
           CALL NcWr( Ptr, fOut05NestNa, 'ALBEDO', st3d, ct3d )
           NULLIFY( Ptr )
        ENDIF
 
-       ! Nested SE
-       IF ( doNestSe05 ) THEN
-          Ptr  => Q( I0_se05:I1_se05, J0_se05:J1_se05 )
-          st3d = (/ 1,       1,       H /)
-          ct3d = (/ XNestSe05, YNestSe05, 1 /)
-          CALL NcWr( Ptr, fOut05NestSe, 'ALBEDO', st3d, ct3d )
-          NULLIFY( Ptr )
-       ENDIF
-
        ! Nested AS
        IF ( doNestAs05 ) THEN
-          Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05 )
+          Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05, 1 )
           st3d = (/ 1,       1,       H /)
           ct3d = (/ XNestAs05, YNestAs05, 1 /)
           CALL NcWr( Ptr, fOut05NestAs, 'ALBEDO', st3d, ct3d )

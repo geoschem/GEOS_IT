@@ -89,28 +89,20 @@ MODULE GeosItInputsModule
   LOGICAL                 :: do2x25                   ! Save out 2x2.25
   LOGICAL                 :: do4x5                    ! Save out 4 x 5?
 
-  LOGICAL                 :: doNestCh05               ! Save nested CH grid?
   LOGICAL                 :: doNestEu05               ! Save nested EU grid?
   LOGICAL                 :: doNestNa05               ! Save nested NA grid?
-  LOGICAL                 :: doNestSe05               ! Save nested SE grid?
   LOGICAL                 :: doNestAs05               ! Save nested Asia grid?
 
-  INTEGER                 :: I0_ch05,    J0_ch05      ! LL corner of CH grid
   INTEGER                 :: I0_eu05,    J0_eu05      ! LL corner of EU grid
   INTEGER                 :: I0_na05,    J0_na05      ! LL corner of NA grid
-  INTEGER                 :: I0_se05,    J0_se05      ! LL corner of SE grid
   INTEGER                 :: I0_as05,    J0_as05      ! LL corner of Asia grid
 
-  INTEGER                 :: I1_ch05,    J1_ch05      ! UR corner of CH grid
   INTEGER                 :: I1_eu05,    J1_eu05      ! UR corner of EU grid
   INTEGER                 :: I1_na05,    J1_na05      ! UR corner of NA grid
-  INTEGER                 :: I1_se05,    J1_se05      ! UR corner of SE grid
-  INTEGER                 :: I1_as05,    J1_as05      ! UR corner of Dia grid
+  INTEGER                 :: I1_as05,    J1_as05      ! UR corner of Asia grid
 
-  INTEGER                 :: I_NestCh05, J_NestCh05   ! NestCh dimensions
-  INTEGER                 :: I_NestEu05, J_NestEu05   ! NestNa dimensions
+  INTEGER                 :: I_NestEu05, J_NestEu05   ! NestEu dimensions
   INTEGER                 :: I_NestNa05, J_NestNa05   ! NestNa dimensions
-  INTEGER                 :: I_NestSe05, J_NestSe05   ! NestSe dimensions
   INTEGER                 :: I_NestAs05, J_NestAs05   ! NestAs dimensions
 
   INTEGER                 :: yyyymmdd                 ! Today's date
@@ -120,10 +112,8 @@ MODULE GeosItInputsModule
   INTEGER                 :: fout05x0625              ! NC fId, output 0.5x0.625
   INTEGER                 :: fOut2x25                 ! NC fId; output 2x25
   INTEGER                 :: fOut4x5                  ! NC fId; output 4x5
-  INTEGER                 :: fOut05NestCh             ! NC fId; output CH grid
   INTEGER                 :: fOut05NestEu             ! NC fId; output EU grid
   INTEGER                 :: fOut05NestNa             ! NC fId; output NA grid
-  INTEGER                 :: fOut05NestSe             ! NC fId; output SE grid
   INTEGER                 :: fOut05NestAs             ! NC fId; output IN grid
 
   REAL*4                  :: FILL_VALUE = 1e15        ! Fill value in HDF file
@@ -138,30 +128,24 @@ MODULE GeosItInputsModule
   CHARACTER(LEN=MAX_CHAR) :: dataTmpl05x0625          ! 05x0625
   CHARACTER(LEN=MAX_CHAR) :: dataTmpl2x25             ! 2x25   
   CHARACTER(LEN=MAX_CHAR) :: dataTmpl4x5              ! 4x5    
-  CHARACTER(LEN=MAX_CHAR) :: dataTmplNestCh05         ! NstCh  
   CHARACTER(LEN=MAX_CHAR) :: dataTmplNestNa05         ! NstNa  
   CHARACTER(LEN=MAX_CHAR) :: dataTmplNestEu05         ! NstEu  
-  CHARACTER(LEN=MAX_CHAR) :: dataTmplNestSe05         ! NstSe  
   CHARACTER(LEN=MAX_CHAR) :: dataTmplNestAs05         ! NstIn  
 
   ! Temporary directories
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmpl05x0625       ! 05x0625
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmpl2x25          ! 2x25   
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmpl4x5           ! 4x5    
-  CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestCh05      ! NstCh  
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestNa05      ! NstNa  
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestEu05      ! NstEu  
-  CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestSe05      ! NstSe  
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestAs05      ! NstIn  
 
   ! Data directories
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmpl05x0625       ! 05x0625
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmpl2x25          ! 2x25   
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmpl4x5           ! 4x5    
-  CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestCh05      ! NstCh  
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestNa05      ! NstNa  
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestEu05      ! NstEu  
-  CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestSe05      ! NstSe  
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestAs05      ! NstIn  
 
   ! Collection files
@@ -315,15 +299,6 @@ MODULE GeosItInputsModule
           CASE( '==> Local Raw Data Path' )
              READ( IU_TXT, '(a)',    ERR=999 ) inputDataDir
 
-          CASE( '==> Nested 0.5x0.625 CH output' )
-             READ( IU_TXT,   *,      ERR=999 ) doNestCh05
-             READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestCh05
-             READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestCh05
-             READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmplNestCh05
-             READ( IU_TXT,   *, ERR=999 ) I0_ch05, J0_ch05, I1_ch05, J1_ch05
-             I_NestCh05 = I1_ch05 - I0_ch05 + 1
-             J_NestCh05 = J1_ch05 - J0_ch05 + 1
-
           CASE( '==> Nested 0.5x0.625 EU output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestEu05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestEu05
@@ -341,15 +316,6 @@ MODULE GeosItInputsModule
              READ( IU_TXT,   *, ERR=999 ) I0_na05, J0_na05, I1_na05, J1_na05
              I_NestNa05 = I1_na05 - I0_na05 + 1
              J_NestNa05 = J1_na05 - J0_na05 + 1
-
-          CASE( '==> Nested 0.5x0.625 SE output' )
-             READ( IU_TXT,   *,      ERR=999 ) doNestSe05
-             READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestSe05
-             READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestSe05
-             READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmplNestSe05
-             READ( IU_TXT,   *, ERR=999 ) I0_se05, J0_se05, I1_se05, J1_se05
-             I_NestSe05 = I1_se05 - I0_se05 + 1
-             J_NestSe05 = J1_se05 - J0_se05 + 1
 
           CASE( '==> Nested 0.5x0.625 AS output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestAs05
@@ -447,8 +413,7 @@ MODULE GeosItInputsModule
     CLOSE( IU_TXT )
 
     ! Define a convenience switch for the native grid
-    doNative = ( doNestCh05 .or. doNestEu05 .or. doNestNa05 .or. &
-                 doNestSe05 .or. doNestAs05 .or. do05x0625      )
+    doNative = ( doNestEu05 .or. doNestNa05 .or. doNestAs05 .or. do05x0625 )
 
     ! Mapping weights: native grid
     IF ( doNative ) THEN
@@ -534,18 +499,12 @@ MODULE GeosItInputsModule
        PRINT*, 'do05x0625  : ', do05x0625
        PRINT*, 'do2x25     : ', do2x25
        PRINT*, 'do4x5      : ', do4x5
-       PRINT*, 'doNestCh05 : ', doNestCh05
-       PRINT*, '  --> I0, J0, I1, J1 : ', I0_ch05, J0_ch05, I1_ch05, J1_ch05
-       PRINT*, '  --> ICH, JCH       : ', I_NestCh05, J_NestCh05
        PRINT*, 'doNestEu05 : ', doNestEu05
        PRINT*, '  --> I0, J0, I1, J1 : ', I0_eu05, J0_eu05, I1_eu05, J1_eu05
        PRINT*, '  --> INA, JNA       : ', I_NestEu05, J_NestEu05
        PRINT*, 'doNestNa05 : ', doNestNa05
        PRINT*, '  --> I0, J0, I1, J1 : ', I0_na05, J0_na05, I1_na05, J1_na05
        PRINT*, '  --> INA, JNA       : ', I_NestNa05, J_NestNa05
-       PRINT*, 'doNestSe05 : ', doNestSe05
-       PRINT*, '  --> I0, J0, I1, J1 : ', I0_se05, J0_se05, I1_se05, J1_se05
-       PRINT*, '  --> ISE, JSE       : ', I_NestSe05, J_NestSe05
        PRINT*, 'doNestAs05 : ', doNestAs05
        PRINT*, '  --> I0, J0, I1, J1 : ', I0_as05, J0_as05, I1_as05, J1_as05
        PRINT*, '  --> IIN, JIN       : ', I_NestAs05, J_NestAs05
@@ -564,22 +523,16 @@ MODULE GeosItInputsModule
        PRINT*, 'dataDirTmpl2x25   : ', TRIM( dataDirTmpl2x25           )
        PRINT*, 'dataDirTmpl4x5    : ', TRIM( dataDirTmpl4x5            )
        PRINT*, ' '
-       PRINT*, 'dataTmplNestCh05  : ', TRIM( dataTmplNestCh05          )
        PRINT*, 'dataTmplNestEu05  : ', TRIM( dataTmplNestEu05          )
        PRINT*, 'dataTmplNestNa05  : ', TRIM( dataTmplNestNa05          )
-       PRINT*, 'dataTmplNestSe05  : ', TRIM( dataTmplNestSe05          )
        PRINT*, 'dataTmplNestAs05  : ', TRIM( dataTmplNestAs05          )
        PRINT*, ' '
-       PRINT*, 'tempDirNestCh05   : ', TRIM( tempDirTmplNestCh05       )
        PRINT*, 'tempDirNestEu05   : ', TRIM( tempDirTmplNestEu05       )
        PRINT*, 'tempDirNestNa05   : ', TRIM( tempDirTmplNestNa05       )
-       PRINT*, 'tempDirNestSe05   : ', TRIM( tempDirTmplNestSe05       )
        PRINT*, 'tempDirNestAs05   : ', TRIM( tempDirTmplNestAs05       )
        PRINT*, ' '
-       PRINT*, 'dataDirNestCh05   : ', TRIM( dataDirTmplNestCh05       )
        PRINT*, 'dataDirNestEu05   : ', TRIM( dataDirTmplNestEu05       )
        PRINT*, 'dataDirNestNa05   : ', TRIM( dataDirTmplNestNa05       )
-       PRINT*, 'dataDirNestSe05   : ', TRIM( dataDirTmplNestSe05       )
        PRINT*, 'dataDirNestAs05   : ', TRIM( dataDirTmplNestAs05       )
        PRINT*, ' '
        PRINT*, 'asm_const_0hr_slv : ', TRIM( asm_const_0hr_slv_file    )

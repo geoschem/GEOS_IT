@@ -1,6 +1,6 @@
 #EOC
 #------------------------------------------------------------------------------
-#          Harvard University Atmospheric Chemistry Modeling Group            !
+#                  GEOS-Chem Global Chemical Transport Model                  !
 #------------------------------------------------------------------------------
 #BOP
 #
@@ -33,15 +33,7 @@
 # F90, LD, LINK_NC are included from "Makefile_header.mk"
 #
 # !REVISION HISTORY: 
-#  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS-5
-#  11 Jan 2012 - R. Yantosca - Now compile GeosItA3*Module.F90 files
-#  12 Jan 2012 - R. Yantosca - Split GeosItA3MstModule.F90 into two modules
-#  23 Jan 2012 - R. Yantosca - Now compile an executable that creates all 
-#                              the output files, as well as separate 
-#                              executables that create a few files each 
-#                              (i.e. coarse-grain parallelization)
-#  20 Sep 2013 - R. Yantosca - Changed Geos57 to GeosIt in filenames
-#  20 Sep 2013 - R. Yantosca - Now just create GeosItDriver{012}.x exe files
+#  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -51,14 +43,15 @@
 #==============================================================================
 
 # Define variables
-SHELL   = /bin/sh
-BIN     = ../bin
-DOC     = ../doc
-EXE0    = GeosItDriver0.x
-EXE1    = GeosItDriver1.x
-EXE2    = GeosItDriver2.x
-LIB     = ../lib
-MOD     = ../mod
+SHELL   :=/bin/bash
+BIN     :=../bin
+DOC     :=../doc
+EXE     :=GeosItDriver.x
+EXE0    :=GeosItDriver0.x
+EXE1    :=GeosItDriver1.x
+EXE2    :=GeosItDriver2.x
+LIB     :=../lib
+MOD     :=../mod
 
 # Include header file.  This returns variables F90, LD, LINK_NC
 # as well as the default Makefile compilation rules for source code files.
@@ -87,10 +80,10 @@ TMP  := $(SRC:.F=.o)
 OBJ  := $(TMP:.F90=.o)
 
 # Object file for executable
+OBJx  := $(EXE:.x=.o)
 OBJx0 := $(EXE0:.x=.o)
 OBJx1 := $(EXE1:.x=.o)
 OBJx2 := $(EXE2:.x=.o)
-OBJx3 := $(EXE3:.x=.o)
 
 #-----------------------
 # Dependency listing
@@ -123,19 +116,19 @@ m_netcdf_io_write.o      : m_netcdf_io_write.F90        \
 
 CharpakModule.o          : CharpakModule.F
 
-GeosItInputsModule.o     : GeosItInputsModule.F90       \
+GeosItInputsModule.o    : GeosItInputsModule.F90       \
                            m_netcdf_io_open.o           \
                            m_netcdf_io_close.o          \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItRegridModule.o     : GeosItRegridModule.F90       \
+GeosItRegridModule.o    : GeosItRegridModule.F90       \
                            GeosItInputsModule.o
 
-GeosItUtilityModule.o    : GeosItUtilityModule.F90      \
+GeosItUtilityModule.o   : GeosItUtilityModule.F90      \
                            CharpakModule.o
 
-GeosItA1Module.o         : GeosItA1Module.F90           \
+GeosItA1Module.o        : GeosItA1Module.F90           \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -149,7 +142,7 @@ GeosItA1Module.o         : GeosItA1Module.F90           \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItA3CldModule.o      : GeosItA3CldModule.F90        \
+GeosItA3CldModule.o     : GeosItA3CldModule.F90        \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -163,7 +156,7 @@ GeosItA3CldModule.o      : GeosItA3CldModule.F90        \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItA3DynModule.o      : GeosItA3DynModule.F90        \
+GeosItA3DynModule.o     : GeosItA3DynModule.F90        \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -177,7 +170,7 @@ GeosItA3DynModule.o      : GeosItA3DynModule.F90        \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItA3MstCModule.o     : GeosItA3MstCModule.F90       \
+GeosItA3MstCModule.o    : GeosItA3MstCModule.F90       \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -191,7 +184,7 @@ GeosItA3MstCModule.o     : GeosItA3MstCModule.F90       \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItA3MstEModule.o     : GeosItA3MstEModule.F90       \
+GeosItA3MstEModule.o    : GeosItA3MstEModule.F90       \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -205,7 +198,7 @@ GeosItA3MstEModule.o     : GeosItA3MstEModule.F90       \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItCnModule.o         : GeosItCnModule.F90           \
+GeosItCnModule.o        : GeosItCnModule.F90           \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -219,7 +212,7 @@ GeosItCnModule.o         : GeosItCnModule.F90           \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItI3Module.o         : GeosItI3Module.F90           \
+GeosItI3Module.o        : GeosItI3Module.F90           \
                            CharpakModule.o              \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
@@ -233,7 +226,7 @@ GeosItI3Module.o         : GeosItI3Module.F90           \
                            m_netcdf_io_get_dimlen.o     \
                            m_netcdf_io_read.o
 
-GeosItDriver.o           : GeosItDriver.F90             \
+GeosItDriver.o          : GeosItDriver.F90             \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
                            GeosItA1Module.o             \
@@ -244,20 +237,20 @@ GeosItDriver.o           : GeosItDriver.F90             \
                            GeosItCnModule.o             \
                            GeosItI3Module.o
 
-GeosItDriver0.o          : GeosItDriver0.F90            \
+GeosItDriver0.o         : GeosItDriver0.F90            \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
                            GeosItA1Module.o             \
                            GeosItCnModule.o             \
                            GeosItI3Module.o
 
-GeosItDriver1.o          : GeosItDriver1.F90            \
+GeosItDriver1.o         : GeosItDriver1.F90            \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
                            GeosItA3CldModule.o          \
                            GeosItA3DynModule.o   
 
-GeosItDriver2.o          : GeosItDriver2.F90            \
+GeosItDriver2.o         : GeosItDriver2.F90            \
                            GeosItInputsModule.o         \
                            GeosItRegridModule.o         \
                            GeosItA3MstCModule.o         \
@@ -272,18 +265,18 @@ GeosItDriver2.o          : GeosItDriver2.F90            \
 all: lib exe
 
 lib: $(OBJ)
-	$(AR) crs libGeosIt.a $(OBJ)
-	mv libGeosIt.a $(LIB)
+	$(AR) crs libMerra2.a $(OBJ)
+	mv libMerra2.a $(LIB)
 
-exe: $(OBJx) $(OBJx0) $(OBJx1) $(OBJx2)
-	$(LD) $(OBJx0) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE0)
-	$(LD) $(OBJx1) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE1)
-	$(LD) $(OBJx2) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE2)
-	$(LD) $(OBJx3) -L$(LIB) -lGeosIt $(LINK_NC) -o $(EXE3)
+exe: $(OBJx) $(OBJx) $(OBJx0) $(OBJx1) $(OBJx2)
+	$(LD) $(OBJx) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE)
+	$(LD) $(OBJx0) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE0)
+	$(LD) $(OBJx1) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE1)
+	$(LD) $(OBJx2) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE2)
+	cp -f $(EXE) $(BIN)
 	cp -f $(EXE0) $(BIN)
 	cp -f $(EXE1) $(BIN)
 	cp -f $(EXE2) $(BIN)
-	cp -f $(EXE3) $(BIN)
 
 doc:
 	$(MAKE) -C $(DOC) doc
