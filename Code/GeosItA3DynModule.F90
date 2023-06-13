@@ -288,7 +288,7 @@ MODULE GeosItA3DynModule
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Detrainment cloud mass flux'
-       units = 'kg m-2 s-2'
+       units = 'kg m-2 s-1'
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'DTRAIN', NF_FLOAT, 4, var4, vId     )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )

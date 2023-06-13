@@ -286,7 +286,7 @@ MODULE GeosItA3MstEModule
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Upward moist convective mass flux'
-       units = 'kg m-2 s-2'
+       units = 'kg m-2 s-1'
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'CMFMC', NF_FLOAT, 4, var4, vId     )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )

@@ -350,7 +350,7 @@ MODULE GeosItA1Module
     IF ( StrPos( 'EVAP', flx_tavg_1hr_slv_data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
        lName = 'Surface evaporation'
-       units = 'kg m-2 s-2'
+       units = 'kg m-2 s-1'
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'EVAP', NF_FLOAT, 3, var3, vId       )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
