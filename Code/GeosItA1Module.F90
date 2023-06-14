@@ -490,22 +490,6 @@ MODULE GeosItA1Module
        CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
     ENDIF
 
-    ! LWTUP
-    IF ( StrPos( 'LWTUP', rad_tavg_1hr_slv_data ) >= 0 ) THEN
-       var3  = (/ idLon, idLat, idTime /)
-       lName = 'Upward longwave flux at top of atmosphere (TOA)'
-       units = 'W m-2'
-       gamap = 'GMAO-2D'
-       CALL NcDef_Variable      ( fOut, 'LWTUP', NF_FLOAT, 3, var3, vId      )
-       CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-    ENDIF
-
     ! PARDF
     IF ( StrPos( 'PARDF', lnd_tavg_1hr_slv_data ) >= 0 ) THEN
        var3  = (/ idLon, idLat, idTime /)
@@ -866,23 +850,6 @@ MODULE GeosItA1Module
        units = 'W m-2'
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'SWGDN', NF_FLOAT, 3, var3, vId      )
-       CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-    ENDIF
-
-    ! SWGNT
-    IF ( StrPos( 'SWGNT', rad_tavg_1hr_slv_data ) >= 0 ) THEN
-       var3  = (/ idLon, idLat, idTime /)
-       
-       lName = 'Net surface downward shortwave flux'
-       units = 'W m-2'
-       gamap = 'GMAO-2D'
-       CALL NcDef_Variable      ( fOut, 'SWGNT', NF_FLOAT, 3, var3, vId      )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
@@ -2098,7 +2065,7 @@ MODULE GeosItA1Module
           SELECT CASE( name )
 
              ! These fields should be positive-definite
-             CASE( 'CLDTOT', 'LWGNT', 'LWTUP', 'SWGDN', 'SWTUP' )
+             CASE( 'CLDTOT', 'LWGNT', 'SWGDN', 'SWTUP' )
                 IF ( do2x25 ) WHERE( Q2x25 < 0e0 ) Q2x25 = 0e0
                 IF ( do4x5  ) WHERE( Q4x5  < 0e0 ) Q4x5  = 0e0
 

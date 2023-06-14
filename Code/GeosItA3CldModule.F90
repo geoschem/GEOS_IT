@@ -451,23 +451,6 @@ MODULE GeosItA3CldModule
        CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
     ENDIF
 
-    ! RH
-    IF ( StrPos( 'RH', cld_tavg_3hr_v72_data_c ) >= 0 ) THEN
-       var4  = (/ idLon, idLat, idLev, idTime /)
-       
-       lName = 'Relative humidity'
-       units = '1'
-       gamap = 'GMAO-3D$'
-       CALL NcDef_Variable      ( fOut, 'RH', NF_FLOAT, 4, var4, vId     )
-       CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-    ENDIF
-
     ! TAUCLI
     IF ( StrPos( 'TAUCLI', cld_tavg_3hr_v72_data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)

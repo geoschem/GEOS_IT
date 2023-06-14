@@ -32,7 +32,7 @@
 ;
  local fIn,      time,     lat,      lon,      ALBEDO,   CLDTOT,  
        EFLUX,    EVAP,     FRSEAICE, FRSNO,    GRN,      GWETROOT, GWETTOP, 
-       HFLUX,    LAI,      LWGNT,    LWTUP,    PARDF,    PARDR,    
+       HFLUX,    LAI,      LWGNT,    PARDF,    PARDR,    
        PBLH,     PRECANV,  PRECCON,  PRECLSC,  PRECSNO,  PRECTOT,  QV2M,
        SEAICE00, SEAICE10, SEAICE20, SEAICE30, SEAICE40, SEAICE50, SEAICE60,
        SEAICE70, SEAICE80, SEAICE90, SLP,      SNODP,    SNOMAS,   SWGDN,
@@ -69,7 +69,6 @@ begin
   HFLUX                  = fIn->HFLUX
   LAI                    = fIn->LAI
   LWGNT                  = fIn->LWGNT
-  LWTUP                  = fIn->LWTUP
   PARDF                  = fIn->PARDF
   PARDR                  = fIn->PARDR
   PBLH                   = fIn->PBLH
@@ -126,7 +125,6 @@ begin
     HFLUX&lat            = lat
     LAI&lat              = lat
     LWGNT&lat            = lat
-    LWTUP&lat            = lat
     PARDF&lat            = lat
     PARDR&lat            = lat
     PBLH&lat             = lat
@@ -179,7 +177,6 @@ begin
   HFLUX&time             = time
   LAI&time               = time
   LWGNT&time             = time
-  LWTUP&time             = time
   PARDF&time             = time
   PARDR&time             = time
   PBLH&time              = time
@@ -232,7 +229,6 @@ begin
 
   ; Add missing units
   LWGNT@units            = "W m-2"
-  LWTUP@units            = "W m-2"
 
   ; Add common COARDS variable attributes
   add_coards_var_atts( ALBEDO   ) 
@@ -247,7 +243,6 @@ begin
   add_coards_var_atts( HFLUX    )
   add_coards_var_atts( LAI      )
   add_coards_var_atts( LWGNT    )
-  add_coards_var_atts( LWTUP    )
   add_coards_var_atts( PARDF    )
   add_coards_var_atts( PARDR    )
   add_coards_var_atts( PBLH     )
@@ -299,7 +294,6 @@ begin
   ;printVarSummary( HFLUX    )
   ;printVarSummary( LAI      )
   ;printVarSummary( LWGNT    )
-  ;printVarSummary( LWTUP    )
   ;printVarSummary( PARDF    )
   ;printVarSummary( PARDR    )
   ;printVarSummary( PBLH     )
@@ -350,7 +344,6 @@ begin
   fOut->HFLUX            = HFLUX
   fOut->LAI              = LAI
   fOut->LWGNT            = LWGNT
-  fOut->LWTUP            = LWTUP
   fOut->PARDF            = PARDF
   fOut->PARDR            = PARDR
   fOut->PBLH             = PBLH
