@@ -100,7 +100,8 @@ CONTAINS
     Write (6,*)
 
     if (err_do_stop) then
-       stop "Code stopped from Do_Err_Out."
+       stop "Code stopped from Do_Err_Out. "// &
+            "Check the GEOS-IT/logs directory for more information."
     end if
 
     return

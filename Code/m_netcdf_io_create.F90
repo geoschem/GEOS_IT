@@ -84,7 +84,6 @@ CONTAINS
 !
 ! !LOCAL VARIABLES:
     character (len=256) :: err_msg
-    character (len=3)   :: ierrstr
     integer             :: ierr
     INTEGER             :: mode
     LOGICAL             :: TMP_NC4
@@ -110,8 +109,9 @@ CONTAINS
     ENDIF
 
     if (ierr /= NF_NOERR) then
-       read( ierr, '(i3)' ) ierrstr
-       err_msg = 'In Nccr_Wr, ierr '//trim(ierrstr)//', cannot create:  '//Trim(filname)
+       err_msg = 'In Nccr_Wr, cannot create:  ' // Trim (filname)
+       err_msg = Trim (err_msg) // '. Create the file directory if it does '// &
+                 'not already exist.'
        call Do_Err_Out (err_msg, .true., 0, 0, 0, 0 , 0.0d0, 0.0d0)
     end if
 
