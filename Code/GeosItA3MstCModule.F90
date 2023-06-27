@@ -209,7 +209,7 @@ MODULE GeosItA3MstCModule
 
     ! Pick DI and DJ attributes based on the grid
     SELECT CASE ( TRIM( gridName ) )
-       CASE( 'nested CH 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' ,  'nested AS 05', '0.5 x 0.625 global')
+       CASE( 'nested EU 05', 'nested NA 05', 'nested AS 05', '0.5 x 0.625 global')
           DI = '0.625'
           DJ = '0.5'
        CASE( '2 x 2.5 global' )
