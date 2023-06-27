@@ -66,8 +66,8 @@ our $LISTING     = "";
 #  &getData(@)
 #
 # !CALLING SEQUENCE:
-#  getGeos57 20110101             # Gets data for 20110101
-#  getGeos57 20110101 1           # Dryrun: shows wget commands only
+#  getGeos57 20180101             # Gets data for 20180101
+#  getGeos57 20180101 1           # Dryrun: shows wget commands only
 #
 # !REVISION HISTORY: 
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/getGeos5

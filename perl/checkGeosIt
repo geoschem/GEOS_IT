@@ -179,7 +179,7 @@ sub checkFiles($$) {
   my $missing = 0;     
 #
 # !CALLING SEQUENCE:
-#  &checkFiles( 20110101 );
+#  &checkFiles( 20180101 );
 #
 # !REMARKS:
 #  There should be 160 total files/day.  We are downloading 4 hourly 

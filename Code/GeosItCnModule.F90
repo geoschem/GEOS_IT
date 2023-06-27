@@ -50,7 +50,7 @@ MODULE GeosItCnModule
   PRIVATE :: ProcessCn2dAsmNx
 !
 ! !REMARKS:
-!  NOTE: Hardwire the constant data file to 00:00 GMT on 2011/01/01.
+!  NOTE: Hardwire the constant data file to 00:00 GMT on 2018/01/01.
 !                                                                             .
 !  netCDF library modules originally written by Jules Kouatchou, GSFC
 !  and re-packaged into NcdfUtilities by Bob Yantosca, Harvard Univ.
@@ -97,7 +97,7 @@ CONTAINS
     INTEGER,          INTENT(INOUT) :: fOut          ! Output netCDF file ID
 !
 ! !REMARKS:
-!  NOTE: Hardwire the constant data file to date 2011/01/01; 00:00 GMT.
+!  NOTE: Hardwire the constant data file to date 2018/01/01; 00:00 GMT.
 
 ! !REVISION HISTORY:
 !  25 Oct 2011 - R. Yantosca - Initial version for GEOS-FP
@@ -190,16 +190,16 @@ CONTAINS
     lName = '72'
     CALL NcDef_Glob_Attributes( fOut, 'Nlayers',              TRIM( lName ) )
 
-    ! Start Date (hardwire to 2011/01/01)
-    lName = '20110101'
+    ! Start Date (hardwire to 2018/01/01)
+    lName = '20180101'
     CALL NcDef_Glob_Attributes( fOut, 'Start_Date',           TRIM( lName ) )
 
     ! Start Time
     lName = '00:00:00.0'
     CALL NcDef_Glob_Attributes( fOut, 'Start_Time',           TRIM( lName ) )
 
-    ! End Date (hardwire to 2011/01/01)
-    lName = '20110101'
+    ! End Date (hardwire to 2018/01/01)
+    lName = '20180101'
     CALL NcDef_Glob_Attributes( fOut, 'End_Date',             TRIM( lName ) )
 
     ! End Time
@@ -239,13 +239,13 @@ CONTAINS
     CALL NcDef_Dimension( fOut, 'lat',  Y, idLat  )
     CALL NcDef_Dimension( fOut, 'lon',  X, idLon  )
 
-    ! Time index array (hardwire date to 2011/01/01)
+    ! Time index array (hardwire date to 2018/01/01)
     var1    = (/ idTime /)
     cal     = 'gregorian'
     lName   = 'time'
-    units   = UnitsForTime( 20110101 )
+    units   = UnitsForTime( 20180101 )
     delta_t = '0000-00-00 00:00:00'
-    begin_d = '20110101'
+    begin_d = '20180101'
     begin_t = '000000'
     incr    = '000000'
     CALL NcDef_Variable      ( fOut, 'time', NF_INT,  1, var1, vId           )
@@ -458,7 +458,7 @@ CONTAINS
     IF ( do05x0625 ) THEN
       fName = TRIM( tempDirTmpl05x0625 ) // TRIM( dataTmpl05x0625 )
       gName = '0.5x0.625 global'
-      CALL ExpandDate  ( fName,     20110101,     000000      )
+      CALL ExpandDate  ( fName,     20180101,     000000      )
       CALL StrRepl     ( fName,     '%%%%%%',     'A1    '    )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
       CALL NcOutFileDef( I05x0625,     J05x0625,        1,    &
@@ -470,7 +470,7 @@ CONTAINS
     IF ( do2x25 ) THEN
        fName = TRIM( tempDirTmpl2x25 ) // TRIM( dataTmpl2x25 )
        gName = '2 x 2.5 global'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20180101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.           )
        CALL NcOutFileDef( I2x25,     J2x25,        1,           &
@@ -482,7 +482,7 @@ CONTAINS
     IF ( do4x5 ) THEN
        fName = TRIM( tempDirTmpl4x5 ) // TRIM( dataTmpl4x5 )
        gName = '4 x 5 global'
-       CALL ExpandDate  ( fName,     20110101,  000000         )
+       CALL ExpandDate  ( fName,     20180101,  000000         )
        CALL StrRepl     ( fName,     '%%%%%%',  'CN    '       )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I4x5,      J4x5,      1,              &
@@ -494,7 +494,7 @@ CONTAINS
     IF ( doNestEu05 ) THEN
        fName = TRIM( tempDirTmplNestEu05 ) // TRIM( dataTmplNestEu05 )
        gName = 'nested EU 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20180101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
        CALL NcOutFileDef( I_NestEu05,  J_NestEu05,     1,       &
@@ -508,7 +508,7 @@ CONTAINS
     IF ( doNestNa05 ) THEN
        fName = TRIM( tempDirTmplNestNa05 ) // TRIM( dataTmplNestNa05 )
        gName = 'nested NA 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20180101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I_NestNa05,  J_NestNa05,  1,              &
@@ -521,8 +521,8 @@ CONTAINS
     ! Open nested AS output file
     IF ( doNestAs05 ) THEN
        fName = TRIM( tempDirTmplNestAs05 ) // TRIM( dataTmplNestAs05 )
-       gName = 'nested As 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       gName = 'nested AS 05'
+       CALL ExpandDate  ( fName,     20180101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I_NestAs05,  J_NestAs05,  1,              &
@@ -670,7 +670,7 @@ CONTAINS
 
     !=======================================================================
     ! Open input file
-    ! NOTE: For constant file, hardwire date to 2011/01/01
+    ! NOTE: For constant file, hardwire date to 2018/01/01
     !=======================================================================
 
     ! Echo info

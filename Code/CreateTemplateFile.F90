@@ -143,9 +143,9 @@ PROGRAM CreateTemplateFile
   CALL NcDef_Glob_Attributes( fId, 'Format' ,     'netCDF-3'        )
   CALL NcDef_Glob_Attributes( fId, 'Model',       'GEOS-5'          )
   CALL NcDef_Glob_Attributes( fId, 'NLayers',     '1'               )
-  CALL NcDef_Glob_Attributes( fId, 'Start_Date',  '20110101'        )
+  CALL NcDef_Glob_Attributes( fId, 'Start_Date',  '20180101'        )
   CALL NcDef_Glob_Attributes( fId, 'Start_Time',  '00:00:00.000000' )
-  CALL NcDef_Glob_Attributes( fId, 'End_Date',    '20110101'        )
+  CALL NcDef_Glob_Attributes( fId, 'End_Date',    '20180101'        )
   CALL NcDef_Glob_Attributes( fId, 'End_Time',    '00:00:00.000000' )
   CALL NcDef_Glob_Attributes( fId, 'Model',       'GEOS5'           )
   CALL NcDef_Glob_Attributes( fId, 'Delta_lon',   '0.3125'          )
@@ -175,12 +175,12 @@ PROGRAM CreateTemplateFile
   vId  = vId + 1
   CALL NcDef_Variable      ( fId, 'time', NF_INT,  1, var1, vId      )
   CALL NcDef_Var_Attributes( fId, vId, 'long_name',      'time'      )
-  str  = 'minutes since 2011-01-01 00:00:00'
+  str  = 'minutes since 2018-01-01 00:00:00'
   CALL NcDef_Var_Attributes( fId, vId, 'units',          TRIM( str ) ) 
   str  = '0000-00-00 00:00:00'
   CALL NcDef_Var_Attributes( fId, vId, 'delta_t',        TRIM( str ) ) 
-  CALL NcDef_Var_Attributes( fId, vId, 'begin_date',     '20110101'  )
-  CALL NcDef_Var_Attributes( fId, vId, 'begin_date',     '20110101'  )
+  CALL NcDef_Var_Attributes( fId, vId, 'begin_date',     '20180101'  )
+  CALL NcDef_Var_Attributes( fId, vId, 'begin_date',     '20180101'  )
   CALL NcDef_Var_Attributes( fId, vId, 'time_increment', '000000'    )
   
   ! LWI mask
