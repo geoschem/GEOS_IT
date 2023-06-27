@@ -459,7 +459,7 @@ CONTAINS
       fName = TRIM( tempDirTmpl05x0625 ) // TRIM( dataTmpl05x0625 )
       gName = '0.5x0.625 global'
       CALL ExpandDate  ( fName,     20180101,     000000      )
-      CALL StrRepl     ( fName,     '%%%%%%',     'A1    '    )
+      CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
       CALL NcOutFileDef( I05x0625,     J05x0625,        1,    &
                          xMid_05x0625, yMid_05x0625, time,      &
