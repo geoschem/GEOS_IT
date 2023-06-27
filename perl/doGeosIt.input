@@ -27,7 +27,7 @@
 #  24 Oct 2011 - R. Yantosca - Initial version (based on doGeos5.input)
 
 ==> Raw Met Data Directory
-/gpfsm/dnb34/ewlundgr/data/GEOSIT_processing/GEOS_IT-raw/YYYY/MM
+/gpfsm/dnb34/ewlundgr/data/GEOS_0.5x0.625/GEOS_IT_Native/YYYY/MM
 
 ==> Code Directory
 ../bin
@@ -39,7 +39,7 @@
 ../logs
 
 ==> Temporary Directory
-/gpfsm/dnb34/ewlundgr/data/GEOSIT_processing/scratch/YYYY/MM
+/gpfsm/dnb34/ewlundgr/data/scratch/YYYY/MM
 
 ==> Program Executable
 GeosItDriver{THREAD}.x
