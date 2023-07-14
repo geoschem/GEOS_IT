@@ -467,7 +467,7 @@ MODULE GeosItA3DynModule
     ! Open 0.5x0.625 output file
     IF ( do05x0625 ) THEN
       fName = TRIM( tempDirTmpl05x0625 ) // TRIM( dataTmpl05x0625 )
-      gName = '0.5x0.625 global'
+      gName = '0.5 x 0.625 global'
       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
       CALL StrRepl     ( fName,     '%%%%%%',    'A3dyn '               )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.                    )
@@ -531,7 +531,7 @@ MODULE GeosItA3DynModule
     ! Open nested AS output file
     IF ( doNestAs05 ) THEN
        fName = TRIM( tempDirTmplNestAs05 ) // TRIM( dataTmplNestAs05 )
-       gName = 'nested In 05'
+       gName = 'nested AS 05'
        CALL ExpandDate  ( fName,     yyyymmdd,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'A3dyn '    )
        CALL StrCompress ( fName,     RemoveAll=.TRUE.          )

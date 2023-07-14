@@ -457,7 +457,7 @@ CONTAINS
     ! Open 0.5x0.625 output file
     IF ( do05x0625 ) THEN
       fName = TRIM( tempDirTmpl05x0625 ) // TRIM( dataTmpl05x0625 )
-      gName = '0.5x0.625 global'
+      gName = '0.5 x 0.625 global'
       CALL ExpandDate  ( fName,     20180101,     000000      )
       CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
@@ -759,7 +759,7 @@ CONTAINS
        IF ( TRIM( name ) == 'FRLANDICE' ) name ='FRLANDIC'
 
        ! Write 0.5x0.625 data
-       IF ( do2x25 ) THEN
+       IF ( do05x0625 ) THEN
           st3d = (/ 1,     1,     1     /)
           ct3d = (/ X05x0625, Y05x0625, T05x0625 /)
           CALL NcWr( Q, fOut05x0625, TRIM( name ), st3d, ct3d )

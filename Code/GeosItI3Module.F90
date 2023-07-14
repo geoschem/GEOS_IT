@@ -425,7 +425,7 @@ MODULE GeosItI3Module
     ! Open 0.5x0.625 output file
     IF ( do05x0625 ) THEN
       fName = TRIM( tempDirTmpl05x0625 ) // TRIM( dataTmpl05x0625 )
-      gName = '0.5x0.625 global'
+      gName = '0.5 x 0.625 global'
       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
       CALL StrRepl     ( fName,     '%%%%%%',     'I3    '              )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.                     )
