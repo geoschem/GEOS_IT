@@ -251,6 +251,7 @@ CONTAINS
     CALL NcDef_Variable      ( fOut, 'time', NF_INT,  1, var1, vId           )
     CALL NcDef_Var_Attributes( fOut, vId, 'calendar',       TRIM( cal     )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName   )  )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName   )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units   )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'delta_t',        TRIM( delta_t )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'begin_date',     TRIM( begin_d )  )
@@ -263,6 +264,7 @@ CONTAINS
     units   = 'degrees_north'
     CALL NcDef_Variable      ( fOut, 'lat', NF_FLOAT, 1, var1, vId           )
     CALL NcDef_Var_attributes( fOut, vId, 'long_name',      TRIM( lName )    )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName   )  )
     CALL NcDef_Var_attributes( fOut, vId, 'units',          TRIM( units )    )
 
     ! Longitude index array
@@ -271,6 +273,7 @@ CONTAINS
     units   = 'degrees_east'
     CALL NcDef_Variable      ( fOut, 'lon', NF_FLOAT, 1, var1, vId           )
     CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName )    )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName   )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units )    )
 
     !-------------------------------------------------------------------------
@@ -286,6 +289,7 @@ CONTAINS
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'FRLAKE', NF_FLOAT, 3, var3, vId     )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -303,6 +307,7 @@ CONTAINS
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'FRLAND', NF_FLOAT, 3, var3, vId     )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -320,6 +325,7 @@ CONTAINS
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'FRLANDIC', NF_FLOAT, 3, var3, vId  )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -337,6 +343,7 @@ CONTAINS
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'FROCEAN', NF_FLOAT, 3, var3, vId    )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -354,6 +361,7 @@ CONTAINS
        gamap = 'GMAO-2D'
        CALL NcDef_Variable      ( fOut, 'PHIS', NF_FLOAT, 3, var3, vId       )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard_name',  TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )

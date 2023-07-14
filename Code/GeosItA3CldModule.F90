@@ -261,6 +261,7 @@ MODULE GeosItA3CldModule
     CALL NcDef_Variable      ( fOut, 'time', NF_INT,  1, var1, vId           )
     CALL NcDef_Var_Attributes( fOut, vId, 'calendar',       TRIM( cal     )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName   )  )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName   )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units   )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'delta_t',        TRIM( delta_t )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'begin_date',     TRIM( begin_d )  )
@@ -273,6 +274,7 @@ MODULE GeosItA3CldModule
     units   = '1'
     CALL NcDef_Variable      ( fOut, 'lev', NF_FLOAT, 1, var1, vId           )
     CALL NcDef_Var_attributes( fOut, vId, 'long_name',      TRIM( lName )    )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName   )  )
     CALL NcDef_Var_attributes( fOut, vId, 'units',          TRIM( units )    )
 
     ! Latitude index array
@@ -281,6 +283,7 @@ MODULE GeosItA3CldModule
     units   = 'degrees_north'
     CALL NcDef_Variable      ( fOut, 'lat', NF_FLOAT, 1, var1, vId           )
     CALL NcDef_Var_attributes( fOut, vId, 'long_name',      TRIM( lName )    )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName   )  )
     CALL NcDef_Var_attributes( fOut, vId, 'units',          TRIM( units )    )
 
     ! Longitude index array
@@ -289,6 +292,7 @@ MODULE GeosItA3CldModule
     units   = 'degrees_east'
     CALL NcDef_Variable      ( fOut, 'lon', NF_FLOAT, 1, var1, vId           )
     CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName )    )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName   )  )
     CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units )    )
 
     !-------------------------------------------------------------------------
@@ -336,6 +340,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'CFCU', NF_FLOAT, 4, var4, vId       )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+    CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName   )  )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -392,6 +397,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'CLOUD', NF_FLOAT, 4, var4, vId      )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -409,6 +415,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'OPTDEPTH', NF_FLOAT, 4, var4, vId   )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -426,6 +433,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'QI', NF_FLOAT, 4, var4, vId         )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -443,6 +451,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'QL', NF_FLOAT, 4, var4, vId         )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -460,6 +469,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'TAUCLI', NF_FLOAT, 4, var4, vId     )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
@@ -477,6 +487,7 @@ MODULE GeosItA3CldModule
        gamap = 'GMAO-3D$'
        CALL NcDef_Variable      ( fOut, 'TAUCLW', NF_FLOAT, 4, var4, vId     )
        CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
+       CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
        CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
