@@ -470,7 +470,7 @@ CONTAINS
       CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
       CALL NcOutFileDef( I05x0625,     J05x0625,        1,    &
-                         xMid_05x0625, yMid_05x0625, time,      &
+                         xMid_05x0625, nc_yMid_05x0625, time,      &
                          gName,     fName,        fOut05x0625    )
    ENDIF
 

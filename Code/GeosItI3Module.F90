@@ -436,9 +436,9 @@ MODULE GeosItI3Module
       CALL ExpandDate  ( fName,     yyyymmdd,     000000                )
       CALL StrRepl     ( fName,     '%%%%%%',     'I3    '              )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.                     )
-      CALL NcOutFileDef( I05x0625,     J05x0625,     L05x0625,      TIMES_A3,  &
-                         xMid_05x0625, yMid_05x0625, zMid_05x0625,  a3MinsI,   &
-                         gName,        fName,        fOut05x0625              )
+      CALL NcOutFileDef( I05x0625,     J05x0625,        L05x0625,     TIMES_A3,&
+                         xMid_05x0625, nc_yMid_05x0625, zMid_05x0625, a3MinsI, &
+                         gName,        fName,           fOut05x0625           )
    ENDIF
 
     ! Open 2x2.5 output file

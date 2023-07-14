@@ -1201,8 +1201,8 @@ MODULE GeosItA1Module
       CALL StrRepl     ( fName,     '%%%%%%',     'A1    '    )
       CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
       CALL NcOutFileDef( I05x0625,     J05x0625,        TIMES_A1,    &
-                         xMid_05x0625, yMid_05x0625, a1Mins,      &
-                         gName,     fName,        fOut05x0625    )
+                         xMid_05x0625, nc_yMid_05x0625, a1Mins,      &
+                         gName,        fName,           fOut05x0625 )
    ENDIF
 
     ! Open 2x2.5 output file
