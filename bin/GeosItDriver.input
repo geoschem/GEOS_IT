@@ -1,0 +1,128 @@
+#------------------------------------------------------------------------------
+#          Harvard University Atmospheric Chemistry Modeling Group            !
+#------------------------------------------------------------------------------
+#BOP
+#
+# !INCLUDE: GeosFpDriver.input
+#
+# !DESCRIPTION: Specifies the input directory and the locations of the 
+# GEOS-FP netCDF data files that are required to produce the GEOS-Chem 
+# "A1", "A3", and "I3" files.
+#\\
+#\\
+# !REMARKS:
+# For each GMAO data file type we must specify:
+# - GMAO data file template name (one line)
+# - GMAO data fields to be read from this file (one comma-separated, line)
+#
+# If you wish to omit all fields from a given file type, you may
+# specify "none" for the template name and fields list.
+#
+# End all directory path names with slashes!
+#
+# !REVISION HISTORY: 
+#  26 Oct 2011 - R. Yantosca - Initial version, based on MerraDriver.input
+#  See https://github.com/geoschem/GEOS_FP for complete history
+#
+
+==> Turn on debug print output?
+F
+
+==> const_2d_asm_Nx
+d5294_geosit_jan18.asm_const_0hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+FRLAKE,FRLAND,FRLANDICE,FROCEAN,PHIS
+F
+
+==> tavg1_2d_flx_Nx
+d5294_geosit_jan18.flx_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+EFLUX,EVAP,FRSEAICE,HFLUX,PBLH,PRECANV,PRECCON,PRECLSC,PRECSNO,PRECTOT,USTAR,Z0M
+
+==> tavg1_2d_lnd_Nx
+d5294_geosit_jan18.lnd_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+FRSNO,GRN,GWETROOT,GWETTOP,LAI,PARDF,PARDR,SNODP,SNOMAS
+
+==> tavg1_2d_rad_Nx
+d5294_geosit_jan18.rad_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+ALBEDO,CLDTOT,LWGNT,SWGDN
+
+==> tavg1_2d_slv_Nx
+d5294_geosit_jan18.slv_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+QV2M,SLP,TO3,TROPPT,TS,T2M,U10M,V10M
+
+==> tavg3_3d_asm_Nv
+d5294_geosit_jan18.asm_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+A3cld: QI, QL
+A3dyn: OMEGA,RH,U,V
+
+==> tavg3_3d_cld_Nv
+d5294_geosit_jan18.cld_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+A3cld: TAUCLI,TAUCLW,OPTDEPTH
+A3dyn: DTRAIN
+
+==> tavg3_3d_mst_Ne
+d5294_geosit_jan18.mst_tavg_3hr_glo_L576x361_v73.YYYY-MM-DDThhmmZ.nc4
+CMFMC,PFICU,PFILSAN,PFLCU,PFLLSAN
+
+==> tavg3_3d_mst_Nv
+d5294_geosit_jan18.mst_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+DQRCU,DQRLSAN,REEVAPCN,REEVAPLSAN
+
+==> tavg3_3d_rad_Nv
+d5294_geosit_jan18.rad_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+CLOUD
+
+==> inst3_3d_asm_Nv
+d5294_geosit_jan18.asm_inst_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+PS,QV,T
+
+==> Local Raw Data Path
+/local/path/to/GEOS_IT/native
+
+==> 2 x 2.5 output
+T
+GEOSFP.YYYYMMDD.%%%%%%.2x25.nc
+/path/to/scratch/GEOS_IT/YYYY/MM/
+/path/to/scratch/GEOS_IT/YYYY/MM/
+
+==> 4 x 5 output 
+T
+GEOSFP.YYYYMMDD.%%%%%%.4x5.nc
+/path/to/scratch/GEOS_IT/YYYY/MM/
+/path/to/scratch/GEOS_IT/YYYY/MM/
+
+==> 0.5 x 0.625 global output
+F
+GEOSFP.YYYYMMDD.%%%%%%.05x0625.nc
+/path/to/scratch/GEOS_IT/YYYY/MM/
+/path/to/scratch/GEOS_IT/YYYY/MM/
+
+==> 0.5x0.625 Nested AS output
+F
+GEOSFP.YYYYMMDD.%%%%%%.05x0625.AS.nc
+/path/to/scratch/GEOS_IT/YYYY/MM/
+/path/to/scratch/GEOS_IT/YYYY/MM/
+385 159 529 291
+
+==> 0.5x0.625 Nested EU output
+F
+GEOSFP.YYYYMMDD.%%%%%%.05x0625.EU.nc
+/path/to/scratch/GEOS_IT/YYYY/MM/
+/path/to/scratch/GEOS_IT/YYYY/MM/
+265 246 353 303     
+
+==> 0.5x0.625 Nested NA output
+F
+GEOSFP.YYYYMMDD.%%%%%%.05x0625.NA.nc
+/path/to/scratch/GEOS_IT/YYYY/MM/
+/path/to/scratch/GEOS_IT/YYYY/MM/
+81 201 193 301
+
+==> Mapping Weight Files
+weights_05x0625_to_2x25.txt
+weights_05x0625_to_4x5.txt
+
+==> Template Files
+GeosItTemplateFile.nc
+#
+#EOP
+#------------------------------------------------------------------------------
