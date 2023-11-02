@@ -61,16 +61,6 @@ MODULE GeosItA3CldModule
 !EOP
 !------------------------------------------------------------------------------
 !BOC
-!
-! !PRIVATE TYPES:
-!
-  LOGICAL :: use_CfAn       ! Save & regrid CFAN field
-  LOGICAL :: use_CfCu       ! Save & regrid CFCU field
-  LOGICAL :: use_CfLs       ! Save & regrid CFLS field
-
-  LOGICAL :: readOnly_CfAn  ! Only use CFAN to create CLOUD
-  LOGICAL :: readOnly_CfLs  ! Only use CFLS to create CLOUD
-
   CONTAINS
 !EOC
 !------------------------------------------------------------------------------
@@ -299,96 +289,6 @@ MODULE GeosItA3CldModule
     ! Define data arrays
     !-------------------------------------------------------------------------
 
-    ! CFAN
-    IF ( StrPos( 'CFAN', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       !%%% UNCOMMENT THIS CODE IF YOU WANT TO ONLY USE CFAN TO CREATE CLOUD
-       !%%% BUT NOT TO SAVE IT OUT TO THE NETCDF FILE (bmy, 9/20/13)
-       !
-       readOnly_CfAn = .TRUE.
-       !
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       !%%% UNCOMMENT THIS CODE IF YOU WANT TO SAVE OUT CFAN TO THE
-       !%%% NETCDF FILE (bmy, 9/20/13)
-       !
-       !var4  = (/ idLon, idLat, idLev, idTime /)
-       !
-       !lName = '3D cloud fraction, anvils'
-       !units = '1'
-       !gamap = 'GMAO-3D$'
-       !CALL NcDef_Variable      ( fOut, 'CFAN', NF_FLOAT, 4, var4, vId       )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       !CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-       !use_CfAn = .TRUE.
-       !
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    ELSE
-       use_CfAn = .FALSE.
-    ENDIF
-
-    ! CFCU
-    IF ( StrPos( 'CFCU', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
-       var4  = (/ idLon, idLat, idLev, idTime /)
-       
-       lName = '3D cloud fraction, convective'
-       units = '1'
-       gamap = 'GMAO-3D$'
-       CALL NcDef_Variable      ( fOut, 'CFCU', NF_FLOAT, 4, var4, vId       )
-       CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-    CALL NcDef_Var_Attributes( fOut, vId, 'standard',       TRIM( lName   )  )
-       CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-       use_CfCu = .TRUE.
-    ELSE
-       use_CfCu = .FALSE.
-    ENDIF
-
-    ! CFLS
-    IF ( StrPos( 'CFLS', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       !%%% UNCOMMENT THIS CODE IF YOU WANT TO ONLY USE CFAN TO CREATE CLOUD
-       !%%% BUT NOT TO SAVE IT OUT TO THE NETCDF FILE (bmy, 9/20/13)
-       !
-       readOnly_CfLs = .TRUE.
-       !
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       !%%% UNCOMMENT THIS CODE IF YOU WANT TO SAVE OUT CFLS TO THE
-       !%%% NETCDF FILE (bmy, 9/20/13)
-       !
-       !var4  = (/ idLon, idLat, idLev, idTime /)
-       !
-       !lName = '3D cloud fraction, large-scale'
-       !units = '1'
-       !gamap = 'GMAO-3D$'
-       !CALL NcDef_Variable      ( fOut, 'CFLS', NF_FLOAT, 4, var4, vId       )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'long_name',      TRIM( lName ) )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'units',          TRIM( units ) )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'gamap_category', TRIM( gamap ) )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'missing_value',  FILL_VALUE    )
-       !CALL NcDef_Var_Attributes( fOut, vId, '_FillValue',     FILL_VALUE    )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'scale_factor',   1e0           )
-       !CALL NcDef_Var_Attributes( fOut, vId, 'add_offset',     0e0           )
-       !use_CfLs = .TRUE.
-       !
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    ELSE
-       use_CfLs = .FALSE.
-    ENDIF
-
-    !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    !%%% Prior to 12/5/13:
-    !%%% Now go back to reading CLOUD from rad_tavg_3hr_v72 (bmy, 12/5/13)
-    !%%%IF ( StrPos( 'CLOUD', cld_tavg_3hr_v72_Data_c ) >= 0 ) THEN
-    !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     IF ( StrPos( 'CLOUD', rad_tavg_3hr_v72_data ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
@@ -887,7 +787,6 @@ MODULE GeosItA3CldModule
              CASE( 'QI', 'QL' )                        ! These fields are
                 CYCLE                                  !  derived, not read
              CASE( 'TAUCLI', 'TAUCLW', 'OPTDEPTH',  &
-                   'CFAN',   'CFCU',   'CFLS',      &
                    'CLOUD'                         )   ! These fields are
                 CYCLE                                  !  procesed elsewhere
              CASE DEFAULT
@@ -1163,6 +1062,7 @@ MODULE GeosItA3CldModule
        msg = '%%% Closing ' // TRIM( fNameInput )
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
        CALL NcCl( fIn )
+
     ENDDO
 
     !=======================================================================
@@ -1226,18 +1126,6 @@ MODULE GeosItA3CldModule
     REAL*4,  TARGET         :: Cld      ( I05x0625,   J05x0625,   L05x0625   )
     REAL*4                  :: Cld_2x25 ( I2x25,      J2x25,      L2x25      )
     REAL*4                  :: Cld_4x5  ( I4x5,       J4x5,       L4x5       )
-
-    REAL*4,  TARGET         :: CfAn     ( I05x0625,   J05x0625,   L05x0625   )
-    REAL*4                  :: CfAn_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: CfAn_4x5 ( I4x5,       J4x5,       L4x5       )
-
-    REAL*4,  TARGET         :: CfCu     ( I05x0625,   J05x0625,   L05x0625   )
-    REAL*4                  :: CfCu_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: CfCu_4x5 ( I4x5,       J4x5,       L4x5       )
-
-    REAL*4,  TARGET         :: CfLs     ( I05x0625,   J05x0625,   L05x0625   )
-    REAL*4                  :: CfLs_2x25( I2x25,      J2x25,      L2x25      )
-    REAL*4                  :: CfLs_4x5 ( I4x5,       J4x5,       L4x5       )
 
     REAL*4,  TARGET         :: OptD     ( I05x0625,   J05x0625,   L05x0625   )
     REAL*4                  :: OptD_2x25( I2x25,      J2x25,      L2x25      )
@@ -1383,7 +1271,7 @@ MODULE GeosItA3CldModule
        CALL NcCl( fIn )
 
        !==================================================================
-       ! Read TAUCLI, TAUCLW, CFAN, CFCU, CFLS from cld_tavg_3hr_v72
+       ! Read TAUCLI and TAUCLW from cld_tavg_3hr_v72
        !==================================================================
 
        ! Create input filename from the template
@@ -1425,38 +1313,6 @@ MODULE GeosItA3CldModule
        ! Compute OPTDEPTH (construct from TAUCLI and TAUCLW)
        OptD = TauI + TauW
 
-       ! CFAN
-       IF ( use_CfAn .or. readOnly_CfAn ) THEN
-          msg = '%%% Reading    CFAN'
-          WRITE( IU_LOG, '(a)' ) TRIM( msg )
-          CALL NcRd( CfAn, fIn, 'CFAN', st4d, ct4d )
-          WHERE( CfAn == FILL_VALUE ) CfAn = 0e0
-       ENDIF
-
-       ! CFCU
-       IF ( use_CfCu ) THEN
-          msg = '%%% Reading    CFCU'
-          WRITE( IU_LOG, '(a)' ) TRIM( msg )
-          CALL NcRd( CfCu, fIn, 'CFCU', st4d, ct4d )
-          WHERE( CfCu == FILL_VALUE ) CfCu = 0e0
-       ENDIF
-
-       ! CFLS
-       IF ( use_CfLs .or. readOnly_CfLs ) THEN
-          msg = '%%% Reading    CFLS'
-          WRITE( IU_LOG, '(a)' ) TRIM( msg )
-          CALL NcRd( CfLs, fIn, 'CFLS', st4d, ct4d )
-          WHERE( CfLs == FILL_VALUE ) CfLs = 0e0
-       ENDIF
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!%%% Prior to 12/5/13:
-!%%% Go back to reading CLOUD from rad_tavg_3hr_v72 collection
-!%%%       ! Create CLOUD as min( CFAN + CFLS, 1e0 )
-!%%%       Cld = CfAn + CfLs
-!%%%       WHERE( Cld > 1e0 ) Cld = 1e0
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
        ! Close input netCDF file
        msg = '%%% Closing ' // TRIM( fNameInput )
        WRITE( IU_LOG, '(a)' ) TRIM( msg )
@@ -1474,8 +1330,6 @@ MODULE GeosItA3CldModule
        IF ( do2x25 ) THEN
           CALL RegridTau( OptD,      OptD_2x25, TauI,  TauI_2x25,  &
                           TauW,      TauW_2x25, Cld,   Cld_2x25,   &
-                          CfAn,      CfAn_2x25, CfCu,  CfCu_2x25,  &
-                          CfLs,      CfLs_2x25,                    &
                           mapTo2x25, I2x25,     J2x25, L2x25      )
        ENDIF
 
@@ -1483,8 +1337,6 @@ MODULE GeosItA3CldModule
        IF ( do4x5 ) THEN
           CALL RegridTau( OptD,      OptD_4x5,  TauI,  TauI_4x5,   &
                           TauW,      TauW_4x5,  Cld,   Cld_4x5,    &
-                          CfAn,      CfAn_4x5,  CfCu,  CfCu_4x5,   &
-                          CfLs,      CfLs_4x5,                     &
                           mapTo4x5,  I4x5,      J4x5,  L4x5       )
        ENDIF
 
@@ -1520,24 +1372,6 @@ MODULE GeosItA3CldModule
           Ptr  => OptD( :, :, Z05x0625:1:-1 )
           CALL NcWr( Ptr, fOut05x0625, 'OPTDEPTH', st4d, ct4d )
           
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( :, :, Z05x0625:1:-1 )
-             CALL NcWr( Ptr, fOut05x0625, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( :, :, Z05x0625:1:-1 )
-             CALL NcWr( Ptr, fOut05x0625, 'CFCU',  st4d, ct4d )
-          ENDIF
-          
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( :, :, Z05x0625:1:-1 )
-             CALL NcWr( Ptr, fOut05x0625, 'CFlS',  st4d, ct4d )
-          ENDIF
-          
           ! Free pointer memory
           NULLIFY( Ptr )
        ENDIF
@@ -1557,11 +1391,6 @@ MODULE GeosItA3CldModule
           CALL NcWr( TauW_2x25, fOut2x25, 'TAUCLW',   st4d, ct4d )
           CALL NcWr( OptD_2x25, fOut2x25, 'OPTDEPTH', st4d, ct4d )
 
-          ! Write optional cloud fraction fields
-          IF ( use_CfAn ) CALL NcWr( CfAn_2x25,  fOut2x25, 'CFAN', st4d, ct4d )
-          IF ( use_CfCu ) CALL NcWr( CfCu_2x25,  fOut2x25, 'CFCU', st4d, ct4d )
-          IF ( use_CfLs ) CALL NcWr( CfLs_2x25,  fOut2x25, 'CFLS', st4d, ct4d )
-
        ENDIF
 
        !----------------------------------------
@@ -1578,11 +1407,6 @@ MODULE GeosItA3CldModule
           CALL NcWr( TauI_4x5, fOut4x5, 'TAUCLI',   st4d, ct4d )
           CALL NcWr( TauW_4x5, fOut4x5, 'TAUCLW',   st4d, ct4d )
           CALL NcWr( OptD_4x5, fOut4x5, 'OPTDEPTH', st4d, ct4d )
-
-          ! Write optional cloud fraction fields
-          IF ( use_CfAn ) CALL NcWr( CfAn_4x5,  fOut4x5, 'CFAN', st4d, ct4d )
-          IF ( use_CfCu ) CALL NcWr( CfCu_4x5,  fOut4x5, 'CFCU', st4d, ct4d )
-          IF ( use_CfLs ) CALL NcWr( CfLs_4x5,  fOut4x5, 'CFLS', st4d, ct4d )
 
        ENDIF
 
@@ -1610,24 +1434,6 @@ MODULE GeosItA3CldModule
           ! OPTDEPTH
           Ptr  => OptD( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu05:1:-1 )
           CALL NcWr( Ptr, fOut05NestEu, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestEu, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestEu, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_eu05:I1_eu05, J0_eu05:J1_eu05, ZnestEu05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestEu, 'CFLS',  st4d, ct4d )
-          ENDIF
 
           ! Free pointer memory
           NULLIFY( Ptr )
@@ -1658,24 +1464,6 @@ MODULE GeosItA3CldModule
           Ptr  => OptD( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa05:1:-1 )
           CALL NcWr( Ptr, fOut05NestNa, 'OPTDEPTH', st4d, ct4d )
 
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestNa, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestNa, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_na05:I1_na05, J0_na05:J1_na05, ZnestNa05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestNa, 'CFLS',  st4d, ct4d )
-          ENDIF
-
           ! Free pointer memory
           NULLIFY( Ptr )
        ENDIF
@@ -1704,24 +1492,6 @@ MODULE GeosItA3CldModule
           ! OPTDEPTH
           Ptr  => OptD( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs05:1:-1 )
           CALL NcWr( Ptr, fOut05NestAs, 'OPTDEPTH', st4d, ct4d )
-
-          ! CFAN (if necessary)
-          IF ( use_CfAn ) THEN
-             Ptr  => CfAn( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestAs, 'CFAN',  st4d, ct4d )
-          ENDIF
-
-          ! CFCU (if necessary)
-          IF ( use_CfCu ) THEN
-             Ptr  => CfCu( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestAs, 'CFCU',  st4d, ct4d )
-          ENDIF
-
-          ! CFLS (if necessary)
-          IF ( use_CfLs ) THEN
-             Ptr  => CfLs( I0_as05:I1_as05, J0_as05:J1_as05, ZNestAs05:1:-1 )
-             CALL NcWr( Ptr, fOut05NestAs, 'CFLS',  st4d, ct4d )
-          ENDIF
 
           ! Free pointer memory
           NULLIFY( Ptr )
@@ -1791,8 +1561,6 @@ MODULE GeosItA3CldModule
 !
   SUBROUTINE RegridTau( optIn,  optOut,  tauiIn, tauiOut, &
                         tauwIn, tauwOut, fIn,    fOut,    &
-                        fAnIn,  fAnOut,  fCuIn,  fCuOut, &
-                        fLsIn,  fLsOut,                  &
                         map,    IMX,     JMX,    LMX )
 !
 ! !INPUT PARAMETERS:
@@ -1812,11 +1580,8 @@ MODULE GeosItA3CldModule
     ! Input in-cloud water optical depth
     REAL*4,       INTENT(IN)  :: tauwIn ( I05x0625, J05x0625, L05x0625 )
 
-    ! Input cloud fractions (total, anvil, convective, large-scale)
+    ! Input cloud fraction (total)
     REAL*4,       INTENT(IN)  :: fIn    ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,       INTENT(IN)  :: fAnIn  ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,       INTENT(IN)  :: fCuIn  ( I05x0625, J05x0625, L05x0625 )
-    REAL*4,       INTENT(IN)  :: fLsIn  ( I05x0625, J05x0625, L05x0625 )
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -1829,11 +1594,8 @@ MODULE GeosItA3CldModule
     ! Output in-cloud water path optical depth
     REAL*4,       INTENT(OUT) :: tauwOut( IMX, JMX, LMX )
 
-    ! Output cloud fractions (total, anvil, convective, large-scale)
+    ! Output cloud fraction)
     REAL*4,       INTENT(OUT) :: fOut   ( IMX, JMX, LMX )
-    REAL*4,       INTENT(OUT) :: fAnOut ( IMX, JMX, LMX )
-    REAL*4,       INTENT(OUT) :: fCuOut ( IMX, JMX, LMX )
-    REAL*4,       INTENT(OUT) :: fLsOut ( IMX, JMX, LMX )
 !
 ! !REVISION HISTORY:
 !  29 Jul 2010 - R. Yantosca - Initial version for GEOS-FP
@@ -1847,8 +1609,6 @@ MODULE GeosItA3CldModule
     INTEGER :: I,           J,           L,        LR,   nPoints
     INTEGER :: Nx,          Ny,          X,        Y
     REAL*4  :: sum_Fn_Wn,   sum_Wn,      Fn_Wn
-    REAL*4  :: sum_FnAn_Wn, sum_FnCu_Wn, sum_FnLs_Wn
-    REAL*4  :: FnAn_Wn,     FnCu_Wn,     FnLs_Wn
     REAL*4  :: optRatio,    tauiRatio,   tauwRatio
     REAL*4  :: optRHS,      tauiRHS,     tauwRHS
 
@@ -1858,9 +1618,7 @@ MODULE GeosItA3CldModule
     !$OMP PRIVATE( I,           J,           L,       nPoints, sum_Fn_Wn ) &
     !$OMP PRIVATE( sum_Wn,      optRHS,      tauiRHS, tauwRHS, Nx        ) &
     !$OMP PRIVATE( Ny,          X,           Y,       Fn_Wn,   optRatio  ) &
-    !$OMP PRIVATE( tauiRatio,   tauwRatio,   LR                          ) &
-    !$OMP PRIVATE( sum_FnAn_Wn, sum_FnCu_Wn, sum_FnLs_Wn                 ) &
-    !$OMP PRIVATE( FnAn_Wn,     FnCu_Wn,     FnLs_Wn                     )
+    !$OMP PRIVATE( tauiRatio,   tauwRatio,   LR                          )
     DO L = 1, LMX
 
        ! Reverse level index for output arrays
@@ -1879,9 +1637,6 @@ MODULE GeosItA3CldModule
 
        ! Zero summing variables
        sum_Fn_Wn   = 0e0
-       sum_FnAn_Wn = 0e0
-       sum_FnCu_Wn = 0e0
-       sum_FnLs_Wn = 0e0
        sum_Wn      = 0e0
        optRHS      = 0e0
        tauiRHS     = 0e0
@@ -1909,24 +1664,6 @@ MODULE GeosItA3CldModule
              ! "fine" grid boxes (X,Y) that make up the "coarse" grid box (I,J)
              sum_Fn_Wn  = sum_Fn_Wn + Fn_Wn
 
-             ! Optional CFAN cloud fraction field
-             IF ( use_CfAn ) THEN
-                FnAn_Wn     = fAnIn(X,Y,L) * map(I,J)%weight(Nx,Ny)
-                sum_FnAn_Wn = sum_FnAn_Wn + FnAn_Wn
-             ENDIF
-
-             ! Optional CFCU cloud fraction field
-             IF ( use_CfCu ) THEN
-                FnCu_Wn     = fCuIn(X,Y,L) * map(I,J)%weight(Nx,Ny)
-                sum_FnCu_Wn = sum_FnCu_Wn + FnCu_Wn
-             ENDIF
-
-             ! Optional CFLS cloud fraction field
-             IF ( use_CfLs ) THEN
-                FnLs_Wn = fLsIn(X,Y,L) * map(I,J)%weight(Nx,Ny)
-                sum_FnLs_Wn = sum_FnLs_Wn + FnLs_Wn
-             ENDIF
-
              ! Compute the term TAU / ( TAU + 7.7 ) for the total,
              ! ice-path, and water-path opbical depths.  NOTE: We don't have
              ! to worry about div by zero due to the +7.7 in the denominator.
@@ -1948,11 +1685,6 @@ MODULE GeosItA3CldModule
        ! zero since SUM( Wn ) will always be greater than zero (there is
        ! always at least 1 "fine" small box in the "coarse" box).
        fOut(I,J,LR) = sum_Fn_Wn / sum_Wn
-
-       ! Output cloud fraction (optional fields CFAN, CFCU, CFLS)
-       IF ( use_CfAn ) fAnOut(I,J,LR) = sum_FnAn_Wn / sum_Wn
-       IF ( use_CfCu ) fCuOut(I,J,LR) = sum_FnCu_Wn / sum_Wn
-       IF ( use_CfLs ) fLsOut(I,J,LR) = sum_FnLs_Wn / sum_Wn
 
        ! Total optical depth on the coarse grid
        IF ( IsSafeDiv( optRHS, sum_Fn_Wn-optRHS ) ) THEN
