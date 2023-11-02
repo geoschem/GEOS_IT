@@ -59,7 +59,7 @@
 #  Also used for GEOS-IT data.
 #
 # !REVISION HISTORY: 
-#  20 Jan 2012 - R. Yantosca - Initial version
+#  See git history. This file is based on the equivalent files in GEOS_FP and MERRA2.
 #EOP
 #------------------------------------------------------------------------------
 #          Harvard University Atmospheric Chemistry Modeling Group            !
@@ -499,7 +499,7 @@ sub main() {
   # Check if files have been downloaded properly
   #-------------------------------------------
   # Test if at least some files are present in the met dir with expected format
-  $listCmd = "ls -1 $MET_DIRECTORY/*geosit*"."$FILE_DATE_STRING"."*";
+  $listCmd = "ls -1 $MET_DIRECTORY/GEOS.it.asm.*"."$FILE_DATE_STRING"."*";
   chomp( @files = qx( $listCmd ) );
   foreach $file ( @files ) { if ( -f  $file ) { $status++; } }
 
