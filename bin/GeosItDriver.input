@@ -21,101 +21,100 @@
 # End all directory path names with slashes!
 #
 # !REVISION HISTORY: 
-#  26 Oct 2011 - R. Yantosca - Initial version, based on MerraDriver.input
-#  See https://github.com/geoschem/GEOS_FP for complete history
+#  See git history. This file was adapted from the equivalent files in MERRA2 and GEOS_FP.
 #
 
 ==> Turn on debug print output?
-F
+T
 
-==> const_2d_asm_Nx
-d5294_geosit_jan18.asm_const_0hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+==> asm_const_0hr_slv
+GEOS.it.asm.asm_const_0hr_glo_L576x361_slv.GEOS5271.YYYY-MM-DDThhmm.V01.nc4
 FRLAKE,FRLAND,FRLANDICE,FROCEAN,PHIS
 F
 
-==> tavg1_2d_flx_Nx
-d5294_geosit_jan18.flx_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+==> flx_tavg_1hr_slv
+GEOS.it.asm.flx_tavg_1hr_glo_L576x361_slv.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 EFLUX,EVAP,FRSEAICE,HFLUX,PBLH,PRECANV,PRECCON,PRECLSC,PRECSNO,PRECTOT,USTAR,Z0M
 
-==> tavg1_2d_lnd_Nx
-d5294_geosit_jan18.lnd_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+==> lnd_tavg_1hr_slv
+GEOS.it.asm.lnd_tavg_1hr_glo_L576x361_slv.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 FRSNO,GRN,GWETROOT,GWETTOP,LAI,PARDF,PARDR,SNODP,SNOMAS
 
-==> tavg1_2d_rad_Nx
-d5294_geosit_jan18.rad_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
-ALBEDO,CLDTOT,LWGNT,SWGDN
+==> rad_tavg_1hr_slv
+GEOS.it.asm.rad_tavg_1hr_glo_L576x361_slv.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
+ALBEDO,CLDTOT,SWGDN
 
-==> tavg1_2d_slv_Nx
-d5294_geosit_jan18.slv_tavg_1hr_glo_L576x361_slv.YYYY-MM-DDThhmmZ.nc4
+==> slv_tavg_1hr_slv
+GEOS.it.asm.slv_tavg_1hr_glo_L576x361_slv.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 QV2M,SLP,TO3,TROPPT,TS,T2M,U10M,V10M
 
-==> tavg3_3d_asm_Nv
-d5294_geosit_jan18.asm_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
-A3cld: QI, QL
-A3dyn: OMEGA,RH,U,V
+==> asm_tavg_3hr_v72
+GEOS.it.asm.asm_tavg_3hr_glo_L576x361_v72.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
+A3cld: QI,QL
+A3dyn: OMEGA,U,V
 
-==> tavg3_3d_cld_Nv
-d5294_geosit_jan18.cld_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+==> cld_tavg_3hr_v72
+GEOS.it.asm.cld_tavg_3hr_glo_L576x361_v72.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 A3cld: TAUCLI,TAUCLW,OPTDEPTH
-A3dyn: DTRAIN
+A3dyn: DTRAIN,RH
 
-==> tavg3_3d_mst_Ne
-d5294_geosit_jan18.mst_tavg_3hr_glo_L576x361_v73.YYYY-MM-DDThhmmZ.nc4
+==> mst_tavg_3hr_v73
+GEOS.it.asm.mst_tavg_3hr_glo_L576x361_v73.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 CMFMC,PFICU,PFILSAN,PFLCU,PFLLSAN
 
-==> tavg3_3d_mst_Nv
-d5294_geosit_jan18.mst_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+==> mst_tavg_3hr_v72
+GEOS.it.asm.mst_tavg_3hr_glo_L576x361_v72.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 DQRCU,DQRLSAN,REEVAPCN,REEVAPLSAN
 
-==> tavg3_3d_rad_Nv
-d5294_geosit_jan18.rad_tavg_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+==> rad_tavg_3hr_v72
+GEOS.it.asm.rad_tavg_3hr_glo_L576x361_v72.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 CLOUD
 
-==> inst3_3d_asm_Nv
-d5294_geosit_jan18.asm_inst_3hr_glo_L576x361_v72.YYYY-MM-DDThhmmZ.nc4
+==> asm_inst_3hr_v72
+GEOS.it.asm.asm_inst_3hr_glo_L576x361_v72.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 PS,QV,T
 
 ==> Local Raw Data Path
-/local/path/to/GEOS_IT/native
+/n/holyscratch01/external_repos/GEOS-CHEM/gcgrid/gcdata/ExtData/GEOS_0.5x0.625/GEOS_IT_Native/YYYY/MM/DD/
+
+==> 4 x 5 output
+F
+GEOSFP.YYYYMMDD.%%%%%%.4x5.nc
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
 ==> 2 x 2.5 output
 T
 GEOSFP.YYYYMMDD.%%%%%%.2x25.nc
-/path/to/scratch/GEOS_IT/YYYY/MM/
-/path/to/scratch/GEOS_IT/YYYY/MM/
-
-==> 4 x 5 output 
-T
-GEOSFP.YYYYMMDD.%%%%%%.4x5.nc
-/path/to/scratch/GEOS_IT/YYYY/MM/
-/path/to/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
 ==> 0.5 x 0.625 global output
-F
+T
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.nc
-/path/to/scratch/GEOS_IT/YYYY/MM/
-/path/to/scratch/GEOS_IT/YYYY/MM/
-
-==> 0.5x0.625 Nested AS output
-F
-GEOSFP.YYYYMMDD.%%%%%%.05x0625.AS.nc
-/path/to/scratch/GEOS_IT/YYYY/MM/
-/path/to/scratch/GEOS_IT/YYYY/MM/
-385 159 529 291
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
 ==> 0.5x0.625 Nested EU output
 F
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.EU.nc
-/path/to/scratch/GEOS_IT/YYYY/MM/
-/path/to/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 265 246 353 303     
 
 ==> 0.5x0.625 Nested NA output
 F
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.NA.nc
-/path/to/scratch/GEOS_IT/YYYY/MM/
-/path/to/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 81 201 193 301
+
+==> 0.5x0.625 Nested AS output
+F
+GEOSFP.YYYYMMDD.%%%%%%.05x0625.AS.nc
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+/n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
+385 159 529 291
 
 ==> Mapping Weight Files
 weights_05x0625_to_2x25.txt
