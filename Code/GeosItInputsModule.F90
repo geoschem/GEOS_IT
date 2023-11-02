@@ -171,7 +171,8 @@ MODULE GeosItInputsModule
   CHARACTER(LEN=MAX_CHAR) :: rad_tavg_1hr_slv_data
   CHARACTER(LEN=MAX_CHAR) :: slv_tavg_1hr_slv_data
   CHARACTER(LEN=MAX_CHAR) :: asm_inst_3hr_v72_data
-  CHARACTER(LEN=MAX_CHAR) :: asm_tavg_3hr_v72_data
+  CHARACTER(LEN=MAX_CHAR) :: asm_tavg_3hr_v72_data_c
+  CHARACTER(LEN=MAX_CHAR) :: asm_tavg_3hr_v72_data_d
   CHARACTER(LEN=MAX_CHAR) :: cld_tavg_3hr_v72_data_c
   CHARACTER(LEN=MAX_CHAR) :: cld_tavg_3hr_v72_data_d
   CHARACTER(LEN=MAX_CHAR) :: mst_tavg_3hr_v72_data
@@ -371,7 +372,8 @@ MODULE GeosItInputsModule
 
           CASE( '==> asm_tavg_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) asm_tavg_3hr_v72_file
-             READ( IU_TXT, '(a)',    ERR=999 ) asm_tavg_3hr_v72_data
+             READ( IU_TXT, '(7x,a)', ERR=999 ) asm_tavg_3hr_v72_data_c
+             READ( IU_TXT, '(7x,a)', ERR=999 ) asm_tavg_3hr_v72_data_d
 
           CASE( '==> cld_tavg_3hr_v72' )
              READ( IU_TXT, '(a)',    ERR=999 ) cld_tavg_3hr_v72_file
@@ -565,7 +567,8 @@ MODULE GeosItInputsModule
        PRINT*, '    --> variables : ', TRIM( slv_tavg_1hr_slv_data    )
        PRINT*, '  asm_tavg_3hr_v72  : '
        PRINT*, '    --> filename  : ', TRIM( asm_tavg_3hr_v72_file    )
-       PRINT*, '    --> variables : ', TRIM( asm_tavg_3hr_v72_data    )
+       PRINT*, '    --> variables : ', TRIM( asm_tavg_3hr_v72_data_c  )
+       PRINT*, '    --> variables : ', TRIM( asm_tavg_3hr_v72_data_d  )
        PRINT*, '  cld_tavg_3hr_v72  : '
        PRINT*, '    --> filename  : ', TRIM( cld_tavg_3hr_v72_file    )
        PRINT*, '    --> variables : ', TRIM( cld_tavg_3hr_v72_data_c  )

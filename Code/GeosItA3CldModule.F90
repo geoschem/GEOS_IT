@@ -325,7 +325,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! QI
-    IF ( StrPos( 'QI', cld_tavg_3hr_v72_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'QI', asm_tavg_3hr_v72_data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Cloud ice water mixing ratio'
@@ -343,7 +343,7 @@ MODULE GeosItA3CldModule
     ENDIF
 
     ! QL
-    IF ( StrPos( 'QL', cld_tavg_3hr_v72_data_c ) >= 0 ) THEN
+    IF ( StrPos( 'QL', asm_tavg_3hr_v72_data_c ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Cloud liquid water mixing ratio'
@@ -623,9 +623,6 @@ MODULE GeosItA3CldModule
 !  TAUCLW, and OPTDEPTH are processed separately in routine Process3dOptDep.
 !  This is because these fields must all be regridded together using the
 !  algorithm developed by Hongyu Liu (in routine RegridTau).
-!                                                                             .
-!  The QI field is constructed as the sum of QIAN + QILS.
-!  The QL field is constructed as the sum of QLAN + QLLS.
 !
 ! !REVISION HISTORY:
 !  09 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
@@ -765,14 +762,6 @@ MODULE GeosItA3CldModule
        ! Process data
        !====================================================================
 
-       ! Zero QI, QL arrays
-       QI      = 0e0
-       QI_2x25 = 0e0
-       QI_4x5  = 0e0
-       QL      = 0e0
-       QL_2x25 = 0e0
-       QL_4x5  = 0e0
-
        ! Loop over data fields
        DO F = 1, nFields
 
@@ -784,8 +773,6 @@ MODULE GeosItA3CldModule
           SELECT CASE ( name )
              CASE( '' )                                ! Null string
                 CYCLE
-             CASE( 'QI', 'QL' )                        ! These fields are
-                CYCLE                                  !  derived, not read
              CASE( 'TAUCLI', 'TAUCLW', 'OPTDEPTH',  &
                    'CLOUD'                         )   ! These fields are
                 CYCLE                                  !  procesed elsewhere
@@ -818,243 +805,86 @@ MODULE GeosItA3CldModule
           ! Flip data in vertical
           Qflip => Q( :, :, Z:1:-1 )
 
-          !-----------------------------------------------------------------
-          ! Process data (or save for later special handling)
-          !-----------------------------------------------------------------
-          SELECT CASE( name )
+          !-----------------------------------------------------------
+          ! Regrid data fields (all except QI, QL)
+          !-----------------------------------------------------------
+          msg = '%%% Regridding ' // name
+          WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-             CASE ( 'QIAN', 'QILS' )
-                QI   = QI  + Qflip    ! QI = QIAN + QILS; regrid below
+          ! Loop over the A-3 times and vertical levels
+          DO L = 1, Z
 
-             CASE ( 'QLAN', 'QLLS' )
-                QL   = QL  + Qflip    ! QL = QLAN + QLLS; regrid below
+             ! Regrid to 2 x 2.5
+             IF ( do2x25 ) THEN
+                CALL RegridGeosItTo2x25( 0, Qflip(:,:,L), Q2x25(:,:,L) )
+             ENDIF
 
-             CASE DEFAULT
+             ! Regrid to 4x5
+             IF ( do4x5 ) THEN
+                CALL RegridGeosItTo4x5 ( 0, Qflip(:,:,L), Q4x5(:,:,L)  )
+             ENDIF
+          ENDDO
+          
+          !-----------------------------------------------------------
+          ! Write netCDF output
+          !-----------------------------------------------------------
+          msg = '%%% Archiving  ' // name
+          WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-                !-----------------------------------------------------------
-                ! Regrid data fields (all except QI, QL)
-                !-----------------------------------------------------------
-                msg = '%%% Regridding ' // name
-                WRITE( IU_LOG, '(a)' ) TRIM( msg )
+          ! Write 0.5x0.625 data
+          IF ( do05x0625 ) THEN
+             Ptr  => Qflip(:,:,:)
+             st4d = (/ 1,     1,     1,     H  /)
+             ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
+             CALL NcWr( Ptr, fOut05x0625, TRIM( name ), st4d, ct4d )
+             NULLIFY( Ptr )
+          ENDIF
 
-                ! Loop over the A-3 times and vertical levels
-                DO L = 1, Z
+          ! Write 2x2.5 data
+          IF ( do2x25 ) THEN
+             st4d = (/ 1,     1,     1,     H  /)
+             ct4d = (/ X2x25, Y2x25, Z2x25, 1  /)
+             CALL NcWr( Q2x25, fOut2x25, TRIM( name ), st4d, ct4d )
+          ENDIF
 
-                   ! Regrid to 2 x 2.5
-                   IF ( do2x25 ) THEN
-                      CALL RegridGeosItTo2x25( 0, Qflip(:,:,L), Q2x25(:,:,L) )
-                   ENDIF
+          ! Write 4x5 data
+          IF ( do4x5 ) THEN
+             st4d  = (/ 1,    1,    1,    H /)
+             ct4d  = (/ X4x5, Y4x5, Z4x5, 1 /)
+             CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st4d, ct4d )
+          ENDIF
 
-                    ! Regrid to 4x5
-                   IF ( do4x5 ) THEN
-                      CALL RegridGeosItTo4x5 ( 0, Qflip(:,:,L), Q4x5(:,:,L)  )
-                   ENDIF
-                ENDDO
+          ! Nested EU
+          IF ( doNestEu05 ) THEN
+             Ptr  => Qflip( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
+             st4d = (/ 1,       1,       1,       H /)
+             ct4d = (/ XNestEu05, YNestEu05, ZNestEu05, 1 /)
+             CALL NcWr( Ptr, fOut05NestEu, TRIM( name ), st4d, ct4d )
+             NULLIFY( Ptr )
+          ENDIF
 
-                !-----------------------------------------------------------
-                ! Write netCDF output (all except QI, QL)
-                !-----------------------------------------------------------
-                msg = '%%% Archiving  ' // name
-                WRITE( IU_LOG, '(a)' ) TRIM( msg )
+          ! Nested NA
+          IF ( doNestNa05 ) THEN
+             Ptr  => Qflip( I0_na05:I1_na05, J0_na05:J1_na05, : )
+             st4d = (/ 1,       1,       1,       H /)
+             ct4d = (/ XNestNa05, YNestNa05, ZNestNa05, 1 /)
+             CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st4d, ct4d )
+             NULLIFY( Ptr )
+          ENDIF
 
-                ! Write 0.5x0.625 data
-                IF ( do05x0625 ) THEN
-                  Ptr  => Qflip(:,:,:)
-                  st4d = (/ 1,     1,     1,     H  /)
-                  ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
-                  CALL NcWr( Ptr, fOut05x0625, TRIM( name ), st4d, ct4d )
-                  NULLIFY( Ptr )
-                ENDIF
-
-                ! Write 2x2.5 data
-                IF ( do2x25 ) THEN
-                   st4d = (/ 1,     1,     1,     H  /)
-                   ct4d = (/ X2x25, Y2x25, Z2x25, 1  /)
-                   CALL NcWr( Q2x25, fOut2x25, TRIM( name ), st4d, ct4d )
-                ENDIF
-
-                ! Write 4x5 data
-                IF ( do4x5 ) THEN
-                   st4d  = (/ 1,    1,    1,    H /)
-                   ct4d  = (/ X4x5, Y4x5, Z4x5, 1 /)
-                   CALL NcWr( Q4x5, fOut4x5, TRIM( name ), st4d, ct4d )
-                ENDIF
-
-                ! Nested EU
-                IF ( doNestEu05 ) THEN
-                   Ptr  => Qflip( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestEu05, YNestEu05, ZNestEu05, 1 /)
-                   CALL NcWr( Ptr, fOut05NestEu, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )
-                ENDIF
-
-                ! Nested NA
-                IF ( doNestNa05 ) THEN
-                   Ptr  => Qflip( I0_na05:I1_na05, J0_na05:J1_na05, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestNa05, YNestNa05, ZNestNa05, 1 /)
-                   CALL NcWr( Ptr, fOut05NestNa, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )
-                ENDIF
-
-                ! Nested AS
-                IF ( doNestAs05 ) THEN
-                   Ptr  => Qflip( I0_as05:I1_as05, J0_as05:J1_as05, : )
-                   st4d = (/ 1,       1,       1,       H /)
-                   ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
-                   CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st4d, ct4d )
-                   NULLIFY( Ptr )
-                ENDIF
-
-          END SELECT
+          ! Nested AS
+          IF ( doNestAs05 ) THEN
+             Ptr  => Qflip( I0_as05:I1_as05, J0_as05:J1_as05, : )
+             st4d = (/ 1,       1,       1,       H /)
+             ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
+             CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st4d, ct4d )
+             NULLIFY( Ptr )
+          ENDIF
 
           ! Free pointer memory
           NULLIFY( Qflip )
-       ENDDO
-
-       !====================================================================
-       ! Regrid QI and QL
-       !====================================================================
-       msg = '%%% Regridding QI and QL'
-       WRITE( IU_LOG, '(a)' ) TRIM( msg )
-
-       ! Loop over the A-3 times and vertical levels
-       DO L = 1, Z
-
-          ! Regrid to 2 x 2.5
-          IF ( do2x25 ) THEN
-             CALL RegridGeosItTo2x25( 0, QI(:,:,L), QI_2x25(:,:,L) )
-             CALL RegridGeosItTo2x25( 0, QL(:,:,L), QL_2x25(:,:,L) )
-          ENDIF
-
-          ! Regrid to 4x5
-          IF ( do4x5 ) THEN
-             CALL RegridGeosItTo4x5 ( 0, QI(:,:,L), QI_4x5(:,:,L)  )
-             CALL RegridGeosItTo4x5 ( 0, QL(:,:,L), QL_4x5(:,:,L)  )
-          ENDIF
 
        ENDDO
-
-       !====================================================================
-       ! Write QI and QL to netCDF
-       !====================================================================
-       msg = '%%% Archfving  QI and QL'
-       WRITE( IU_LOG, '(a)' ) TRIM( msg )
-
-       !-----------------------------
-       ! 0.5x0.625 GLOBAL GRID
-       !-----------------------------
-       IF ( do05x0625 ) THEN
-
-         ! netCDF indices
-         st4d = (/ 1,     1,     1,     H  /)
-         ct4d = (/ X05x0625, Y05x0625, Z05x0625, 1  /)
-
-         ! QI
-         Ptr  => QI(:,:,:)
-         CALL NcWr( Ptr, fOut05x0625, 'QI', st4d, ct4d )
-         NULLIFY( Ptr )
-
-         ! QL
-         Ptr  => QL(:,:,:)
-         CALL NcWr( Ptr, fOut05x0625, 'QL', st4d, ct4d )
-         NULLIFY( Ptr )
-
-       ENDIF
-
-       !-----------------------------
-       ! 2 x 2.5 GLOBAL GRID
-       !-----------------------------
-       IF ( do2x25 ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,     1,     1,     H  /)
-          ct4d = (/ X2x25, Y2x25, Z2x25, 1  /)
-
-          ! Write data
-          CALL NcWr( QI_2x25, fOut2x25, 'QI', st4d, ct4d )
-          CALL NcWr( QL_2x25, fOut2x25, 'QL', st4d, ct4d )
-
-       ENDIF
-
-       !-----------------------------
-       ! 4 x 5 GLOBAL GRID
-       !-----------------------------
-       IF ( do4x5 ) THEN
-
-          ! netCDF indices
-          st4d  = (/ 1,    1,    1,    H /)
-          ct4d  = (/ X4x5, Y4x5, Z4x5, 1 /)
-
-          ! Write data
-          CALL NcWr( QI_4x5, fOut4x5, 'QI', st4d, ct4d )
-          CALL NcWr( QL_4x5, fOut4x5, 'QL', st4d, ct4d )
-
-       ENDIF
-
-       !-----------------------------
-       ! NESTED 0625 EU GRID
-       !-----------------------------
-       IF ( doNestEu05 ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestEu05, YNestEu05, ZNestEu05, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
-          CALL NcWr( Ptr, fOut05NestEu, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_eu05:I1_eu05, J0_eu05:J1_eu05, : )
-          CALL NcWr( Ptr, fOut05NestEu, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-
-       !-----------------------------
-       ! NESTED 0625 NA GRID
-       !-----------------------------
-       IF ( doNestNa05 ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestNa05, YNestNa05, ZNestNa05, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_na05:I1_na05, J0_na05:J1_na05, : )
-          CALL NcWr( Ptr, fOut05NestNa, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_na05:I1_na05, J0_na05:J1_na05, : )
-          CALL NcWr( Ptr, fOut05NestNa, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
-
-       !-----------------------------
-       ! NESTED 0625 AS GRID
-       !-----------------------------
-       IF ( doNestAs05 ) THEN
-
-          ! netCDF indices
-          st4d = (/ 1,       1,       1,       H /)
-          ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
-
-          ! QI
-          Ptr  => QI( I0_as05:I1_as05, J0_as05:J1_as05, : )
-          CALL NcWr( Ptr, fOut05NestAs, 'QI', st4d, ct4d )
-          NULLIFY( Ptr )
-
-          ! QL
-          Ptr  => QL( I0_as05:I1_as05, J0_as05:J1_as05, : )
-          CALL NcWr( Ptr, fOut05NestAs, 'QL', st4d, ct4d )
-          NULLIFY( Ptr )
-
-       ENDIF
 
        !--------------------------------------------------------------------
        ! Close input file

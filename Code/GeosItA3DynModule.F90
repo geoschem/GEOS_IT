@@ -306,7 +306,7 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! OMEGA
-    IF ( StrPos( 'OMEGA', asm_tavg_3hr_v72_data ) >= 0 ) THEN
+    IF ( StrPos( 'OMEGA', asm_tavg_3hr_v72_data_d ) >= 0 ) THEN
        var4     = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Vertical pressure velocity'
@@ -342,7 +342,7 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! U
-    IF ( StrPos( 'U', asm_tavg_3hr_v72_data ) >= 0 ) THEN
+    IF ( StrPos( 'U', asm_tavg_3hr_v72_data_d ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Eastward component of wind'
@@ -360,7 +360,7 @@ MODULE GeosItA3DynModule
     ENDIF
 
     ! V
-    IF ( StrPos( 'V', asm_tavg_3hr_v72_data ) >= 0 ) THEN
+    IF ( StrPos( 'V', asm_tavg_3hr_v72_data_d ) >= 0 ) THEN
        var4  = (/ idLon, idLat, idLev, idTime /)
        
        lName = 'Northward component of wind'
@@ -452,12 +452,12 @@ MODULE GeosItA3DynModule
 
     ! List of all the A-3 fields combined
     allFieldsList = TRIM( cld_tavg_3hr_v72_data_d ) // ',' // &
-                    TRIM( asm_tavg_3hr_v72_data   )
+                    TRIM( asm_tavg_3hr_v72_data_d )
 
     ! Return the list of fields and number of fields to process
     ! from each of the GeosIt raw met data files
     CALL GetNFields( cld_tavg_3hr_v72_data_d, nFields_3dCldNv, fields_3dCldNv )
-    CALL GetNFields( asm_tavg_3hr_v72_data,   nFields_3dAsmNv, fields_3dAsmNv )
+    CALL GetNFields( asm_tavg_3hr_v72_data_d, nFields_3dAsmNv, fields_3dAsmNv )
     CALL GetNFields( allFieldsList,          nAllFields,      allFields      )
 
     ! Echo info
