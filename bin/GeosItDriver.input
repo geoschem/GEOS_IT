@@ -28,9 +28,9 @@
 T
 
 ==> asm_const_0hr_slv
-GEOS.it.asm.asm_const_0hr_glo_L576x361_slv.GEOS5271.YYYY-MM-DDThhmm.V01.nc4
+GEOS.it.asm.asm_const_0hr_glo_L576x361_slv.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
 FRLAKE,FRLAND,FRLANDICE,FROCEAN,PHIS
-F
+T
 
 ==> flx_tavg_1hr_slv
 GEOS.it.asm.flx_tavg_1hr_glo_L576x361_slv.GEOS5294.YYYY-MM-DDThhmm.V01.nc4
@@ -77,39 +77,39 @@ PS,QV,T
 ==> Local Raw Data Path
 /n/holyscratch01/external_repos/GEOS-CHEM/gcgrid/gcdata/ExtData/GEOS_0.5x0.625/GEOS_IT_Native/YYYY/MM/DD/
 
-==> 4 x 5 output
-F
+==> Global 4 x 5 output
+T
 GEOSFP.YYYYMMDD.%%%%%%.4x5.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
-==> 2 x 2.5 output
-T
+==> Global 2 x 2.5 output
+F
 GEOSFP.YYYYMMDD.%%%%%%.2x25.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
-==> 0.5 x 0.625 global output
-T
+==> Global 0.5 x 0.625 output
+F
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
-==> 0.5x0.625 Nested EU output
+==> Nested 0.5 x 0.625 EU output
 F
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.EU.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 265 246 353 303     
 
-==> 0.5x0.625 Nested NA output
+==> Nested 0.5 x 0.625 NA output
 F
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.NA.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 81 201 193 301
 
-==> 0.5x0.625 Nested AS output
+==> Nexted 0.5 x 0.625 AS output
 F
 GEOSFP.YYYYMMDD.%%%%%%.05x0625.AS.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/

@@ -304,7 +304,7 @@ MODULE GeosItInputsModule
           CASE( '==> Local Raw Data Path' )
              READ( IU_TXT, '(a)',    ERR=999 ) inputDataDir
 
-          CASE( '==> Nested 0.5x0.625 EU output' )
+          CASE( '==> Nested 0.5 x 0.625 EU output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestEu05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestEu05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestEu05
@@ -313,7 +313,7 @@ MODULE GeosItInputsModule
              I_NestEu05 = I1_eu05 - I0_eu05 + 1
              J_NestEu05 = J1_eu05 - J0_eu05 + 1
 
-          CASE( '==> Nested 0.5x0.625 NA output' )
+          CASE( '==> Nested 0.5 x 0.625 NA output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestNa05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestNa05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestNa05
@@ -322,7 +322,7 @@ MODULE GeosItInputsModule
              I_NestNa05 = I1_na05 - I0_na05 + 1
              J_NestNa05 = J1_na05 - J0_na05 + 1
 
-          CASE( '==> Nested 0.5x0.625 AS output' )
+          CASE( '==> Nested 0.5 x 0.625 AS output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestAs05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestAs05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestAs05
@@ -331,19 +331,19 @@ MODULE GeosItInputsModule
              I_NestAs05 = I1_as05 - I0_as05 + 1
              J_NestAs05 = J1_as05 - J0_as05 + 1
 
-          CASE( '==> 0.5 x 0.625 output' )
+          CASE( '==> Global 0.5 x 0.625 output' )
              READ( IU_TXT,   *,      ERR=999 ) do05x0625
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmpl05x0625
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmpl05x0625
              READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmpl05x0625
 
-          CASE( '==> 2 x 2.5 output' )
+          CASE( '==> Global 2 x 2.5 output' )
              READ( IU_TXT,   *,      ERR=999 ) do2x25
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmpl2x25
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmpl2x25
              READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmpl2x25
 
-          CASE( '==> 4 x 5 output' )
+          CASE( '==> Global 4 x 5 output' )
              READ( IU_TXT,   *,      ERR=999 ) do4x5
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmpl4x5
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmpl4x5
