@@ -3,10 +3,10 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !INCLUDE: GeosFpDriver.input
+# !INCLUDE: GeosItDriver.input
 #
 # !DESCRIPTION: Specifies the input directory and the locations of the 
-# GEOS-FP netCDF data files that are required to produce the GEOS-Chem 
+# GEOS-IT netCDF data files that are required to produce the GEOS-Chem 
 # "A1", "A3", and "I3" files.
 #\\
 #\\
@@ -79,39 +79,39 @@ PS,QV,T
 
 ==> Global 4 x 5 output
 T
-GEOSFP.YYYYMMDD.%%%%%%.4x5.nc
+GEOSIT.YYYYMMDD.%%%%%%.4x5.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
 ==> Global 2 x 2.5 output
 F
-GEOSFP.YYYYMMDD.%%%%%%.2x25.nc
+GEOSIT.YYYYMMDD.%%%%%%.2x25.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
 ==> Global 0.5 x 0.625 output
 F
-GEOSFP.YYYYMMDD.%%%%%%.05x0625.nc
+GEOSIT.YYYYMMDD.%%%%%%.05x0625.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 
 ==> Nested 0.5 x 0.625 EU output
 F
-GEOSFP.YYYYMMDD.%%%%%%.05x0625.EU.nc
+GEOSIT.YYYYMMDD.%%%%%%.05x0625.EU.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 265 246 353 303     
 
 ==> Nested 0.5 x 0.625 NA output
 F
-GEOSFP.YYYYMMDD.%%%%%%.05x0625.NA.nc
+GEOSIT.YYYYMMDD.%%%%%%.05x0625.NA.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 81 201 193 301
 
 ==> Nexted 0.5 x 0.625 AS output
 F
-GEOSFP.YYYYMMDD.%%%%%%.05x0625.AS.nc
+GEOSIT.YYYYMMDD.%%%%%%.05x0625.AS.nc
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 /n/holyscratch01/jacob_lab/Users/elundgren/GEOSIT_processing/scratch/GEOS_IT/YYYY/MM/
 385 159 529 291
