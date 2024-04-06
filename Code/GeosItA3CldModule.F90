@@ -46,7 +46,7 @@ MODULE GeosItA3CldModule
 ! !PRIVATE MEMBER FUNCTIONS:
 !
   PRIVATE :: NcOutFileDef
-  PRIVATE :: Process3dCldNv
+  PRIVATE :: Process3dAsmNv
   PRIVATE :: Process3dOptDep
   PRIVATE :: RegridTau
 !
@@ -57,6 +57,7 @@ MODULE GeosItA3CldModule
 ! !REVISION HISTORY:
 !  11 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
 !  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  06 Apr 2024 - Z. Yuanjian - Fixed bugs reading QI and QL
 !  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
@@ -447,6 +448,7 @@ MODULE GeosItA3CldModule
 ! !LOCAL VARIABLES:
 !
     ! Scalars
+    INTEGER                 :: nFields_3dAsmNv
     INTEGER                 :: nFields_3dCldNv
     INTEGER                 :: nFields_3dRadNv
     INTEGER                 :: nAllFields
@@ -457,6 +459,7 @@ MODULE GeosItA3CldModule
 
     ! Arrays
     CHARACTER(LEN=MAX_CHAR) :: allFields     (MAX_FLDS)
+    CHARACTER(LEN=MAX_CHAR) :: fields_3dAsmNv(MAX_FLDS)
     CHARACTER(LEN=MAX_CHAR) :: fields_3dCldNv(MAX_FLDS)
     CHARACTER(LEN=MAX_CHAR) :: fields_3dRadNv(MAX_FLDS)
 
@@ -470,17 +473,21 @@ MODULE GeosItA3CldModule
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
     ! List of all the A-3 fields combined
-    allFieldsList = TRIM( cld_tavg_3hr_v72_data_c ) // ',' // &
+    allFieldsList = TRIM( asm_tavg_3hr_v72_data_c ) // ',' // &
+                    TRIM( cld_tavg_3hr_v72_data_c ) // ',' // &
                     TRIM( rad_tavg_3hr_v72_data   )
 
     ! Return the list of fields and number of fields to process
     ! from each of the GeosIt raw met data files
+    CALL GetNFields( asm_tavg_3hr_v72_data_c, nFields_3dAsmNv, fields_3dAsmNv )
     CALL GetNFields( cld_tavg_3hr_v72_data_c, nFields_3dCldNv, fields_3dCldNv )
     CALL GetNFields( rad_tavg_3hr_v72_data,   nFields_3dRadNv, fields_3dRadNv )
     CALL GetNFields( allFieldsList,          nAllFields,      allFields      )
 
     ! Echo info
+    WRITE( IU_LOG, 100 ) TRIM( asm_tavg_3hr_v72_file ), nFields_3dAsmNv
     WRITE( IU_LOG, 100 ) TRIM( cld_tavg_3hr_v72_file ), nFields_3dCldNv
+    WRITE( IU_LOG, 100 ) TRIM( rad_tavg_3hr_v72_file ), nFields_3dRadNv
     WRITE( IU_LOG, 110 ) nAllFields
 
     ! Formats
@@ -572,7 +579,7 @@ MODULE GeosItA3CldModule
     !=======================================================================
     ! Process data
     !=======================================================================
-    CALL Process3dCldNv ( nFields_3dCldNv, fields_3dCldNv ) ! cld_tavg_3hr_v72
+    CALL Process3dAsmNv ( nFields_3dAsmNv, fields_3dAsmNv ) ! asm_tavg_3hr_v72
     CALL Process3dOptDep(                                 ) ! optical depths
 
     !=======================================================================
@@ -603,15 +610,15 @@ MODULE GeosItA3CldModule
 !------------------------------------------------------------------------------
 !BOP
 !
-! !IROUTINE: Process3dCldNv
+! !IROUTINE: Process3dAsmNv
 !
-! !DESCRIPTION: Subroutine Process3dCldNv regrids the GEOS-IT met fields
-!  from the "cld\_tavg\_3hr\_v72" file and saves output to netCDF file format.
+! !DESCRIPTION: Subroutine Process3dAsmNv regrids the GEOS-IT met fields
+!  from the "asm\_tavg\_3hr\_v72" file and saves output to netCDF file format.
 !\\
 !\\
 ! !INTERFACE:
 !
-  SUBROUTINE Process3dCldNv( nFields, fields )
+  SUBROUTINE Process3dAsmNv( nFields, fields )
 !
 ! !INPUT PARAMETERS:
 !
@@ -620,13 +627,14 @@ MODULE GeosItA3CldModule
 !
 ! !REMARKS:
 !  The cloud fraction field CLOUD and cloud optical depth fields TAUCLI,
-!  TAUCLW, and OPTDEPTH are processed separately in routine Process3dOptDep.
+!  TAUCLW, and OPTDEPTH are processed separately in routine Process3dOptDep from cld_tavg_3hr_v72.
 !  This is because these fields must all be regridded together using the
 !  algorithm developed by Hongyu Liu (in routine RegridTau).
 !
 ! !REVISION HISTORY:
 !  09 Jan 2012 - R. Yantosca - Initial version for GEOS-FP
 !  07 Jun 2023 - E. Lundgren - Adapted for GEOS-IT
+!  06 Apr 2024 - Z. Yuanjian - Fixed bugs reading QI and QL
 !  See git history for additional revision history
 !EOP
 !------------------------------------------------------------------------------
@@ -656,14 +664,6 @@ MODULE GeosItA3CldModule
     REAL*4                  :: Q2x25  ( I2x25,    J2x25,      L2x25      )
     REAL*4                  :: Q4x5   ( I4x5,     J4x5,       L4x5       )
 
-    REAL*4,  TARGET         :: QI     ( I05x0625, J05x0625,   L05x0625   )
-    REAL*4                  :: QI_2x25( I2x25,    J2x25,      L2x25      )
-    REAL*4                  :: QI_4x5 ( I4x5,     J4x5,       L4x5       )
-
-    REAL*4,  TARGET         :: QL     ( I05x0625, J05x0625,   L05x0625   )
-    REAL*4                  :: QL_2x25( I2x25,    J2x25,      L2x25      )
-    REAL*4                  :: QL_4x5 ( I4x5,     J4x5,       L4x5       )
-
     ! Pointer arrays
     REAL*4,  POINTER        :: Qflip(:,:,:)
     REAL*4,  POINTER        :: Ptr  (:,:,:)
@@ -678,7 +678,7 @@ MODULE GeosItA3CldModule
     !=======================================================================
 
      ! Echo info
-    msg = '%%%%%% ENTERING ROUTINE Process3dCldNv %%%%%%'
+    msg = '%%%%%% ENTERING ROUTINE Process3dAsmNv %%%%%%'
     WRITE( IU_LOG, '(a)' ) '%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
@@ -742,7 +742,7 @@ MODULE GeosItA3CldModule
        hhmmss = ( ( a3mins(H) / 60 ) * 10000 ) + 3000
 
        ! Create input filename from the template
-       fNameInput = TRIM( inputDataDir ) // TRIM( cld_tavg_3hr_v72_file )
+       fNameInput = TRIM( inputDataDir ) // TRIM( asm_tavg_3hr_v72_file )
        CALL expandDate( fNameInput, yyyymmdd, hhmmss )
 
        ! Echo info
@@ -769,16 +769,8 @@ MODULE GeosItA3CldModule
           ! This will truncate field names longer than 8 chars.
           name = TRIM( fields(F) )
 
-          ! Skip certain fieldnames
-          SELECT CASE ( name )
-             CASE( '' )                                ! Null string
-                CYCLE
-             CASE( 'TAUCLI', 'TAUCLW', 'OPTDEPTH',  &
-                   'CLOUD'                         )   ! These fields are
-                CYCLE                                  !  procesed elsewhere
-             CASE DEFAULT
-                ! Nothing
-          END SELECT
+          ! Skip if the fieldname is empty
+          IF ( name == '' ) CYCLE
 
           ! Zero data arrays
           Q     = 0e0
@@ -806,7 +798,7 @@ MODULE GeosItA3CldModule
           Qflip => Q( :, :, Z:1:-1 )
 
           !-----------------------------------------------------------
-          ! Regrid data fields (all except QI, QL)
+          ! Regrid data fields
           !-----------------------------------------------------------
           msg = '%%% Regridding ' // name
           WRITE( IU_LOG, '(a)' ) TRIM( msg )
@@ -900,10 +892,10 @@ MODULE GeosItA3CldModule
     !=======================================================================
 
     ! Echo info
-    msg = '%%%%%% LEAVING ROUTINE Process3dCldNv %%%%%%'
+    msg = '%%%%%% LEAVING ROUTINE Process3dAsmNv %%%%%%'
     WRITE( IU_LOG, '(a)' ) TRIM( msg )
 
-  END SUBROUTINE Process3dCldNv
+  END SUBROUTINE Process3dAsmNv
 !EOC
 !------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
